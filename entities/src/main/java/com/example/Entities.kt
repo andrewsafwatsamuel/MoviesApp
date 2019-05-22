@@ -7,13 +7,15 @@ import java.io.Serializable
 
 data class Movie(
     @field:SerializedName("vote_count") val voteCount: Int,
-    @field:SerializedName("id") val id:Long,
+    @field:SerializedName("id") val id: Long,
+    @field:SerializedName("video") val haveVideo: Boolean,
     @field:SerializedName("vote_average") val voteAverage: Double,
     @field:SerializedName("title") val title: String,
     @field:SerializedName("popularity") val popularity: Float,
     @field:SerializedName("poster_path") val poster: String,
     @field:SerializedName("original_language") val language: String,
     @field:SerializedName("original_title") val originalTitle: String,
+    @field:SerializedName("genre_ids") val genreIds: List<Int>,
     @field:SerializedName("backdrop_path") val backDropPhoto: String,
     @field:SerializedName("adult") val isAdult: Boolean,
     @field:SerializedName("overview") val overView: String,
@@ -21,6 +23,52 @@ data class Movie(
 ) : Serializable
 
 @Entity
-data class SuccessfulQuery(
-   @field:PrimaryKey val queryString: String
+data class Genre(
+    @field:PrimaryKey val id: Int,
+    val name: String
 ) : Serializable
+
+@Entity
+data class SuccessfulQuery(
+    @field:PrimaryKey val queryString: String
+) : Serializable
+
+/*
+* action	28
+
+animated	16
+
+documentary	99
+
+drama	18
+
+family	10751
+
+fantasy	14
+
+history	36
+
+comedy	35
+
+war	10752
+
+crime	80
+
+music	10402
+
+mystery	9648
+
+romance	10749
+
+sci fi	878
+
+horror	27
+
+TV movie	10770
+
+thriller	53
+
+western	37
+
+adventure	12
+*/
