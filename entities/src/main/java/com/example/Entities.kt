@@ -5,6 +5,13 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
+data class MovieResponse(
+    @field:SerializedName("page") val pageNumber: Int,
+    @field:SerializedName("total_results") val resultCount: Int,
+    @field:SerializedName("total_pages") val pageCount: Int,
+    @field:SerializedName("results") val results: List<Movie>
+) : Serializable
+
 data class Movie(
     @field:SerializedName("vote_count") val voteCount: Int,
     @field:SerializedName("id") val id: Long,
