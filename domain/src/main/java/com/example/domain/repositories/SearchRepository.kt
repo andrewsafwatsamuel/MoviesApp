@@ -1,3 +1,5 @@
+package com.example.domain.repositories
+
 import com.example.MovieResponse
 import com.example.SuccessfulQuery
 import com.example.domain.databaseGateWay.movieAppDatabase
@@ -5,10 +7,10 @@ import com.example.domain.serverGateWay.movieSearch
 import io.reactivex.Single
 
 interface SearchRepository {
-    fun getSuccessfulQueries(): List<SuccessfulQuery>
-    fun checkPresentQuery(queryString: String): SuccessfulQuery
+    fun getSuccessfulQueries(): List<SuccessfulQuery>?
+    fun checkPresentQuery(queryString: String): SuccessfulQuery?
     fun addSuccessfulQuery(query: SuccessfulQuery)
-    fun searchMovie( movieName:String,pageNumber:Int):Single<MovieResponse>
+    fun searchMovie( movieName:String,pageNumber:Int):Single<MovieResponse>?
 }
 
 val searchRepository:SearchRepositoryImplementer by lazy {SearchRepositoryImplementer()}
