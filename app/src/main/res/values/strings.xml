@@ -4,4 +4,5 @@
     <string name="more_info">More info</string>
     <string name="search_screen_start_text">Search any movie you want</string>
     <string name="search">search</string>
+    <string name="empty_previous_searches">No previous searches yet</string>
 </resources>

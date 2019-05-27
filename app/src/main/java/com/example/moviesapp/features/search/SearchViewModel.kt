@@ -31,35 +31,41 @@ class SearchViewModel(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe()
-        .also { disposables.addAll() }
+        ?.also { disposables.add(it) }
 
-    fun storeMovieName(movieName: String) {
+    private fun storeMovieName(movieName: String) {
         Single.fromCallable { storeMovieNameUseCase(movieName) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({}, Throwable::printStackTrace)
-            .also { it.dispose() }
+            .also { disposables.add(it) }
     }
 
-    fun retrieveMovies(onSuccess: (MovieResponse) -> Unit, pageNumber: Int, movieName: String) {
+    private val connectionError =
+        "Unable to resolve host \"api.themoviedb.org\": No address associated with hostname"
+
+    fun retrieveMovies(
+        onSuccess: (MovieResponse) -> Unit, pageNumber: Int, movieName: String
+    ) {
         movieSearch(pageNumber, movieName)
-            .also { emptyResult.value = "" }
             ?.subscribeOn(Schedulers.io())
+            ?.also { emptyResult.postValue("") }
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.doOnSuccess { onSuccess(it) }
-            ?.doOnError { onError() }
-            ?.subscribe({ finisLoadingSuccess(it) }, Throwable::printStackTrace)
-            .also { disposables.addAll() }
+            ?.doOnError {
+                loading.value = false
+                if (it.localizedMessage == connectionError)
+                    emptyResult.value = NOT_CONNECTED
+            }
+            ?.subscribe({ finisLoadingSuccess(it, movieName) }, Throwable::printStackTrace)
+            ?.also { disposables.add(it) }
     }
 
-    private fun onError() {
-        loading.value = false
-        emptyResult.value = NOT_CONNECTED
-    }
 
-    private fun finisLoadingSuccess(result: MovieResponse) {
+    private fun finisLoadingSuccess(result: MovieResponse, movieName: String) {
         loading.value = false
         if (result.resultCount == 0) emptyResult.value = NO_RESULTS
+        else storeMovieName(movieName)
     }
 
     override fun onCleared() {

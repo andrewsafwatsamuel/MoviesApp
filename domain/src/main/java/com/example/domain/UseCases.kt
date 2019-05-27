@@ -27,7 +27,6 @@ class StoreMovieNameUseCase(private val repository: SearchRepository = searchRep
             .takeUnless { checkPresentName(it) }
             ?.let { repository.addSuccessfulQuery(SuccessfulQuery(it)) }
     }
-
     fun checkPresentName(movieName: String): Boolean {
         return SuccessfulQuery(movieName).equals(repository.checkPresentQuery(movieName))
     }

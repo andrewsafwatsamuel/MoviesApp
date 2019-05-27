@@ -43,7 +43,6 @@ class MovieViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
     }
 }
 
-
 class MovieAdapter(
     val movieList: ArrayList<Movie>
 ) : RecyclerView.Adapter<MovieViewHolder>(){
