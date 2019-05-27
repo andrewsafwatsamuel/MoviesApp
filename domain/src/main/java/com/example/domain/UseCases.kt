@@ -15,9 +15,8 @@ class MovieSearchUseCase(
         return movieName
             .takeIf { it.isNotBlank() }
             ?.takeUnless { loading.value ?: false }
-            ?.also { loading.postValue(true) }
+            ?.also { loading.value=true }
             ?.let { repository.searchMovie(it, pageNumber) }
-            .also { loading.postValue(false) }
     }
 }
 

@@ -1,6 +1,7 @@
 package com.example.domain.serverGateWay
 
 import com.example.MovieResponse
+import io.reactivex.Flowable
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -17,5 +18,5 @@ interface SearchApi{
         @Query("query") movieName:String,
         @Query("page") pageNumber:Int,
         @Query("api_key") apiKey:String= API_KEY
-    ):Single<MovieResponse>
+    ):Single<MovieResponse>?
 }

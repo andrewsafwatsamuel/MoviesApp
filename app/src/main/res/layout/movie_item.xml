@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:id="@+id/movie_card_view">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:padding="2dp"
+            android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintGuide_begin="165dp"
+                android:id="@+id/guideline"/>
+        <androidx.constraintlayout.widget.Guideline
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintGuide_begin="149dp"
+                android:id="@+id/guideline2"/>
+        <ImageView
+                android:scaleType="centerCrop"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/movie_tape"
+                android:id="@+id/poster_image_view"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/guideline"
+                app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                app:layout_constraintStart_toStartOf="parent"/>
+        <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:id="@+id/view2" app:layout_constraintEnd_toEndOf="parent"
+                android:background="@color/gainsboro"
+                app:layout_constraintStart_toEndOf="@+id/poster_image_view"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/guideline" app:layout_constraintVertical_bias="0.8"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/moreInfo_textView"
+                app:layout_constraintTop_toBottomOf="@+id/view2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/poster_image_view"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="@string/more_info"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif"/>
+        <TextView
+                tools:text="Novelist Catherine Tramell is once again in trouble with the law, and Scotland Yard appoints psychiatrist Dr. Michael Glass to evaluate her. Though, like Detective Nick Curran before him, Glass is entranced by Tramell and lured into a seductive game."
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/overview_text_view"
+                android:lines="3"
+                android:textColor="@color/dark_gray"
+                app:layout_constraintBottom_toTopOf="@+id/view2"
+                app:layout_constraintStart_toEndOf="@+id/poster_image_view" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="20dp" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/release_date_text_view" android:layout_marginStart="10dp"
+                app:layout_constraintHorizontal_bias="1.0" app:layout_constraintVertical_bias="0.0"/>
+        <TextView
+                tools:text="2006-03-29"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/release_date_text_view"
+                android:textColor="@color/dark_gray"
+                app:layout_constraintBottom_toTopOf="@+id/view2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline2"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.3"
+                android:layout_marginStart="10dp" android:layout_marginTop="16dp"/>
+        <TextView
+                tools:text="Basic Instinct 2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/movie_name_text_view"
+                android:lines="2"
+android:textStyle="bold"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/poster_image_view"
+                app:layout_constraintBottom_toTopOf="@+id/release_date_text_view" android:layout_marginStart="10dp"
+                android:layout_marginBottom="8dp" android:layout_marginTop="16dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
