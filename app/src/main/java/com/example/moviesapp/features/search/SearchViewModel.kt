@@ -18,9 +18,9 @@ const val NOT_CONNECTED = "Please check your internet connection"
 private const val NO_RESULTS = "It seems that there are no movies with that name"
 
 class SearchViewModel(
-    val showMovieDetails: PublishSubject<Serializable> = PublishSubject.create(),
     val disposables: CompositeDisposable = CompositeDisposable(),
     val storedMovieNames: MutableLiveData<List<String>> = MutableLiveData(),
+    val parameterLiveData: MutableLiveData<QueryParameters> = MutableLiveData(),
     val loading: MutableLiveData<Boolean> = MutableLiveData(),
     val emptyResult: MutableLiveData<String> = MutableLiveData(),
     val movieList: ArrayList<Movie> = ArrayList(),

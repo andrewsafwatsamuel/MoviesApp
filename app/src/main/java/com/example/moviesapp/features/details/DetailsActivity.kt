@@ -29,7 +29,6 @@ class DetailsActivity : AppCompatActivity() {
 
         supportActionBar?.title = extraMovie.title
         loadCover(extraMovie.backDropPhoto ?: "")
-        println(extraMovie.backDropPhoto)
         loadPoster(extraMovie.poster ?: "")
         votes_text_view.text = "votes: ${extraMovie.voteCount}"
         release_date_text_view.text = "released in: ${extraMovie.releaseDate}"
