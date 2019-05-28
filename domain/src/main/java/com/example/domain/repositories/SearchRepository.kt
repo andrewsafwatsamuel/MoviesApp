@@ -4,7 +4,6 @@ import com.example.MovieResponse
 import com.example.SuccessfulQuery
 import com.example.domain.databaseGateWay.movieAppDatabase
 import com.example.domain.serverGateWay.movieSearch
-import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface SearchRepository {
