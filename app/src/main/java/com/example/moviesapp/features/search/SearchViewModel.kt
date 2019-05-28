@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.Movie
 import com.example.MovieResponse
-import com.example.domain.MovieSearchUseCase
-import com.example.domain.ShowStoredMoviesUseCase
-import com.example.domain.StoreMovieNameUseCase
+import com.example.domain.useCases.MovieSearchUseCase
+import com.example.domain.useCases.ShowStoredMoviesUseCase
+import com.example.domain.useCases.StoreMovieNameUseCase
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -21,8 +21,12 @@ class SearchViewModel(
     val loading: MutableLiveData<Boolean> = MutableLiveData(),
     val emptyResult: MutableLiveData<String> = MutableLiveData(),
     val movieList: ArrayList<Movie> = ArrayList(),
-    private val storedMovies: ShowStoredMoviesUseCase = ShowStoredMoviesUseCase(storedMovieNames),
-    val movieSearch: MovieSearchUseCase = MovieSearchUseCase(loading),
+    private val storedMovies: ShowStoredMoviesUseCase = ShowStoredMoviesUseCase(
+        storedMovieNames
+    ),
+    val movieSearch: MovieSearchUseCase = MovieSearchUseCase(
+        loading
+    ),
     private val storeMovieNameUseCase: StoreMovieNameUseCase = StoreMovieNameUseCase()
 ) : ViewModel() {
 

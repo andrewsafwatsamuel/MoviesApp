@@ -1,6 +1,7 @@
 package com.example.domain
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.domain.useCases.StoreMovieNameUseCase
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test

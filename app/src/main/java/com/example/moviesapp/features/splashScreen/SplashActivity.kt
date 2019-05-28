@@ -10,7 +10,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-
 class SplashActivity : AppCompatActivity() {
     private val disposable = CompositeDisposable()
     override fun onCreate(savedInstanceState: Bundle?) {

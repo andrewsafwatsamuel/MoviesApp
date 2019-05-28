@@ -2,9 +2,8 @@ package com.example.domain
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.example.SuccessfulQuery
 import com.example.domain.repositories.SearchRepository
-import com.example.domain.repositories.searchRepository
+import com.example.domain.useCases.ShowStoredMoviesUseCase
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert.*
@@ -24,7 +23,7 @@ class ShowStoredMoviesUseCaseTest{
              on { getSuccessfulQueries() } doReturn presentQuery
          }
 
-        with(ShowStoredMoviesUseCase(result,repositoryMock)) {
+        with(ShowStoredMoviesUseCase(result, repositoryMock)) {
             invoke()
         }
 
@@ -38,7 +37,7 @@ class ShowStoredMoviesUseCaseTest{
             on { getSuccessfulQueries() } doReturn  listOf(null)
         }
 
-        with(ShowStoredMoviesUseCase(result,repositoryMock)) {
+        with(ShowStoredMoviesUseCase(result, repositoryMock)) {
             invoke()
         }
 

@@ -2,6 +2,7 @@ package com.example.domain
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.example.domain.useCases.MovieSearchUseCase
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test

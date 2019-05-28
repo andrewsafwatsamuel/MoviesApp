@@ -11,7 +11,7 @@ import com.example.SuccessfulQuery
 @Dao
 interface GenreDao {
     @Query("SELECT name FROM Genre WHERE id IN (:genreIds)")
-    fun getMovieGenres(genreIds: List<Int>): List<String>
+    fun retrieveGenres(genreIds: List<Int>): List<String>
 }
 
 @Dao

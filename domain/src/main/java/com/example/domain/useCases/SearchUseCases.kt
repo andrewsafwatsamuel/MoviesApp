@@ -1,4 +1,4 @@
-package com.example.domain
+package com.example.domain.useCases
 
 import androidx.lifecycle.MutableLiveData
 import com.example.MovieResponse
