@@ -61,8 +61,7 @@ class SearchViewModel(
             ?.doOnSuccess { onSuccess(it) }
             ?.doOnError {
                 loading.value = false
-                if (it.localizedMessage == connectionError)
-                    emptyResult.value = NOT_CONNECTED
+                if (it.localizedMessage == connectionError) emptyResult.value = NOT_CONNECTED
             }
             ?.subscribe({ finisLoadingSuccess(it, movieName) }, Throwable::printStackTrace)
             ?.also { disposables.add(it) }

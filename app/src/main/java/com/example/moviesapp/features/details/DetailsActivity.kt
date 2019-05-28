@@ -8,8 +8,10 @@ import com.bumptech.glide.Glide
 import com.example.Movie
 import com.example.domain.useCases.retrieveGenres
 import com.example.moviesapp.R
+import com.example.moviesapp.features.search.BACK_DRAW_SIZE
 import com.example.moviesapp.features.search.BASE_POSTER_URL
 import com.example.moviesapp.features.search.EXTRA_MOVIE
+import com.example.moviesapp.features.search.POOSTER_SIZE
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -39,13 +41,13 @@ class DetailsActivity : AppCompatActivity() {
     private fun loadPoster(posterUrl: String) = posterUrl
         .takeUnless { it.isBlank() }
         ?.also {
-            Glide.with(view).load(BASE_POSTER_URL + posterUrl).into(details_poster_image_view)
+            Glide.with(view).load(BASE_POSTER_URL + POOSTER_SIZE+ posterUrl).into(details_poster_image_view)
         }
 
     private fun loadCover(coverUrl: String) = coverUrl
         .takeUnless { it.isBlank() }
         ?.also {
-            Glide.with(view).load(BASE_POSTER_URL + coverUrl).into(cover_image_view)
+            Glide.with(view).load(BASE_POSTER_URL + BACK_DRAW_SIZE+ coverUrl).into(cover_image_view)
         }
 
     private fun showGenres(ids: List<Int>) = genres_recycler_view
