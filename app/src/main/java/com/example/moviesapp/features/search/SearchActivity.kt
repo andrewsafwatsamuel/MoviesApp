@@ -64,6 +64,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         search_edit_text.setOnClickListener {
+            viewModel.retrieveMovieNames()
             previous_searches_layout.visibility = View.VISIBLE
         }
 
