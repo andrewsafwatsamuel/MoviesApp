@@ -14,6 +14,7 @@ class DetailsUseCasesKtTest {
     @get:Rule
     val rule: TestRule = InstantTaskExecutorRule()
 
+    //if all is ok return genre list
     @Test
     fun `retrieveGenres in successful conditions then retrieve genre list`() {
         val ids = listOf(1, 2, 3)
@@ -27,6 +28,7 @@ class DetailsUseCasesKtTest {
         }
     }
 
+//if id list is empty return empty genre list
     @Test
     fun `retrieveGenres with empty id list then retrieve nothing`() {
         val ids = listOf<Int>()

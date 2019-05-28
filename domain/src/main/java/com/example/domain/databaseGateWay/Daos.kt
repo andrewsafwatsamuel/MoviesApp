@@ -5,9 +5,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.example.SuccessfulQuery
 
-//read me
-//I put daos to single file as they are not large in number and related to each other
-
 @Dao
 interface GenreDao {
     @Query("SELECT name FROM Genre WHERE id IN (:genreIds)")

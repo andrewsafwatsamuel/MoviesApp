@@ -1,5 +1,6 @@
 package com.example.moviesapp.features.details
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,12 +13,14 @@ import com.example.moviesapp.features.search.EXTRA_MOVIE
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_details.*
 
 class DetailsActivity : AppCompatActivity() {
+
     private val disposable = CompositeDisposable()
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
@@ -54,7 +57,7 @@ class DetailsActivity : AppCompatActivity() {
         .also { retrieveGenres({ genre -> it.adapter = GenreAdapter(genre) }, ids) }
 
     private fun retrieveGenres(genres: (List<String>) -> Unit, ids: List<Int>) =
-        Single.fromCallable { com.example.domain.useCases.retrieveGenres(ids) }
+        Single.fromCallable { retrieveGenres(ids) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ genres(it) }, Throwable::printStackTrace)
