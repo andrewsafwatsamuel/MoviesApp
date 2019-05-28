@@ -1,6 +1,10 @@
 package com.example.moviesapp.features.search
 
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -14,8 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.MovieResponse
 import com.example.moviesapp.R
+import com.example.moviesapp.features.details.DetailsActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 import kotlinx.android.synthetic.main.activity_search.*
+import java.io.Serializable
+import java.util.concurrent.TimeUnit
 
 private var pageNumber = 1
 private var pageCount = 0
@@ -26,6 +34,12 @@ class SearchActivity : AppCompatActivity() {
 
     private val viewModel by lazy {
         ViewModelProviders.of(this)[SearchViewModel::class.java]
+    }
+
+    private val resultsReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            viewModel.showMovieDetails.onNext(intent!!.getSerializableExtra(EXTRA_MOVIE))
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +85,13 @@ class SearchActivity : AppCompatActivity() {
         viewModel.emptyResult.observe(this, Observer {
             if (it.isBlank()) onNonEmptyState() else onEmptyState(it)
         })
+
+        registerReceiver(resultsReceiver, IntentFilter(ACTION_OPEN_DETAILS_SCREEN))
+
+        viewModel.showMovieDetails.debounce(500, TimeUnit.MILLISECONDS)
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribe { startForecastScreen(it) }
+            .also { viewModel.disposables.addAll() }
     }
 
     private fun previousSearchesAdapter(searches: List<String>) {
@@ -122,6 +143,17 @@ class SearchActivity : AppCompatActivity() {
         result_recycler_view.visibility = View.GONE
         empty_list_text_view.visibility = View.VISIBLE
         empty_list_text_view.text = emptyStateText
+    }
+
+    private fun startForecastScreen(movie: Serializable) {
+        Intent(this, DetailsActivity::class.java)
+            .putExtra(EXTRA_MOVIE, movie)
+            .also { startActivity(it) }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(resultsReceiver)
     }
 
     class OnScrollListener(

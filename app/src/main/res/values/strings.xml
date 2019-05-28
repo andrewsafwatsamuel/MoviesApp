@@ -6,4 +6,6 @@
     <string name="search">search</string>
     <string name="empty_previous_searches">No previous searches yet</string>
     <string name="splash_image">splash image</string>
+    <string name="cover_photo">cover photo</string>
+    <string name="poster">poster</string>
 </resources>
