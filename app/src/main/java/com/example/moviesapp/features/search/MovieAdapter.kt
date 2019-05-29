@@ -15,7 +15,7 @@ import java.io.Serializable
 
 const val BASE_POSTER_URL = "http://image.tmdb.org/t/p/"
 const val POOSTER_SIZE="w185"
-const val BACK_DRAW_SIZE="w342"
+const val BACK_DRAW_SIZE="w500"
 const val ACTION_OPEN_DETAILS_SCREEN =
     "com.example.moviesapp.features.search.ACTION_OPEN_DETAILS_SCREEN"
 const val EXTRA_MOVIE = "com.example.moviesapp.features.search.EXTRA_MOVIE"

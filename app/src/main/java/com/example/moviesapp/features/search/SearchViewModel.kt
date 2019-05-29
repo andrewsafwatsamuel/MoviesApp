@@ -67,7 +67,6 @@ class SearchViewModel(
             ?.also { disposables.add(it) }
     }
 
-
     private fun finisLoadingSuccess(result: MovieResponse, movieName: String) {
         loading.value = false
         if (result.resultCount == 0) emptyResult.value = NO_RESULTS

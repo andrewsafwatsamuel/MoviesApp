@@ -29,7 +29,8 @@ class SearchActivity : AppCompatActivity() {
     private val viewModel by lazy {
         ViewModelProviders.of(this)[SearchViewModel::class.java]
     }
-    val showMovieDetails: PublishSubject<Serializable> = PublishSubject.create()
+
+    private val showMovieDetails: PublishSubject<Serializable> = PublishSubject.create()
 
     private val resultsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -42,24 +43,14 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
         supportActionBar?.hide()
 
+        val movieAdapter = MovieAdapter(viewModel.movieList)
+        val layoutManager = LinearLayoutManager(this)
+        val uiParameters = UiParameters(layoutManager, movieAdapter)
+
         viewModel
             .also { it.retrieveMovieNames() }
             .takeUnless { it.movieList.isEmpty() }
             ?.also { previous_searches_layout.visibility = View.GONE }
-
-        val movieAdapter = MovieAdapter(viewModel.movieList)
-        val layoutManager = LinearLayoutManager(this)
-        val uiParameters = UiParameters(layoutManager, viewModel, movieAdapter)
-        result_recycler_view
-            .also { it.layoutManager = layoutManager }
-            .also { it.adapter = movieAdapter }
-            .also {
-                it.addOnScrollListener(
-                    Paginator(
-                        viewModel.parameterLiveData, this, uiParameters
-                    )
-                )
-            }
 
         search_image_view.setOnClickListener {
             searchOnClick(movieAdapter, search_edit_text.text.toString())
@@ -70,8 +61,13 @@ class SearchActivity : AppCompatActivity() {
             previous_searches_layout.visibility = View.VISIBLE
         }
 
-        previous_search_results_list_view.emptyView = previous_searches_empty_text_vie
+        previous_search_results_list_view.emptyView = previous_searches_empty_text_view
             .also { it.text = resources.getString(R.string.empty_previous_searches) }
+
+        result_recycler_view
+            .also { it.layoutManager = layoutManager }
+            .also { it.adapter = movieAdapter }
+            .addOnScrollListener(setPagination(uiParameters))
 
         viewModel.storedMovieNames.observe(this, Observer {
             previousSearchesAdapter(it)
@@ -81,6 +77,7 @@ class SearchActivity : AppCompatActivity() {
                     search_edit_text.setText(it[position])
                 }
         })
+
         viewModel.loading.observe(this, Observer {
             if (it) onStartLoading() else onFinishLoading()
         })
@@ -97,14 +94,6 @@ class SearchActivity : AppCompatActivity() {
             .also { viewModel.disposables.addAll() }
     }
 
-    private fun previousSearchesAdapter(searches: List<String>) {
-        previous_search_results_list_view.adapter = ArrayAdapter<String>(
-            this,
-            R.layout.previous_search_result_item,
-            R.id.search_item, searches
-        )
-    }
-
     private fun searchOnClick(movieAdapter: MovieAdapter, name: String) {
         viewModel.movieList.clear()
         viewModel.retrieveMovies({ response ->
@@ -115,8 +104,35 @@ class SearchActivity : AppCompatActivity() {
     private fun onResultRetrieved(movieAdapter: MovieAdapter, response: MovieResponse, name: String) {
         viewModel.movieList.clear()
         movieAdapter.addItems(response.results)
-        viewModel.parameterLiveData.value = QueryParameters(response.pageNumber+1, response.pageCount, name)
+        viewModel.parameterLiveData.value =
+            QueryParameters(response.pageNumber + 1, response.pageCount, name)
     }
+
+    private fun previousSearchesAdapter(searches: List<String>) {
+        previous_search_results_list_view.adapter = ArrayAdapter<String>(
+            this,
+            R.layout.previous_search_result_item,
+            R.id.search_item, searches
+        )
+    }
+
+    private fun setPagination(uiParameters: UiParameters) = PaginationScrollListener(
+        { searchOnScroll(it, uiParameters.movieAdapter) },
+        viewModel.parameterLiveData, this, uiParameters
+    )
+
+    private fun searchOnScroll(
+        parameters: QueryParameters, movieAdapter: MovieAdapter
+    ) = viewModel.retrieveMovies({
+        movieAdapter.addItems(it.results)
+        viewModel.emptyResult.value = ""
+        viewModel.parameterLiveData.value =
+            QueryParameters(
+                parameters.pageNumber + 1,
+                parameters.pageCount, parameters.movieName
+            )
+        println(it)
+    }, parameters.pageNumber, parameters.movieName)
 
     private fun onStartLoading() {
         onNonEmptyState()

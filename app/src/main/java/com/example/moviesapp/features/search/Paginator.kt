@@ -8,35 +8,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 data class QueryParameters(
-    var pageNumber: Int,
-    var pageCount: Int,
-    var movieName: String
+    val pageNumber: Int,
+    val pageCount: Int,
+    val movieName: String
 )
 
 data class UiParameters(
-     val layoutManager: LinearLayoutManager,
-    val viewModel: SearchViewModel,
+    val layoutManager: LinearLayoutManager,
     val movieAdapter: MovieAdapter
 )
 
-class Paginator(
-   private val queryParameters: MutableLiveData<QueryParameters>,
-    lifecycleOwner: LifecycleOwner,
+class PaginationScrollListener(
+    private val retrieve: (QueryParameters) -> Unit,
+    private val queryParameters: MutableLiveData<QueryParameters>,
+    private val lifecycleOwner: LifecycleOwner,
     private val uiParameters: UiParameters,
     private var scrolling: Boolean = false,
-    private var loading: Boolean = false,
-    private var pageCount: Int=0,
-    private var pageNumber: Int=0,
-    private var movieName: String=""
+    private var loading: Boolean = false
 ) : RecyclerView.OnScrollListener() {
-
-    init {
-        queryParameters.observe(lifecycleOwner, Observer {
-            pageCount=it.pageCount
-            pageNumber=it.pageNumber
-            movieName=it.movieName
-        })
-    }
 
     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
         super.onScrollStateChanged(recyclerView, newState)
@@ -48,27 +37,23 @@ class Paginator(
 
         val currentItems = uiParameters.layoutManager.childCount
         val totalItems = uiParameters.layoutManager.itemCount
-        val scrollOutItems =uiParameters.layoutManager.findFirstVisibleItemPosition()
-
+        val scrollOutItems = uiParameters.layoutManager.findFirstVisibleItemPosition()
         if (!loading && scrolling && (currentItems + scrollOutItems == totalItems)) {
-            paginate()
+            queryParameters.observe(lifecycleOwner, Observer { paginate(it) })
         }
     }
 
-    private fun paginate() = pageNumber
-        .takeIf { it <= pageCount }
-        .also { pageNumber++ }
-        .also { queryParameters.value= QueryParameters(pageNumber,pageCount,movieName)}
-        .also { loadData() }
+    private fun paginate(
+        parameters: QueryParameters
+    ) {
+        if (parameters.pageNumber <= parameters.pageCount) {
+            loadData(parameters)
+        }
+    }
 
-    private fun loadData() = uiParameters.viewModel
-        .also { loading = true }
-        .also { retrieveMovies(it) }
-
-    private fun retrieveMovies(viewModel: SearchViewModel) =
-        viewModel.retrieveMovies({
-            uiParameters.movieAdapter.addItems(it.results)
-            viewModel.emptyResult.value = ""
-            loading = false
-        }, pageNumber, movieName)
+    private fun loadData(parameters: QueryParameters) {
+        loading = true
+        retrieve(parameters)
+        loading = false
+    }
 }

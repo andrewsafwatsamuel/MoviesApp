@@ -5,7 +5,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 const val API_ROOT = "http://api.themoviedb.org/3/"
-const val API_KEY="b3070a5d3abfb7c241d2688d066914e7"
+const val API_KEY="e0e450709bf35bc741a26a4ffd9e3116"
 
 object RetrofitInstance {
     operator fun invoke(): Retrofit {
