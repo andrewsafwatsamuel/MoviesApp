@@ -8,14 +8,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.Movie
+import com.example.moviesapp.POSTER_SIZE
 import com.example.moviesapp.R
+import com.example.moviesapp.drawPhoto
 import java.io.Serializable
 
-const val BASE_POSTER_URL = "http://image.tmdb.org/t/p/"
-const val POOSTER_SIZE="w185"
-const val BACK_DRAW_SIZE="w500"
 const val ACTION_OPEN_DETAILS_SCREEN =
     "com.example.moviesapp.features.search.ACTION_OPEN_DETAILS_SCREEN"
 const val EXTRA_MOVIE = "com.example.moviesapp.features.search.EXTRA_MOVIE"
@@ -28,8 +26,7 @@ class MovieViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
     private val movieCardView by lazy { view.findViewById<CardView>(R.id.movie_card_view) }
 
     fun bind(movie: Movie) {
-        if (!movie.poster.isNullOrBlank())
-            Glide.with(view).load(BASE_POSTER_URL+ POOSTER_SIZE + movie.poster).into(posterImageView)
+        drawPhoto(POSTER_SIZE,movie.poster?:"",posterImageView)
         nameTextView.text = movie.title
         dateTextView.text =
             if (!movie.releaseDate.isNullOrEmpty()) movie.releaseDate else "--"

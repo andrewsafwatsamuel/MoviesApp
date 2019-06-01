@@ -4,19 +4,18 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.Movie
 import com.example.domain.useCases.retrieveGenres
-import com.example.moviesapp.R
-import com.example.moviesapp.features.search.BACK_DRAW_SIZE
-import com.example.moviesapp.features.search.BASE_POSTER_URL
+import com.example.moviesapp.*
 import com.example.moviesapp.features.search.EXTRA_MOVIE
-import com.example.moviesapp.features.search.POOSTER_SIZE
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_details.*
+import kotlinx.android.synthetic.main.activity_details.overview_text_view
+import kotlinx.android.synthetic.main.activity_details.release_date_text_view
+import kotlinx.android.synthetic.main.movie_item.*
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -28,27 +27,14 @@ class DetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_details)
 
         val extraMovie = intent.getSerializableExtra(EXTRA_MOVIE) as Movie
-
         supportActionBar?.title = extraMovie.title
-        loadCover(extraMovie.backDropPhoto ?: "")
-        loadPoster(extraMovie.poster ?: "")
+        drawPhoto(BACK_DRAW_SIZE,extraMovie.backDropPhoto?:"",cover_image_view)
+        drawPhoto(POSTER_SIZE,extraMovie.poster?:"",details_poster_image_view)
         votes_text_view.text = "votes: ${extraMovie.voteCount}"
         release_date_text_view.text = "released in: ${extraMovie.releaseDate}"
         showGenres(extraMovie.genreIds?: listOf())
         overview_text_view.text = extraMovie.overView
     }
-
-    private fun loadPoster(posterUrl: String) = posterUrl
-        .takeUnless { it.isBlank() }
-        ?.also {
-            Glide.with(view).load(BASE_POSTER_URL + POOSTER_SIZE+ posterUrl).into(details_poster_image_view)
-        }
-
-    private fun loadCover(coverUrl: String) = coverUrl
-        .takeUnless { it.isBlank() }
-        ?.also {
-            Glide.with(view).load(BASE_POSTER_URL + BACK_DRAW_SIZE+ coverUrl).into(cover_image_view)
-        }
 
     private fun showGenres(ids: List<Int>) = genres_recycler_view
         .also {

@@ -45,8 +45,6 @@ class SearchActivity : AppCompatActivity() {
 
         val movieAdapter = MovieAdapter(viewModel.movieList)
         val layoutManager = LinearLayoutManager(this)
-        val uiParameters = UiParameters(layoutManager, movieAdapter)
-
         viewModel
             .also { it.retrieveMovieNames() }
             .takeUnless { it.movieList.isEmpty() }
@@ -67,7 +65,7 @@ class SearchActivity : AppCompatActivity() {
         result_recycler_view
             .also { it.layoutManager = layoutManager }
             .also { it.adapter = movieAdapter }
-            .addOnScrollListener(setPagination(uiParameters))
+            .addOnScrollListener(setPagination(layoutManager, movieAdapter))
 
         viewModel.storedMovieNames.observe(this, Observer {
             previousSearchesAdapter(it)
@@ -116,10 +114,11 @@ class SearchActivity : AppCompatActivity() {
         )
     }
 
-    private fun setPagination(uiParameters: UiParameters) = PaginationScrollListener(
-        { searchOnScroll(it, uiParameters.movieAdapter) },
-        viewModel.parameterLiveData, this, uiParameters
-    )
+    private fun setPagination(layoutManager: LinearLayoutManager, adapter: MovieAdapter) =
+        PaginationScrollListener(
+            { searchOnScroll(it, adapter) },
+            viewModel.parameterLiveData, this, layoutManager
+        )
 
     private fun searchOnScroll(
         parameters: QueryParameters, movieAdapter: MovieAdapter
@@ -131,7 +130,6 @@ class SearchActivity : AppCompatActivity() {
                 parameters.pageNumber + 1,
                 parameters.pageCount, parameters.movieName
             )
-        println(it)
     }, parameters.pageNumber, parameters.movieName)
 
     private fun onStartLoading() {

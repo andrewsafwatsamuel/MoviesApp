@@ -13,16 +13,12 @@ data class QueryParameters(
     val movieName: String
 )
 
-data class UiParameters(
-    val layoutManager: LinearLayoutManager,
-    val movieAdapter: MovieAdapter
-)
 
 class PaginationScrollListener(
     private val retrieve: (QueryParameters) -> Unit,
     private val queryParameters: MutableLiveData<QueryParameters>,
     private val lifecycleOwner: LifecycleOwner,
-    private val uiParameters: UiParameters,
+   private val layoutManager: LinearLayoutManager,
     private var scrolling: Boolean = false,
     private var loading: Boolean = false
 ) : RecyclerView.OnScrollListener() {
@@ -35,9 +31,9 @@ class PaginationScrollListener(
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
-        val currentItems = uiParameters.layoutManager.childCount
-        val totalItems = uiParameters.layoutManager.itemCount
-        val scrollOutItems = uiParameters.layoutManager.findFirstVisibleItemPosition()
+        val currentItems = layoutManager.childCount
+        val totalItems = layoutManager.itemCount
+        val scrollOutItems = layoutManager.findFirstVisibleItemPosition()
         if (!loading && scrolling && (currentItems + scrollOutItems == totalItems)) {
             queryParameters.observe(lifecycleOwner, Observer { paginate(it) })
         }
