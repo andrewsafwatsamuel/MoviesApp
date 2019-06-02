@@ -1,6 +1,5 @@
 package com.example.moviesapp.features.search
 
-import android.widget.AbsListView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -18,15 +17,9 @@ class PaginationScrollListener(
     private val retrieve: (QueryParameters) -> Unit,
     private val queryParameters: MutableLiveData<QueryParameters>,
     private val lifecycleOwner: LifecycleOwner,
-   private val layoutManager: LinearLayoutManager,
-    private var scrolling: Boolean = false,
+    private val layoutManager: LinearLayoutManager,
     private var loading: Boolean = false
 ) : RecyclerView.OnScrollListener() {
-
-    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-        super.onScrollStateChanged(recyclerView, newState)
-        scrolling = newState == AbsListView.OnScrollListener.SCROLL_STATE_FLING
-    }
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
@@ -34,7 +27,7 @@ class PaginationScrollListener(
         val currentItems = layoutManager.childCount
         val totalItems = layoutManager.itemCount
         val scrollOutItems = layoutManager.findFirstVisibleItemPosition()
-        if (!loading && scrolling && (currentItems + scrollOutItems == totalItems)) {
+        if (!loading && (currentItems + scrollOutItems == totalItems)) {
             queryParameters.observe(lifecycleOwner, Observer { paginate(it) })
         }
     }

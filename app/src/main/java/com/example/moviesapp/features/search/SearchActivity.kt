@@ -130,6 +130,7 @@ class SearchActivity : AppCompatActivity() {
                 parameters.pageNumber + 1,
                 parameters.pageCount, parameters.movieName
             )
+        println(it)
     }, parameters.pageNumber, parameters.movieName)
 
     private fun onStartLoading() {
