@@ -14,11 +14,11 @@ data class QueryParameters(
 
 
 class PaginationScrollListener(
-    private val retrieve: (QueryParameters) -> Unit,
     private val queryParameters: MutableLiveData<QueryParameters>,
     private val lifecycleOwner: LifecycleOwner,
     private val layoutManager: LinearLayoutManager,
-    private var loading: Boolean = false
+    private var loading: Boolean = false,
+    private val retrieve: (QueryParameters) -> Unit
 ) : RecyclerView.OnScrollListener() {
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
