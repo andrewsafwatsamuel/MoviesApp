@@ -8,4 +8,7 @@
     <string name="splash_image">splash image</string>
     <string name="cover_photo">cover photo</string>
     <string name="poster">poster</string>
+    <string name="tmdb_green">tmdb_logo_green</string>
+    <string name="search_green">serach_green</string>
+    <string name="search_for_movie">Search for a movie</string>
 </resources>

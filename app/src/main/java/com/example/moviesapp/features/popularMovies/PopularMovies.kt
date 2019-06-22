@@ -31,17 +31,18 @@ class PopularMovies : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_popular_movies)
+        supportActionBar?.hide()
+
         viewModel.getPopularMovies(checkConnectivity(this))
 
         val layoutManager = LinearLayoutManager(this)
 
         val adapter = MovieAdapter(viewModel.movies)
 
-        val scrollListener = PaginationScrollListener(
-            viewModel.parameters,
-            this,
-            layoutManager
-        ) { viewModel.getPopularMovies(checkConnectivity(this), it.pageNumber + 1) }
+        val scrollListener =
+            PaginationScrollListener(viewModel.parameters, this, layoutManager) {
+                viewModel.getPopularMovies(checkConnectivity(this), it.pageNumber + 1)
+            }
 
         with(viewModel) {
             loading.observe(this@PopularMovies, Observer {
@@ -54,11 +55,11 @@ class PopularMovies : AppCompatActivity() {
         }
 
         drawRecycler(layoutManager, adapter, scrollListener)
+        search_activity_button.setOnClickListener { startSearchScreen() }
     }
 
-    private fun startSearchScreen()=
-        Intent(this,SearchActivity::class.java)
-        .also { startActivity(it) }
+    private val searchIntent by lazy { Intent(this, SearchActivity::class.java) }
+    private fun startSearchScreen() = startActivity(searchIntent)
 
     private fun drawRecycler(
         manager: LinearLayoutManager,
