@@ -2,26 +2,18 @@ package com.example.domain.useCases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.example.Movie
 import com.example.MovieResponse
 import com.example.domain.repositories.BasePopularRepository
-import com.example.domain.repositories.DetailsRepository
-import com.example.domain.repositories.PopularRepository
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import io.reactivex.Single
-import io.reactivex.internal.schedulers.TrampolineScheduler
 import io.reactivex.schedulers.Schedulers
-import net.bytebuddy.implementation.bytecode.Throw
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 import java.lang.Exception
 
-//if is not connected then do not retrieve data
-//if is retrieving do not start retrieving
-//if all is ok then retrieve
 class PopularUseCaseTest {
 
     @get:Rule
@@ -29,7 +21,7 @@ class PopularUseCaseTest {
 
 
     @Test
-    fun `invoke with successful condition then return results`() {
+    fun `invoke with successful condition then return result`() {
         val repositoryMock = mock<BasePopularRepository> {
             on { getPopularMovies(1) } doReturn Single.just(
                 MovieResponse(1, 1, 1, listOf())

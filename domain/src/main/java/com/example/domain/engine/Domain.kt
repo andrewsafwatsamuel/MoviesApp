@@ -12,3 +12,6 @@ object Domain {
         applicationLiveData.value = application
     }
 }
+
+fun <T> T.toMutableLiveData() =
+    MutableLiveData<T>().also { it.value = this }

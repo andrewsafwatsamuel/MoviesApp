@@ -10,11 +10,11 @@ class PopularUseCase(private val repository: BasePopularRepository = popularRepo
         isConnected: Boolean,
         loading: MutableLiveData<Boolean>,
         result: MutableLiveData<MovieResponse>,
-        pageNumber: Int = 1
+        pageNumber: Int
     ) = repository.getPopularMovies(pageNumber)
         .takeIf { isConnected }
         ?.takeUnless { loading.value ?: false }
         ?.also { loading.postValue(true) }
-        ?.doOnSuccess { result.value = it }
-        ?.doFinally { loading.value = false }
+        ?.doOnSuccess { result.postValue(it)}
+        ?.doFinally { loading.postValue(false) }
 }

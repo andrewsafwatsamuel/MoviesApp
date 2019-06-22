@@ -1,4 +1,4 @@
-package com.example.moviesapp.features.search
+package com.example.moviesapp.subFeatures.movies
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -15,8 +15,8 @@ import com.example.moviesapp.drawPhoto
 import java.io.Serializable
 
 const val ACTION_OPEN_DETAILS_SCREEN =
-    "com.example.moviesapp.features.search.ACTION_OPEN_DETAILS_SCREEN"
-const val EXTRA_MOVIE = "com.example.moviesapp.features.search.EXTRA_MOVIE"
+    "com.example.moviesapp.subFeatures.movies.ACTION_OPEN_DETAILS_SCREEN"
+const val EXTRA_MOVIE = "com.example.moviesapp.subFeatures.movies.EXTRA_MOVIE"
 
 class MovieViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
     private val posterImageView by lazy { view.findViewById<ImageView>(R.id.poster_image_view) }
@@ -43,7 +43,7 @@ class MovieViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 }
 
 class MovieAdapter(
-    private val movieList: ArrayList<Movie>
+    private val movieList: MutableList<Movie>
 ) : RecyclerView.Adapter<MovieViewHolder>(){
 
     override fun getItemCount(): Int {
@@ -64,3 +64,4 @@ class MovieAdapter(
         notifyDataSetChanged()
     }
 }
+

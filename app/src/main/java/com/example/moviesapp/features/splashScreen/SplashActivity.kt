@@ -1,10 +1,10 @@
 package com.example.moviesapp.features.splashScreen
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.moviesapp.R
-import com.example.moviesapp.features.search.SearchActivity
+import com.example.moviesapp.features.popularMovies.PopularMovies
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -23,7 +23,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startSearchScreen() {
-        Intent(this, SearchActivity::class.java)
+        Intent(this, PopularMovies::class.java)
             .also { startActivity(it) }
             .also { finish() }
     }

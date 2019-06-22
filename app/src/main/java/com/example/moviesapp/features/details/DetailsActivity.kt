@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.Movie
 import com.example.domain.useCases.retrieveGenres
 import com.example.moviesapp.*
-import com.example.moviesapp.features.search.EXTRA_MOVIE
+import com.example.moviesapp.subFeatures.movies.EXTRA_MOVIE
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -15,7 +15,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.activity_details.overview_text_view
 import kotlinx.android.synthetic.main.activity_details.release_date_text_view
-import kotlinx.android.synthetic.main.movie_item.*
 
 class DetailsActivity : AppCompatActivity() {
 

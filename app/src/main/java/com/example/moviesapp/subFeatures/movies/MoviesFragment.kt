@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.moviesapp.R
 import com.example.moviesapp.features.details.DetailsActivity
-import com.example.moviesapp.features.search.ACTION_OPEN_DETAILS_SCREEN
-import com.example.moviesapp.features.search.EXTRA_MOVIE
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject

@@ -1,20 +1,22 @@
 package com.example.moviesapp.features.search
 
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.MovieResponse
 import com.example.moviesapp.R
+import com.example.moviesapp.subFeatures.movies.MovieAdapter
 import com.example.moviesapp.subFeatures.movies.MoviesFragment
-
+import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
+import com.example.moviesapp.subFeatures.movies.QueryParameters
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
@@ -99,18 +101,18 @@ class SearchActivity : AppCompatActivity() {
         }
 
     private fun setPagination(layoutManager: LinearLayoutManager, adapter: MovieAdapter) =
-        PaginationScrollListener(
+        PaginationScrollListener<String>(
             viewModel.parameterLiveData, this, layoutManager
         ) { searchOnScroll(it, adapter) }
 
     private fun searchOnScroll(
-        parameters: QueryParameters, movieAdapter: MovieAdapter
-    ) = viewModel.retrieveMovies(parameters.pageNumber, parameters.movieName) {
+        parameters: QueryParameters<String>, movieAdapter: MovieAdapter
+    ) = viewModel.retrieveMovies(parameters.pageNumber, parameters.parameters) {
         movieAdapter.addItems(it.results)
         viewModel.emptyResult.value = ""
         viewModel.parameterLiveData.value = QueryParameters(
             parameters.pageNumber + 1,
-            parameters.pageCount, parameters.movieName
+            parameters.pageCount, parameters.parameters
         )
     }
 

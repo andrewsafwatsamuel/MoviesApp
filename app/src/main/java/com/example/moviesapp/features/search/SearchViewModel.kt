@@ -1,7 +1,5 @@
 package com.example.moviesapp.features.search
 
-import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.Movie
@@ -9,13 +7,11 @@ import com.example.MovieResponse
 import com.example.domain.useCases.MovieSearchUseCase
 import com.example.domain.useCases.ShowStoredMoviesUseCase
 import com.example.domain.useCases.StoreMovieNameUseCase
-import com.example.moviesapp.subFeatures.movies.MoviesFragment
+import com.example.moviesapp.subFeatures.movies.QueryParameters
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
-import java.io.Serializable
 
 const val NOT_CONNECTED = "Please check your internet connection"
 private const val NO_RESULTS = "It seems that there are no movies with that name"
@@ -23,7 +19,7 @@ private const val NO_RESULTS = "It seems that there are no movies with that name
 class SearchViewModel(
     private val disposables: CompositeDisposable = CompositeDisposable(),
     val storedMovieNames: MutableLiveData<List<String>> = MutableLiveData(),
-    val parameterLiveData: MutableLiveData<QueryParameters> = MutableLiveData(),
+    val parameterLiveData: MutableLiveData<QueryParameters<String>> = MutableLiveData(),
     val loading: MutableLiveData<Boolean> = MutableLiveData(),
     val emptyResult: MutableLiveData<String> = MutableLiveData(),
     val movieList: ArrayList<Movie> = ArrayList(),
