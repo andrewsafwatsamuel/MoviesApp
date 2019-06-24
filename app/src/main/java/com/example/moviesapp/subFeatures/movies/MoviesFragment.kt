@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.moviesapp.R
+import com.example.moviesapp.checkConnectivity
 import com.example.moviesapp.features.details.DetailsActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -66,14 +67,28 @@ class MoviesFragment : Fragment() {
         empty_movies_text_view.visibility = View.GONE
     }
 
+    fun onEmptyState(emptyStateText: String) {
+        movies_recycler_view.visibility = View.GONE
+        empty_movies_text_view.visibility = View.VISIBLE
+        empty_movies_text_view.text = emptyStateText
+    }
+
+    fun onConnectivityCheck(): Boolean =
+        checkConnectivity(activity!!)
+            .also { if (!it) notConnected() else onNonEmptyState() }
+
     fun onNonEmptyState() {
         empty_movies_text_view.visibility = View.GONE
         movies_recycler_view.visibility = View.VISIBLE
     }
 
-    fun onEmptyState(emptyStateText: String) {
-        movies_recycler_view.visibility = View.GONE
-        empty_movies_text_view.visibility = View.VISIBLE
-        empty_movies_text_view.text = emptyStateText
+    private fun notConnected() {
+        onEmptyState("There is no internet connection")
+        movies_progress_bar.visibility = View.GONE
+//        TODO("add more user friendly way")
+    }
+
+    fun getToTop() {
+        movies_recycler_view.smoothScrollToPosition(0)
     }
 }

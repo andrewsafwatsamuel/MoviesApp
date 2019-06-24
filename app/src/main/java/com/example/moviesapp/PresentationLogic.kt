@@ -16,4 +16,4 @@ fun drawPhoto(size: String, url: String, view: ImageView) = url
 
 fun checkConnectivity(activity: Activity): Boolean =
     (activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-        .run { if (activeNetworkInfo != null) activeNetworkInfo.isConnected else false }
+        .run { activeNetworkInfo != null && activeNetworkInfo.isConnected }

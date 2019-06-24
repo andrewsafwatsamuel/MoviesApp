@@ -15,8 +15,8 @@ class PopularViewModel(
     val result: MutableLiveData<MovieResponse> = MutableLiveData(),
     val loading:MutableLiveData<Boolean> = MutableLiveData(),
     val parameters:MutableLiveData<QueryParameters<Unit>> = MutableLiveData(),
-    private val popularUseCase: PopularUseCase= PopularUseCase(),
-    private val disposable: CompositeDisposable= CompositeDisposable()
+    private val disposable: CompositeDisposable= CompositeDisposable(),
+    private val popularUseCase: PopularUseCase= PopularUseCase()
 ):ViewModel(){
 fun getPopularMovies(isConnected:Boolean,pageNumber: Int=1)=
     popularUseCase(isConnected,loading,result,pageNumber)

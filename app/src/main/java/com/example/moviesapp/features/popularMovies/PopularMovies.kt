@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapp.R
-import com.example.moviesapp.checkConnectivity
 import com.example.moviesapp.features.search.SearchActivity
 import com.example.moviesapp.subFeatures.movies.MovieAdapter
 import com.example.moviesapp.subFeatures.movies.MoviesFragment
@@ -33,7 +32,7 @@ class PopularMovies : AppCompatActivity() {
         setContentView(R.layout.activity_popular_movies)
         supportActionBar?.hide()
 
-        viewModel.getPopularMovies(checkConnectivity(this))
+        viewModel.getPopularMovies(fragment.onConnectivityCheck())
 
         val layoutManager = LinearLayoutManager(this)
 
@@ -41,12 +40,12 @@ class PopularMovies : AppCompatActivity() {
 
         val scrollListener =
             PaginationScrollListener(viewModel.parameters, this, layoutManager) {
-                viewModel.getPopularMovies(checkConnectivity(this), it.pageNumber + 1)
+                viewModel.getPopularMovies(fragment.onConnectivityCheck(), it.pageNumber + 1)
             }
 
         with(viewModel) {
             loading.observe(this@PopularMovies, Observer {
-                if (it) fragment.onStartLoading() else fragment.onFinishLoading()
+                if (it) fragment.onStartLoading() else finishLoading()
             })
             result.observe(this@PopularMovies, Observer {
                 adapter.addItems(it.results)
@@ -55,7 +54,12 @@ class PopularMovies : AppCompatActivity() {
         }
 
         drawRecycler(layoutManager, adapter, scrollListener)
+
         search_activity_button.setOnClickListener { startSearchScreen() }
+
+        first_item_button.setOnClickListener { fragment.getToTop() }
+
+        popular_swipe_refresh.setOnRefreshListener { swipeRefresh() }
     }
 
     private val searchIntent by lazy { Intent(this, SearchActivity::class.java) }
@@ -70,4 +74,14 @@ class PopularMovies : AppCompatActivity() {
         adapter = movieAdapter
         addOnScrollListener(scrollListener)
     }
+
+    private fun finishLoading() {
+        fragment.onFinishLoading()
+        popular_swipe_refresh.isRefreshing = false
+    }
+
+    private fun swipeRefresh() = fragment.onConnectivityCheck()
+        .also { viewModel.getPopularMovies(it) }
+        .also { if (!it) popular_swipe_refresh.isRefreshing = false }
+
 }
