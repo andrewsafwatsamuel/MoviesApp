@@ -9,10 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapp.R
 import com.example.moviesapp.features.search.SearchActivity
-import com.example.moviesapp.subFeatures.movies.MovieAdapter
-import com.example.moviesapp.subFeatures.movies.MoviesFragment
-import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
-import com.example.moviesapp.subFeatures.movies.QueryParameters
+import com.example.moviesapp.subFeatures.movies.*
 import kotlinx.android.synthetic.main.activity_popular_movies.*
 
 class PopularMovies : AppCompatActivity() {
@@ -36,7 +33,7 @@ class PopularMovies : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(this)
 
-        val adapter = MovieAdapter(viewModel.movies)
+        val adapter = AdapterFactory(viewModel.movies).create(LIST_MOVIE_ADAPTER)
 
         val scrollListener =
             PaginationScrollListener(viewModel.parameters, this, layoutManager) {
@@ -67,7 +64,7 @@ class PopularMovies : AppCompatActivity() {
 
     private fun drawRecycler(
         manager: LinearLayoutManager,
-        movieAdapter: MovieAdapter,
+        movieAdapter: MovieAdapter<*>,
         scrollListener: PaginationScrollListener<Unit>
     ) = with(recyclerView) {
         layoutManager = manager

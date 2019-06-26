@@ -13,10 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.MovieResponse
 import com.example.moviesapp.R
-import com.example.moviesapp.subFeatures.movies.MovieAdapter
-import com.example.moviesapp.subFeatures.movies.MoviesFragment
-import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
-import com.example.moviesapp.subFeatures.movies.QueryParameters
+import com.example.moviesapp.subFeatures.movies.*
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
@@ -33,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
         supportActionBar?.hide()
 
-        val adapter = MovieAdapter(viewModel.movieList)
+        val adapter = AdapterFactory(viewModel.movieList).create(LIST_MOVIE_ADAPTER)
 
         val layoutManager = LinearLayoutManager(this)
 
@@ -71,12 +68,12 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
-    private fun searchOnClick(movieAdapter: MovieAdapter, name: String) {
+    private fun searchOnClick(movieAdapter: MovieAdapter<*>, name: String) {
         viewModel.movieList.clear()
         viewModel.retrieveMovies(1, name) { onResultRetrieved(movieAdapter, it, name) }
     }
 
-    private fun onResultRetrieved(movieAdapter: MovieAdapter, response: MovieResponse, name: String) {
+    private fun onResultRetrieved(movieAdapter: MovieAdapter<*>, response: MovieResponse, name: String) {
         viewModel.movieList.clear()
         movieAdapter.addItems(response.results)
         viewModel.parameterLiveData.value =
@@ -85,7 +82,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun drawRecycler(
         recyclerLayoutManager: LinearLayoutManager,
-        movieAdapter: MovieAdapter
+        movieAdapter: MovieAdapter<*>
     ) = with(recyclerView) {
         layoutManager = recyclerLayoutManager
         adapter = movieAdapter
@@ -93,20 +90,20 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun onClick(
-        names: List<String>, adapter: MovieAdapter
+        names: List<String>, adapter: MovieAdapter<*>
     ): AdapterView.OnItemClickListener? =
         AdapterView.OnItemClickListener { _, _, position, _ ->
             searchOnClick(adapter, names[position])
             search_edit_text.setText(names[position])
         }
 
-    private fun setPagination(layoutManager: LinearLayoutManager, adapter: MovieAdapter) =
-        PaginationScrollListener<String>(
+    private fun setPagination(layoutManager: LinearLayoutManager, adapter: MovieAdapter<*>) =
+        PaginationScrollListener(
             viewModel.parameterLiveData, this, layoutManager
         ) { searchOnScroll(it, adapter) }
 
     private fun searchOnScroll(
-        parameters: QueryParameters<String>, movieAdapter: MovieAdapter
+        parameters: QueryParameters<String>, movieAdapter: MovieAdapter<*>
     ) = viewModel.retrieveMovies(parameters.pageNumber, parameters.parameters) {
         movieAdapter.addItems(it.results)
         viewModel.emptyResult.value = ""
