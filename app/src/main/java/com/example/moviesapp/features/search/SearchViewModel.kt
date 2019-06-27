@@ -13,31 +13,38 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-const val NOT_CONNECTED = "Please check your internet connection"
-private const val NO_RESULTS = "It seems that there are no movies with that name"
+//const val NOT_CONNECTED = "Please check your internet connection"
+//private const val NO_RESULTS = "It seems that there are no movies with that name"
 
 class SearchViewModel(
-    private val disposables: CompositeDisposable = CompositeDisposable(),
     val storedMovieNames: MutableLiveData<List<String>> = MutableLiveData(),
     val parameterLiveData: MutableLiveData<QueryParameters<String>> = MutableLiveData(),
     val loading: MutableLiveData<Boolean> = MutableLiveData(),
+    val result: MutableLiveData<MovieResponse> = MutableLiveData(),
     val emptyResult: MutableLiveData<String> = MutableLiveData(),
     val movieList: ArrayList<Movie> = ArrayList(),
-    private val storedMovies: ShowStoredMoviesUseCase = ShowStoredMoviesUseCase(
-        storedMovieNames
-    ),
-    val movieSearch: MovieSearchUseCase = MovieSearchUseCase(
-        loading
-    ),
+    val movieSearch: MovieSearchUseCase = MovieSearchUseCase(),
+    private val storedMovies: ShowStoredMoviesUseCase = ShowStoredMoviesUseCase(),
+    private val disposables: CompositeDisposable = CompositeDisposable(),
     private val storeMovieNameUseCase: StoreMovieNameUseCase = StoreMovieNameUseCase()
 ) : ViewModel() {
 
     fun retrieveMovieNames() = Single
-        .fromCallable { storedMovies() }
+        .fromCallable { storedMovies(storedMovieNames) }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe()
         ?.also { disposables.add(it) }
+
+    fun retrieveMovies(
+        connected: Boolean, movieName: String, pageNumber: Int = 1
+    ) {
+        movieSearch(connected, movieName, loading, result, pageNumber)
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe({storeMovieName(movieName)}, Throwable::printStackTrace)
+            ?.also { disposables.add(it) } ?: Unit
+    }
 
     private fun storeMovieName(movieName: String) {
         Single.fromCallable { storeMovieNameUseCase(movieName) }
@@ -46,35 +53,9 @@ class SearchViewModel(
             .subscribe({}, Throwable::printStackTrace)
             .also { disposables.add(it) }
     }
-
-    private val connectionError =
-        "Unable to resolve host \"api.themoviedb.org\": No address associated with hostname"
-
-    fun retrieveMovies(
-         pageNumber: Int, movieName: String, onSuccess: (MovieResponse) -> Unit
-    ) {
-        movieSearch(pageNumber, movieName)
-            ?.subscribeOn(Schedulers.io())
-            ?.also { emptyResult.postValue("") }
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.doOnSuccess { onSuccess(it) }
-            ?.doOnError {
-                loading.value = false
-                if (it.localizedMessage == connectionError) emptyResult.value = NOT_CONNECTED
-            }
-            ?.subscribe({ finisLoadingSuccess(it, movieName) }, Throwable::printStackTrace)
-            ?.also { disposables.add(it) }
-    }
-
-    private fun finisLoadingSuccess(result: MovieResponse, movieName: String) {
-        loading.value = false
-        if (result.resultCount == 0) emptyResult.value = NO_RESULTS
-        else storeMovieName(movieName)
-    }
-
+    
     override fun onCleared() {
         super.onCleared()
         disposables.dispose()
     }
 }
-

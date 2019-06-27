@@ -7,12 +7,12 @@ import com.example.domain.repositories.BasePopularRepository
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import io.reactivex.Single
+import io.reactivex.Single.just
 import io.reactivex.schedulers.Schedulers
-import org.junit.Assert.*
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import java.lang.Exception
 
 class PopularUseCaseTest {
 
@@ -32,7 +32,7 @@ class PopularUseCaseTest {
         val result = MutableLiveData<MovieResponse>()
         val popularUseCase = PopularUseCase(repositoryMock)
 
-        popularUseCase(connected, loading, result)!!
+        popularUseCase(connected, loading, result,1)!!
             .observeOn(Schedulers.trampoline())
             .subscribeOn(Schedulers.trampoline())
             .subscribe()
@@ -52,7 +52,7 @@ class PopularUseCaseTest {
         val result = MutableLiveData<MovieResponse>()
         val popularUseCase = PopularUseCase(repositoryMock)
 
-        popularUseCase(connected, loading, result)!!
+        popularUseCase(connected, loading, result,1)!!
             .observeOn(Schedulers.trampoline())
             .subscribeOn(Schedulers.trampoline())
             .subscribe()
@@ -72,7 +72,7 @@ class PopularUseCaseTest {
         val result = MutableLiveData<MovieResponse>()
         val popularUseCase = PopularUseCase(repositoryMock)
 
-        popularUseCase(connected, loading, result)!!
+        popularUseCase(connected, loading, result,1)!!
             .observeOn(Schedulers.trampoline())
             .subscribeOn(Schedulers.trampoline())
             .doOnSubscribe { throw Exception() }
@@ -93,7 +93,7 @@ class PopularUseCaseTest {
         val result = MutableLiveData<MovieResponse>()
         val popularUseCase = PopularUseCase(repositoryMock)
 
-        popularUseCase(connected, loading, result)
+        popularUseCase(connected, loading, result,1)
             ?.observeOn(Schedulers.trampoline())
             ?.subscribeOn(Schedulers.trampoline())
             ?.subscribe()
@@ -105,7 +105,7 @@ class PopularUseCaseTest {
     @Test
     fun `invoke when loading then do not return results`() {
         val repositoryMock = mock<BasePopularRepository> {
-            on { getPopularMovies(1) } doReturn Single.just(
+            on { getPopularMovies(1) } doReturn   just(
                 MovieResponse(1, 1, 1, listOf())
             )
         }
@@ -115,7 +115,7 @@ class PopularUseCaseTest {
         val popularUseCase = PopularUseCase(repositoryMock)
 
         loading.value = true
-        popularUseCase(connected, loading, result)
+        popularUseCase(connected, loading, result,1)
             ?.observeOn(Schedulers.trampoline())
             ?.subscribeOn(Schedulers.trampoline())
             ?.subscribe()

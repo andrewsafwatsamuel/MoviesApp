@@ -2,8 +2,13 @@ package com.example.domain
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.example.MovieResponse
+import com.example.domain.repositories.SearchRepository
 import com.example.domain.useCases.MovieSearchUseCase
-import org.junit.Assert.*
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import io.reactivex.Single.just
+import io.reactivex.schedulers.Schedulers
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -14,47 +19,88 @@ class MovieSearchUseCaseTest {
     @get:Rule
     val rule: TestRule = InstantTaskExecutorRule()
 
-    //if all is ok start searching
     @Test
-    fun `invoke with successful conditions return single object containing response`() {
+    fun `invoke with successful conditions result is not null`() {
         val pageNumber = 1
         val movieName = "lala land"
-        val mockRepository = SearchRepositoryMock()
+        val mockRepository = mock<SearchRepository> {
+            on { searchMovie(movieName, pageNumber) } doReturn just(
+                MovieResponse(1, 1, 1, listOf())
+            )
+        }
         val loading = MutableLiveData<Boolean>()
+        val result = MutableLiveData<MovieResponse>()
+        val movieSearchUseCase = MovieSearchUseCase(mockRepository)
 
-        val movieSearchUseCase = MovieSearchUseCase(loading, mockRepository)
-        val result = movieSearchUseCase(pageNumber, movieName)
+        movieSearchUseCase(movieName, loading, result, pageNumber)
+            ?.subscribeOn(Schedulers.trampoline())
+            ?.observeOn(Schedulers.trampoline())
+            ?.subscribe({}, Throwable::printStackTrace)
 
-        assertFalse(result == null)
+        assert(result.value != null)
     }
 
-    //if movie name is blank do not start search
     @Test
-    fun `invoke with empty Movie name then do not return results`() {
-        val pageNumber = 1
-        val movieName = ""
-        val mockRepository = SearchRepositoryMock()
-        val loading = MutableLiveData<Boolean>()
-
-        val movieSearchUseCase = MovieSearchUseCase(loading, mockRepository)
-        val result = movieSearchUseCase(pageNumber, movieName)
-
-        assertTrue(result == null)
-    }
-
-    //if is searching do not start search
-    @Test
-    fun `invoke while searching then do not return result`() {
+    fun `invoke with blank movie name return no results`() {
         val pageNumber = 1
         val movieName = "lala land"
-        val mockRepository = SearchRepositoryMock()
+        val mockRepository = mock<SearchRepository> {
+            on { searchMovie(movieName, pageNumber) } doReturn just(
+                MovieResponse(1, 1, 1, listOf())
+            )
+        }
         val loading = MutableLiveData<Boolean>()
+        val result = MutableLiveData<MovieResponse>()
+        val movieSearchUseCase = MovieSearchUseCase(mockRepository)
+
+        movieSearchUseCase("", loading, result, pageNumber)
+            ?.subscribeOn(Schedulers.trampoline())
+            ?.observeOn(Schedulers.trampoline())
+            ?.subscribe({}, Throwable::printStackTrace)
+
+        assert(result.value == null)
+    }
+
+    @Test
+    fun `invoke while loading then return no results`() {
+        val pageNumber = 1
+        val movieName = "lala land"
+        val mockRepository = mock<SearchRepository> {
+            on { searchMovie(movieName, pageNumber) } doReturn just(
+                MovieResponse(1, 1, 1, listOf())
+            )
+        }
+        val loading = MutableLiveData<Boolean>()
+        val result = MutableLiveData<MovieResponse>()
+        val movieSearchUseCase = MovieSearchUseCase(mockRepository)
 
         loading.value = true
-        val movieSearchUseCase = MovieSearchUseCase(loading, mockRepository)
-        val result = movieSearchUseCase(pageNumber, movieName)
+        movieSearchUseCase(movieName, loading, result, pageNumber)
+            ?.subscribeOn(Schedulers.trampoline())
+            ?.observeOn(Schedulers.trampoline())
+            ?.subscribe({}, Throwable::printStackTrace)
 
-        assertTrue(result == null)
+        assert(result.value == null)
     }
 
+    @Test
+    fun `invoke with successful response then loading value equals false`() {
+        val pageNumber = 1
+        val movieName = "lala land"
+        val mockRepository = mock<SearchRepository> {
+            on { searchMovie(movieName, pageNumber) } doReturn just(
+                MovieResponse(1, 1, 1, listOf())
+            )
+        }
+        val loading = MutableLiveData<Boolean>()
+        val result = MutableLiveData<MovieResponse>()
+        val movieSearchUseCase = MovieSearchUseCase(mockRepository)
+
+        movieSearchUseCase(movieName, loading, result, pageNumber)
+            ?.subscribeOn(Schedulers.trampoline())
+            ?.observeOn(Schedulers.trampoline())
+            ?.subscribe({}, Throwable::printStackTrace)
+
+        assert(loading.value == false)
+    }
 }
