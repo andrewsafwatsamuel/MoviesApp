@@ -9,7 +9,6 @@
         android:layout_margin="8dp"
         android:id="@+id/movie_card_view">
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:padding="2dp"
             android:layout_height="wrap_content">

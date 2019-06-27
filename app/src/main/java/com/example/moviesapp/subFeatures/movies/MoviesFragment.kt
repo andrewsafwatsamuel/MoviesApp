@@ -41,7 +41,6 @@ class MoviesFragment : Fragment() {
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe { startDetailsScreen(it) }
             .also { disposables.addAll() }
-
         activity?.registerReceiver(resultsReceiver, IntentFilter(ACTION_OPEN_DETAILS_SCREEN))
     }
 

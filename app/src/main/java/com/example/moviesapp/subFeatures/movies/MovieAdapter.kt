@@ -15,6 +15,7 @@ import com.example.moviesapp.R
 import com.example.moviesapp.drawPhoto
 import java.io.Serializable
 
+
 const val ACTION_OPEN_DETAILS_SCREEN =
     "com.example.moviesapp.subFeatures.movies.ACTION_OPEN_DETAILS_SCREEN"
 const val EXTRA_MOVIE = "com.example.moviesapp.subFeatures.movies.EXTRA_MOVIE"
@@ -65,7 +66,7 @@ class ListViewHolder(private val view: View) : MovieViewHolder(view) {
     }
 }
 
-class ListAdapter(private val movieList: MutableList<Movie>) : MovieAdapter<ListViewHolder>(movieList) {
+class ListAdapter(movieList: MutableList<Movie>) : MovieAdapter<ListViewHolder>(movieList) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         LayoutInflater
@@ -75,23 +76,24 @@ class ListAdapter(private val movieList: MutableList<Movie>) : MovieAdapter<List
 }
 
 class GridViewHolder(private val view: View) : MovieViewHolder(view) {
+
+    private val boaster by lazy { view.findViewById<ImageView>(R.id.grid_movie_boaster)!! }
+    private val movieName by lazy { view.findViewById<TextView>(R.id.grid_movie_name)!! }
+    private val container by lazy { view.findViewById<CardView>(R.id.grid_item)!! }
+
     override fun bind(movie: Movie) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        movieName.text = movie.title?.replace("\n", "")
+        drawPhoto(POSTER_SIZE, movie.poster, boaster)
+        container.setOnClickListener { onViewClicked(movie, view) }
     }
 }
 
 class GridAdapter(movieList: MutableList<Movie>) : MovieAdapter<GridViewHolder>(movieList) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GridViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onBindViewHolder(holder: GridViewHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        LayoutInflater
+            .from(parent.context)
+            .inflate(R.layout.grid_item, parent, false)
+            .let { GridViewHolder(it) }
 }
 
 class AdapterFactory(private val movieList: MutableList<Movie>) {

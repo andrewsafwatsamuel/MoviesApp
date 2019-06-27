@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapp.R
@@ -31,9 +32,9 @@ class PopularMovies : AppCompatActivity() {
 
         viewModel.getPopularMovies(fragment.onConnectivityCheck())
 
-        val layoutManager = LinearLayoutManager(this)
+        val layoutManager = GridLayoutManager(this,3)
 
-        val adapter = AdapterFactory(viewModel.movies).create(LIST_MOVIE_ADAPTER)
+        val adapter = AdapterFactory(viewModel.movies).create(GRID_MOVIE_ADAPTER)
 
         val scrollListener =
             PaginationScrollListener(viewModel.parameters, this, layoutManager) {
