@@ -3,6 +3,8 @@ package com.example.moviesapp
 import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 
@@ -17,3 +19,11 @@ fun drawPhoto(size: String, url: String?, view: ImageView) = url
 fun checkConnectivity(activity: Activity): Boolean =
     (activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
         .run { activeNetworkInfo != null && activeNetworkInfo.isConnected }
+
+interface BaseTextWatcher:TextWatcher{
+    override fun afterTextChanged(s: Editable)=Unit
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) = Unit
+}

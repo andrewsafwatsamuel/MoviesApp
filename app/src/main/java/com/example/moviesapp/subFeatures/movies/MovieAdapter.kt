@@ -10,9 +10,13 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.Movie
+import com.example.domain.useCases.StoreMovieNameUseCase
 import com.example.moviesapp.POSTER_SIZE
 import com.example.moviesapp.R
 import com.example.moviesapp.drawPhoto
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.io.Serializable
 
 
@@ -47,13 +51,16 @@ abstract class MovieAdapter<VH : MovieViewHolder>(
     }
 }
 
-class ListViewHolder(private val view: View) : MovieViewHolder(view) {
+class ListViewHolder(
+    private val view: View,
+    private val movieInsert: StoreMovieNameUseCase = StoreMovieNameUseCase()
+) : MovieViewHolder(view) {
 
-    private val posterImageView by lazy { view.findViewById<ImageView>(R.id.poster_image_view) }
-    private val nameTextView by lazy { view.findViewById<TextView>(R.id.movie_name_text_view) }
-    private val dateTextView by lazy { view.findViewById<TextView>(R.id.release_date_text_view) }
-    private val overviewTextView by lazy { view.findViewById<TextView>(R.id.overview_text_view) }
-    private val movieCardView by lazy { view.findViewById<CardView>(R.id.movie_card_view) }
+    private val posterImageView by lazy { view.findViewById<ImageView>(R.id.poster_image_view)!! }
+    private val nameTextView by lazy { view.findViewById<TextView>(R.id.movie_name_text_view)!! }
+    private val dateTextView by lazy { view.findViewById<TextView>(R.id.release_date_text_view)!! }
+    private val overviewTextView by lazy { view.findViewById<TextView>(R.id.overview_text_view)!! }
+    private val movieCardView by lazy { view.findViewById<CardView>(R.id.movie_card_view)!! }
 
     override fun bind(movie: Movie) {
         drawPhoto(POSTER_SIZE, movie.poster ?: "", posterImageView)
@@ -62,7 +69,13 @@ class ListViewHolder(private val view: View) : MovieViewHolder(view) {
             if (!movie.releaseDate.isNullOrEmpty()) movie.releaseDate else "--"
         overviewTextView.text =
             if (!movie.overView.isNullOrEmpty()) movie.overView else "no available overView ..."
-        movieCardView.setOnClickListener { onViewClicked(movie, view) }
+        movieCardView.setOnClickListener { onViewClicked(movie, view);storeMovieName(movie.title?:"haha") }
+    }
+    private fun storeMovieName(movieName: String) {
+        Single.fromCallable { movieInsert(movieName) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
     }
 }
 
@@ -96,8 +109,8 @@ class GridAdapter(movieList: MutableList<Movie>) : MovieAdapter<GridViewHolder>(
             .let { GridViewHolder(it) }
 }
 
-class AdapterFactory(private val movieList: MutableList<Movie>) {
-    fun create(adapter: String): MovieAdapter<*> =
+class AdapterFactory(private val adapter: String) {
+    fun create(movieList: MutableList<Movie>): MovieAdapter<*> =
         when (adapter) {
             LIST_MOVIE_ADAPTER -> ListAdapter(movieList)
             GRID_MOVIE_ADAPTER -> GridAdapter(movieList)

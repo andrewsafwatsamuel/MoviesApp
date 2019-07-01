@@ -6,35 +6,29 @@ import com.example.Movie
 import com.example.MovieResponse
 import com.example.domain.useCases.MovieSearchUseCase
 import com.example.domain.useCases.ShowStoredMoviesUseCase
-import com.example.domain.useCases.StoreMovieNameUseCase
 import com.example.moviesapp.subFeatures.movies.QueryParameters
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-//const val NOT_CONNECTED = "Please check your internet connection"
-//private const val NO_RESULTS = "It seems that there are no movies with that name"
-
 class SearchViewModel(
     val storedMovieNames: MutableLiveData<List<String>> = MutableLiveData(),
     val parameterLiveData: MutableLiveData<QueryParameters<String>> = MutableLiveData(),
     val loading: MutableLiveData<Boolean> = MutableLiveData(),
     val result: MutableLiveData<MovieResponse> = MutableLiveData(),
-    val emptyResult: MutableLiveData<String> = MutableLiveData(),
-    val movieList: ArrayList<Movie> = ArrayList(),
-    val movieSearch: MovieSearchUseCase = MovieSearchUseCase(),
-    private val storedMovies: ShowStoredMoviesUseCase = ShowStoredMoviesUseCase(),
-    private val disposables: CompositeDisposable = CompositeDisposable(),
-    private val storeMovieNameUseCase: StoreMovieNameUseCase = StoreMovieNameUseCase()
+    val movieList: MutableList<Movie> = mutableListOf(),
+    val disposables: CompositeDisposable = CompositeDisposable(),
+    private val movieSearch: MovieSearchUseCase = MovieSearchUseCase(),
+    private val storedMovies: ShowStoredMoviesUseCase = ShowStoredMoviesUseCase()
 ) : ViewModel() {
 
     fun retrieveMovieNames() = Single
         .fromCallable { storedMovies(storedMovieNames) }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe()
-        ?.also { disposables.add(it) }
+        .subscribe({}, Throwable::printStackTrace)
+        .also { disposables.add(it) }
 
     fun retrieveMovies(
         connected: Boolean, movieName: String, pageNumber: Int = 1
@@ -42,18 +36,10 @@ class SearchViewModel(
         movieSearch(connected, movieName, loading, result, pageNumber)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe({storeMovieName(movieName)}, Throwable::printStackTrace)
+            ?.subscribe({}, Throwable::printStackTrace)
             ?.also { disposables.add(it) } ?: Unit
     }
 
-    private fun storeMovieName(movieName: String) {
-        Single.fromCallable { storeMovieNameUseCase(movieName) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({}, Throwable::printStackTrace)
-            .also { disposables.add(it) }
-    }
-    
     override fun onCleared() {
         super.onCleared()
         disposables.dispose()

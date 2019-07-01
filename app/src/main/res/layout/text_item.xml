@@ -2,12 +2,11 @@
 <TextView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/genre_item_text_view"
-        android:textColor="@color/tdmb_secondary_color"
+        android:id="@+id/item_text_view"
+        android:textColor="@color/tmdb_secondary_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_shadows"
         tools:text="action"
         android:layout_margin="8dp"
-        android:padding="5dp"
-/>
+        android:padding="5dp"/>
