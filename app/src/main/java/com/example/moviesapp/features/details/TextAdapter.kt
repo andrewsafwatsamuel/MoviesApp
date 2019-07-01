@@ -1,5 +1,6 @@
 package com.example.moviesapp.features.details
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,11 +45,19 @@ class GenreAdapter(
         GenreViewHolder(inflateView(parent))
 }
 
-class RecentSearchHolder(view: View) : TextViewHolder(view) {
+const val ACTION_SEARCH = "com.example.moviesapp.features.details.action.search"
+const val EXTRA_KEY = "com.example.moviesapp.features.details.extra.key"
+
+class RecentSearchHolder(private val view: View) : TextViewHolder(view) {
     override fun bind(string: String) {
         super.bind(string)
-        textItem.setOnClickListener { println(string) }
+        textItem.setOnClickListener { onClick(string) }
     }
+
+    private fun onClick(string: String) =
+        Intent(ACTION_SEARCH)
+            .putExtra(EXTRA_KEY, string)
+            .also { view.context.sendBroadcast(it) }
 }
 
 class RecentSearchesAdapter(
@@ -60,7 +69,3 @@ class RecentSearchesAdapter(
             .apply { background = context.getDrawable(android.R.color.transparent) }
             .let { RecentSearchHolder(it) }
 }
-
-
-
-

@@ -1,5 +1,9 @@
 package com.example.moviesapp.features.search
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +12,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapp.BaseTextWatcher
 import com.example.moviesapp.R
+import com.example.moviesapp.features.details.ACTION_SEARCH
+import com.example.moviesapp.features.details.EXTRA_KEY
 import com.example.moviesapp.features.details.RecentSearchesAdapter
 import com.example.moviesapp.subFeatures.movies.*
 import kotlinx.android.synthetic.main.activity_search.*
@@ -18,6 +24,14 @@ class SearchActivity : AppCompatActivity() {
 
     private val viewModel by lazy { ViewModelProviders.of(this)[SearchViewModel::class.java] }
     private val fragment by lazy { movies_fragment as MoviesFragment }
+    private val searchReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent) {
+            intent.getStringExtra(EXTRA_KEY)
+                .also { retrieveMovies(it) }
+                .also {  search_edit_text.setText(it)}
+            hideSearches()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +72,12 @@ class SearchActivity : AppCompatActivity() {
                 fragment.run { if (it) onStartLoading() else onFinishLoading() }
             })
         }
+        registerReceiver(searchReceiver, IntentFilter(ACTION_SEARCH))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(searchReceiver)
     }
 
     private fun hideSearches() {
@@ -67,12 +87,15 @@ class SearchActivity : AppCompatActivity() {
 
     private fun onTextChanged(): BaseTextWatcher = object : BaseTextWatcher {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) =
-            with(viewModel) {
-                movieList.clear()
-                retrieveMovies(fragment.onConnectivityCheck(), s.toString())
-                if (s.isEmpty() || s.isBlank()) retrieveRecents() else hideSearches()
-            }
+            retrieveMovies(s.toString())
+                .also { if (s.isEmpty() || s.isBlank()) retrieveRecents() else hideSearches() }
     }
+
+    private fun retrieveMovies(string: String) =
+        with(viewModel) {
+            movieList.clear()
+            retrieveMovies(fragment.onConnectivityCheck(), string)
+        }
 
     private fun retrieveRecents() {
         viewModel.retrieveMovieNames()

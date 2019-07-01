@@ -1,6 +1,6 @@
 package com.example.moviesapp.subFeatures.movies
 
-import android.content.BroadcastReceiver
+ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -29,8 +29,8 @@ class MoviesFragment : Fragment() {
     private val showMovieDetails: PublishSubject<Serializable> = PublishSubject.create()
 
     private val resultsReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            showMovieDetails.onNext(intent!!.getSerializableExtra(EXTRA_MOVIE))
+        override fun onReceive(context: Context, intent: Intent) {
+            showMovieDetails.onNext(intent.getSerializableExtra(EXTRA_MOVIE))
         }
     }
 
@@ -109,15 +109,5 @@ class MoviesFragment : Fragment() {
         layoutManager = manager
         adapter = movieAdapter
         addOnScrollListener(scrollListener)
-    }
-
-    fun hideAll() {
-        movies_recycler_view.visibility = View.GONE
-        empty_movies_text_view.visibility = View.GONE
-    }
-
-    fun showAll() {
-        movies_recycler_view.visibility = View.VISIBLE
-        empty_movies_text_view.visibility = View.VISIBLE
     }
 }
