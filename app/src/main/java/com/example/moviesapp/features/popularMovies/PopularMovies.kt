@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapp.R
 import com.example.moviesapp.features.search.SearchActivity
 import com.example.moviesapp.subFeatures.movies.*
@@ -20,10 +19,6 @@ class PopularMovies : AppCompatActivity() {
 
     private val fragment by lazy { popular_fragment as MoviesFragment }
 
-    private val recyclerView by lazy {
-        fragment.view?.findViewById<RecyclerView>(R.id.movies_recycler_view)!!
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_popular_movies)
@@ -35,10 +30,12 @@ class PopularMovies : AppCompatActivity() {
 
         val adapter = AdapterFactory(GRID_MOVIE_ADAPTER).create(viewModel.movies)
 
-        val scrollListener =
-            PaginationScrollListener(viewModel.parameters, this, layoutManager) {
-                viewModel.getPopularMovies(fragment.onConnectivityCheck(), it.pageNumber + 1)
-            }
+        val scrollListener = PaginationScrollListener.Builder<Unit>()
+            .queryParameters(viewModel.parameters)
+            .lifecycleOwner(this)
+            .layoutManager(layoutManager)
+            .retrieve { viewModel.getPopularMovies(fragment.onConnectivityCheck(), it.pageNumber + 1) }
+            .build()
 
         with(viewModel) {
             loading.observe(this@PopularMovies, Observer {
@@ -46,7 +43,7 @@ class PopularMovies : AppCompatActivity() {
             })
             result.observe(this@PopularMovies, Observer {
                 adapter.addItems(it.results)
-                parameters.value = QueryParameters(it.pageNumber, it.pageCount, Unit)
+                parameters.value = QueryParameters(it.pageNumber, pageCount(it.pageCount), Unit)
             })
         }
 
@@ -59,6 +56,8 @@ class PopularMovies : AppCompatActivity() {
         popular_swipe_refresh.setOnRefreshListener { swipeRefresh() }
     }
 
+    private fun pageCount(count:Int)=if (count<=60) count else 60
+
     private val searchIntent by lazy { Intent(this, SearchActivity::class.java) }
     private fun startSearchScreen() = startActivity(searchIntent)
 
@@ -68,7 +67,7 @@ class PopularMovies : AppCompatActivity() {
     }
 
     private fun swipeRefresh() = fragment.onConnectivityCheck()
+        .also { viewModel.movies.clear() }
         .also { viewModel.getPopularMovies(it) }
         .also { if (!it) popular_swipe_refresh.isRefreshing = false }
-
 }

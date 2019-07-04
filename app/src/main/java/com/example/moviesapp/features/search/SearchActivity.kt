@@ -15,6 +15,7 @@ import com.example.moviesapp.R
 import com.example.moviesapp.features.details.ACTION_SEARCH
 import com.example.moviesapp.features.details.EXTRA_KEY
 import com.example.moviesapp.features.details.RecentSearchesAdapter
+import com.example.moviesapp.hideKeyboard
 import com.example.moviesapp.subFeatures.movies.*
 import kotlinx.android.synthetic.main.activity_search.*
 
@@ -28,7 +29,8 @@ class SearchActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent) {
             intent.getStringExtra(EXTRA_KEY)
                 .also { retrieveMovies(it) }
-                .also {  search_edit_text.setText(it)}
+                .also { search_edit_text.setText(it) }
+            hideKeyboard(this@SearchActivity)
             hideSearches()
         }
     }
@@ -41,11 +43,15 @@ class SearchActivity : AppCompatActivity() {
 
         val listAdapter = AdapterFactory(LIST_MOVIE_ADAPTER).create(viewModel.movieList)
         val manager = LinearLayoutManager(this)
-        val scrollListener = PaginationScrollListener(
-            viewModel.parameterLiveData, this, manager
-        ) {
-            viewModel.retrieveMovies(fragment.onConnectivityCheck(), it.parameters, it.pageNumber + 1)
-        }
+        val scrollListener = PaginationScrollListener.Builder<String>()
+            .queryParameters(viewModel.parameterLiveData)
+            .lifecycleOwner(this)
+            .layoutManager(manager)
+            .retrieve {
+                viewModel.retrieveMovies(fragment.onConnectivityCheck(), it.parameters, it.pageNumber + 1)
+            }
+            .activity(this)
+            .build()
 
         fragment.drawRecycler(manager, listAdapter, scrollListener)
 

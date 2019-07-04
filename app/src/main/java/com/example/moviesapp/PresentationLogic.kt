@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 
@@ -27,3 +28,6 @@ interface BaseTextWatcher:TextWatcher{
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) = Unit
 }
+fun hideKeyboard(activity: Activity) = activity.getSystemService(Activity.INPUT_METHOD_SERVICE)
+    .let { it as InputMethodManager }
+    .also { it.hideSoftInputFromWindow(activity.currentFocus?.windowToken, 0) }
