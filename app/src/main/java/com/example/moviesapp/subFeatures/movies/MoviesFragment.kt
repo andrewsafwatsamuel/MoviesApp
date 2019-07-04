@@ -1,6 +1,6 @@
 package com.example.moviesapp.subFeatures.movies
 
-import android.content.BroadcastReceiver
+ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapp.R
 import com.example.moviesapp.checkConnectivity
 import com.example.moviesapp.features.details.DetailsActivity
@@ -19,6 +20,8 @@ import kotlinx.android.synthetic.main.fragment_movies.*
 import java.io.Serializable
 import java.util.concurrent.TimeUnit
 
+private const val NOT_CONNECTED = "Please check your internet connection"
+
 class MoviesFragment : Fragment() {
 
     private val disposables = CompositeDisposable()
@@ -26,8 +29,8 @@ class MoviesFragment : Fragment() {
     private val showMovieDetails: PublishSubject<Serializable> = PublishSubject.create()
 
     private val resultsReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            showMovieDetails.onNext(intent!!.getSerializableExtra(EXTRA_MOVIE))
+        override fun onReceive(context: Context, intent: Intent) {
+            showMovieDetails.onNext(intent.getSerializableExtra(EXTRA_MOVIE))
         }
     }
 
@@ -41,9 +44,17 @@ class MoviesFragment : Fragment() {
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe { startDetailsScreen(it) }
             .also { disposables.addAll() }
+    }
+
+    override fun onResume() {
+        super.onResume()
         activity?.registerReceiver(resultsReceiver, IntentFilter(ACTION_OPEN_DETAILS_SCREEN))
     }
 
+    override fun onStop() {
+        super.onStop()
+        activity?.unregisterReceiver(resultsReceiver)
+    }
     private fun startDetailsScreen(movie: Serializable) {
         Intent(context, DetailsActivity::class.java)
             .putExtra(EXTRA_MOVIE, movie)
@@ -52,7 +63,6 @@ class MoviesFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        activity?.unregisterReceiver(resultsReceiver)
         disposables.dispose()
     }
 
@@ -63,7 +73,7 @@ class MoviesFragment : Fragment() {
 
     fun onFinishLoading() {
         movies_progress_bar.visibility = View.GONE
-        empty_movies_text_view.visibility = View.GONE
+
     }
 
     fun onEmptyState(emptyStateText: String) {
@@ -82,12 +92,22 @@ class MoviesFragment : Fragment() {
     }
 
     private fun notConnected() {
-        onEmptyState("There is no internet connection")
         movies_progress_bar.visibility = View.GONE
+        onEmptyState(NOT_CONNECTED)
 //        TODO("add more user friendly way")
     }
 
     fun getToTop() {
         movies_recycler_view.smoothScrollToPosition(0)
+    }
+
+    fun drawRecycler(
+        manager: LinearLayoutManager,
+        movieAdapter: MovieAdapter<*>,
+        scrollListener: PaginationScrollListener<*>
+    ) = with(movies_recycler_view) {
+        layoutManager = manager
+        adapter = movieAdapter
+        addOnScrollListener(scrollListener)
     }
 }

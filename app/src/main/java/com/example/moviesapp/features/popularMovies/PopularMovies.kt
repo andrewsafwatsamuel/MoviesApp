@@ -6,10 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapp.R
 import com.example.moviesapp.features.search.SearchActivity
+import com.example.moviesapp.pageCount
 import com.example.moviesapp.subFeatures.movies.*
 import kotlinx.android.synthetic.main.activity_popular_movies.*
 
@@ -21,10 +20,6 @@ class PopularMovies : AppCompatActivity() {
 
     private val fragment by lazy { popular_fragment as MoviesFragment }
 
-    private val recyclerView by lazy {
-        fragment.view?.findViewById<RecyclerView>(R.id.movies_recycler_view)!!
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_popular_movies)
@@ -34,12 +29,14 @@ class PopularMovies : AppCompatActivity() {
 
         val layoutManager = GridLayoutManager(this,3)
 
-        val adapter = AdapterFactory(viewModel.movies).create(GRID_MOVIE_ADAPTER)
+        val adapter = AdapterFactory(GRID_MOVIE_ADAPTER).create(viewModel.movies)
 
-        val scrollListener =
-            PaginationScrollListener(viewModel.parameters, this, layoutManager) {
-                viewModel.getPopularMovies(fragment.onConnectivityCheck(), it.pageNumber + 1)
-            }
+        val scrollListener = PaginationScrollListener.Builder<Unit>()
+            .queryParameters(viewModel.parameters)
+            .lifecycleOwner(this)
+            .layoutManager(layoutManager)
+            .retrieve { viewModel.getPopularMovies(fragment.onConnectivityCheck(), it.pageNumber + 1) }
+            .build()
 
         with(viewModel) {
             loading.observe(this@PopularMovies, Observer {
@@ -47,11 +44,11 @@ class PopularMovies : AppCompatActivity() {
             })
             result.observe(this@PopularMovies, Observer {
                 adapter.addItems(it.results)
-                parameters.value = QueryParameters(it.pageNumber, it.pageCount, Unit)
+                parameters.value = QueryParameters(it.pageNumber, pageCount(it.pageCount), Unit)
             })
         }
 
-        drawRecycler(layoutManager, adapter, scrollListener)
+        fragment.drawRecycler(layoutManager, adapter, scrollListener)
 
         search_activity_button.setOnClickListener { startSearchScreen() }
 
@@ -63,23 +60,13 @@ class PopularMovies : AppCompatActivity() {
     private val searchIntent by lazy { Intent(this, SearchActivity::class.java) }
     private fun startSearchScreen() = startActivity(searchIntent)
 
-    private fun drawRecycler(
-        manager: LinearLayoutManager,
-        movieAdapter: MovieAdapter<*>,
-        scrollListener: PaginationScrollListener<Unit>
-    ) = with(recyclerView) {
-        layoutManager = manager
-        adapter = movieAdapter
-        addOnScrollListener(scrollListener)
-    }
-
     private fun finishLoading() {
         fragment.onFinishLoading()
         popular_swipe_refresh.isRefreshing = false
     }
 
     private fun swipeRefresh() = fragment.onConnectivityCheck()
+        .also { viewModel.movies.clear() }
         .also { viewModel.getPopularMovies(it) }
         .also { if (!it) popular_swipe_refresh.isRefreshing = false }
-
 }

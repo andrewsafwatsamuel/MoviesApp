@@ -23,7 +23,7 @@
         <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@color/transparent_tdmb_secondary_color"
+                android:background="@color/transparent_tmdb_secondary_color"
                 android:id="@+id/view"
                 app:layout_constraintEnd_toEndOf="@id/cover_image_view"
                 app:layout_constraintStart_toStartOf="@id/cover_image_view"
@@ -89,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/overview_text_view" android:layout_marginTop="8dp"
-                android:textColor="@color/tdmb_secondary_color"
+                android:textColor="@color/tmdb_secondary_color"
                 android:padding="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintTop_toBottomOf="@+id/genres_recycler_view" android:layout_marginBottom="8dp"

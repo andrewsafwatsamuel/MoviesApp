@@ -26,7 +26,7 @@
         <TextView
                 android:id="@+id/grid_movie_name"
                 tools:text="movie name"
-                android:textColor="@color/tdmb_secondary_color"
+                android:textColor="@color/tmdb_secondary_color"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:lines="2"
