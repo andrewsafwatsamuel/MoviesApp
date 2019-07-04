@@ -15,7 +15,10 @@ const val BACK_DRAW_SIZE = "w500"
 
 fun drawPhoto(size: String, url: String?, view: ImageView) = url
     .takeUnless { it.isNullOrBlank() }
-    ?.also { Glide.with(view).load("$BASE_POSTER_URL$size$it").into(view) }
+    ?.let { Glide.with(view).load("$BASE_POSTER_URL$size$it")}
+    ?.placeholder(R.drawable.movie_roll)
+    ?.error(R.drawable.movie_roll)
+    ?.into(view)?: view.setImageResource(R.drawable.movie_roll)
 
 fun checkConnectivity(activity: Activity): Boolean =
     (activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
