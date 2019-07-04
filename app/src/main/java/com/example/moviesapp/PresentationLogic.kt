@@ -31,3 +31,4 @@ interface BaseTextWatcher:TextWatcher{
 fun hideKeyboard(activity: Activity) = activity.getSystemService(Activity.INPUT_METHOD_SERVICE)
     .let { it as InputMethodManager }
     .also { it.hideSoftInputFromWindow(activity.currentFocus?.windowToken, 0) }
+fun pageCount(count:Int)=if (count<=60) count else 60

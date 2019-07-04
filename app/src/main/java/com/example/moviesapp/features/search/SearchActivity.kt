@@ -16,8 +16,11 @@ import com.example.moviesapp.features.details.ACTION_SEARCH
 import com.example.moviesapp.features.details.EXTRA_KEY
 import com.example.moviesapp.features.details.RecentSearchesAdapter
 import com.example.moviesapp.hideKeyboard
+import com.example.moviesapp.pageCount
 import com.example.moviesapp.subFeatures.movies.*
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_search.*
+import java.util.concurrent.TimeUnit
 
 private const val NO_RESULTS = "It seems that there are no movies with that name"
 
@@ -27,11 +30,8 @@ class SearchActivity : AppCompatActivity() {
     private val fragment by lazy { movies_fragment as MoviesFragment }
     private val searchReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
-            intent.getStringExtra(EXTRA_KEY)
-                .also { retrieveMovies(it) }
-                .also { search_edit_text.setText(it) }
-            hideKeyboard(this@SearchActivity)
-            hideSearches()
+            viewModel.searchPublishSubject.onNext(intent.getStringExtra(EXTRA_KEY))
+
         }
     }
 
@@ -70,13 +70,19 @@ class SearchActivity : AppCompatActivity() {
         with(viewModel) {
             result.observe(this@SearchActivity, Observer {
                 listAdapter.addItems(it.results)
-                parameterLiveData.value = QueryParameters(it.pageNumber, it.pageCount, search_edit_text.text.toString())
+                setParameters(it.pageNumber, it.pageCount)
                 if (search_edit_text.text.isEmpty()) retrieveRecents() else hideSearches()
                 fragment.run { if (movieList.isEmpty()) onEmptyState(NO_RESULTS) else onNonEmptyState() }
             })
             loading.observe(this@SearchActivity, Observer {
                 fragment.run { if (it) onStartLoading() else onFinishLoading() }
             })
+            searchPublishSubject
+                .debounce(500,TimeUnit.MILLISECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe{ startSearch(it)}
+                .also { disposables.addAll() }
         }
         registerReceiver(searchReceiver, IntentFilter(ACTION_SEARCH))
     }
@@ -103,6 +109,10 @@ class SearchActivity : AppCompatActivity() {
             retrieveMovies(fragment.onConnectivityCheck(), string)
         }
 
+    private fun setParameters(pageNumber: Int, pageCount: Int) = viewModel.parameterLiveData
+        .run { value = QueryParameters(pageNumber, pageCount(pageCount), search_edit_text.text.toString()) }
+
+
     private fun retrieveRecents() {
         viewModel.retrieveMovieNames()
         showSearches()
@@ -112,4 +122,8 @@ class SearchActivity : AppCompatActivity() {
         recent_searches_recyclerView.visibility = View.VISIBLE
         movies_container.visibility = View.GONE
     }
+
+   private fun startSearch(searchKey:String)=
+        search_edit_text.setText(searchKey)
+       .also { hideKeyboard(this@SearchActivity) }
 }

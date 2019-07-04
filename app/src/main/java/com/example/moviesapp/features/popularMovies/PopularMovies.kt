@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviesapp.R
 import com.example.moviesapp.features.search.SearchActivity
+import com.example.moviesapp.pageCount
 import com.example.moviesapp.subFeatures.movies.*
 import kotlinx.android.synthetic.main.activity_popular_movies.*
 
@@ -55,8 +56,6 @@ class PopularMovies : AppCompatActivity() {
 
         popular_swipe_refresh.setOnRefreshListener { swipeRefresh() }
     }
-
-    private fun pageCount(count:Int)=if (count<=60) count else 60
 
     private val searchIntent by lazy { Intent(this, SearchActivity::class.java) }
     private fun startSearchScreen() = startActivity(searchIntent)

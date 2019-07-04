@@ -11,8 +11,10 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 
 class SearchViewModel(
+    val searchPublishSubject :PublishSubject<String> = PublishSubject.create(),
     val storedMovieNames: MutableLiveData<List<String>> = MutableLiveData(),
     val parameterLiveData: MutableLiveData<QueryParameters<String>> = MutableLiveData(),
     val loading: MutableLiveData<Boolean> = MutableLiveData(),
