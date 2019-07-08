@@ -27,7 +27,7 @@ class PopularMovies : AppCompatActivity() {
 
         viewModel.getPopularMovies(fragment.onConnectivityCheck())
 
-        val layoutManager = GridLayoutManager(this,3)
+        val layoutManager = GridLayoutManager(this, 3)
 
         val adapter = AdapterFactory(GRID_MOVIE_ADAPTER).create(viewModel.movies)
 
@@ -45,6 +45,7 @@ class PopularMovies : AppCompatActivity() {
             result.observe(this@PopularMovies, Observer {
                 adapter.addItems(it.results)
                 parameters.value = QueryParameters(it.pageNumber, pageCount(it.pageCount), Unit)
+                disposable.clear()
             })
         }
 

@@ -43,7 +43,7 @@ class MoviesFragment : Fragment() {
         showMovieDetails.debounce(500, TimeUnit.MILLISECONDS)
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe { startDetailsScreen(it) }
-            .also { disposables.addAll() }
+            .also { disposables.add(it) }
     }
 
     override fun onResume() {
@@ -54,16 +54,12 @@ class MoviesFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         activity?.unregisterReceiver(resultsReceiver)
+        disposables.dispose()
     }
     private fun startDetailsScreen(movie: Serializable) {
         Intent(context, DetailsActivity::class.java)
             .putExtra(EXTRA_MOVIE, movie)
             .also { startActivity(it) }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.dispose()
     }
 
     fun onStartLoading() {

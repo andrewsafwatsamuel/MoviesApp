@@ -15,7 +15,7 @@ class PopularViewModel(
     val result: MutableLiveData<MovieResponse> = MutableLiveData(),
     val loading:MutableLiveData<Boolean> = MutableLiveData(),
     val parameters:MutableLiveData<QueryParameters<Unit>> = MutableLiveData(),
-    private val disposable: CompositeDisposable= CompositeDisposable(),
+    val disposable: CompositeDisposable= CompositeDisposable(),
     private val popularUseCase: PopularUseCase= PopularUseCase()
 ):ViewModel(){
 fun getPopularMovies(isConnected:Boolean,pageNumber: Int=1)=
@@ -23,7 +23,7 @@ fun getPopularMovies(isConnected:Boolean,pageNumber: Int=1)=
         ?.subscribeOn(Schedulers.io())
         ?.observeOn(AndroidSchedulers.mainThread())
         ?.subscribe({},Throwable::printStackTrace)
-        ?.also { disposable.addAll() } ?: Unit
+        ?.also { disposable.add(it) } ?: Unit
 
     override fun onCleared() {
         super.onCleared()

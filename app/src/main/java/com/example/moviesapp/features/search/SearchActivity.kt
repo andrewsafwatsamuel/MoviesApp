@@ -73,16 +73,17 @@ class SearchActivity : AppCompatActivity() {
                 setParameters(it.pageNumber, it.pageCount)
                 if (search_edit_text.text.isEmpty()) retrieveRecents() else hideSearches()
                 fragment.run { if (movieList.isEmpty()) onEmptyState(NO_RESULTS) else onNonEmptyState() }
+                disposables.clear()
             })
             loading.observe(this@SearchActivity, Observer {
                 fragment.run { if (it) onStartLoading() else onFinishLoading() }
             })
             searchPublishSubject
-                .debounce(500,TimeUnit.MILLISECONDS)
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe{ startSearch(it)}
-                .also { disposables.addAll() }
+                .subscribe { startSearch(it) }
+                .also { disposables.add(it) }
         }
         registerReceiver(searchReceiver, IntentFilter(ACTION_SEARCH))
     }
@@ -123,7 +124,7 @@ class SearchActivity : AppCompatActivity() {
         movies_container.visibility = View.GONE
     }
 
-   private fun startSearch(searchKey:String)=
+    private fun startSearch(searchKey: String) =
         search_edit_text.setText(searchKey)
-       .also { hideKeyboard(this@SearchActivity) }
+            .also { hideKeyboard(this@SearchActivity) }
 }
