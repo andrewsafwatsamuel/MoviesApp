@@ -58,9 +58,7 @@ data class DetailsResponse(
     @field:SerializedName("videos") val trailers: Videos?
 )
 
-@Entity
 data class Genre(
-    @field:PrimaryKey
     @field: SerializedName("id") val id: Int,
     @field:SerializedName("name") val name: String
 ) : Serializable

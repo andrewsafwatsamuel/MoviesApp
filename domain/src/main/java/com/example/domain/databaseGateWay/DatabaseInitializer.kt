@@ -6,7 +6,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
-private const val DATABASE_NAME = "DatabaseGateway.db"
+ const val DATABASE_NAME = "DatabaseGateway.db"
 
 fun initializeDatabase(context: Context): MovieAppDatabase {
     copyDatabaseFileIfNotCreated(context)
