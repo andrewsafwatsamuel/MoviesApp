@@ -97,7 +97,7 @@ data class Video(
     @field:SerializedName("type") val type: String?
 ) : Serializable
 
-data class Credits(
+data class CreditsResponse(
     @field:SerializedName("cast") val cast: List<CastMember?>,
     @field:SerializedName("crew") val crew: List<CrewMember?>
 
