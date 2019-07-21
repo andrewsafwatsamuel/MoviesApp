@@ -17,18 +17,17 @@ import com.example.moviesapp.drawPhoto
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.io.Serializable
 
 
 const val ACTION_OPEN_DETAILS_SCREEN =
     "com.example.moviesapp.subFeatures.movies.ACTION_OPEN_DETAILS_SCREEN"
-const val EXTRA_MOVIE = "com.example.moviesapp.subFeatures.movies.EXTRA_MOVIE"
+const val ID_EXTRA = "com.example.moviesapp.subFeatures.movies.EXTRA_MOVIE"
 const val LIST_MOVIE_ADAPTER = "listMovieAdapter"
 const val GRID_MOVIE_ADAPTER = "gridMovieAdapter"
 
 private fun onViewClicked(movie: Movie, view: View) {
     Intent(ACTION_OPEN_DETAILS_SCREEN)
-        .putExtra(EXTRA_MOVIE, movie as Serializable)
+        .putExtra(ID_EXTRA, movie.id)
         .also { view.context.sendBroadcast(it) }
 }
 

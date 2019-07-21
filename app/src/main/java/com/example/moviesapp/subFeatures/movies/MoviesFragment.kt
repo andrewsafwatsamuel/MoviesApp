@@ -17,7 +17,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_movies.*
-import java.io.Serializable
 import java.util.concurrent.TimeUnit
 
 private const val NOT_CONNECTED = "Please check your internet connection"
@@ -26,11 +25,11 @@ class MoviesFragment : Fragment() {
 
     private val disposables = CompositeDisposable()
 
-    private val showMovieDetails: PublishSubject<Serializable> = PublishSubject.create()
+    private val showMovieDetails: PublishSubject<Long> = PublishSubject.create()
 
     private val resultsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            showMovieDetails.onNext(intent.getSerializableExtra(EXTRA_MOVIE))
+            showMovieDetails.onNext(intent.getLongExtra(ID_EXTRA,0))
         }
     }
 
@@ -62,9 +61,9 @@ class MoviesFragment : Fragment() {
         disposables.dispose()
     }
 
-    private fun startDetailsScreen(movie: Serializable) {
+    private fun startDetailsScreen(id: Long) {
         Intent(context, DetailsActivity::class.java)
-            .putExtra(EXTRA_MOVIE, movie)
+            .putExtra(ID_EXTRA, id)
             .also { startActivity(it) }
     }
 
