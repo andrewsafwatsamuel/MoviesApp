@@ -69,7 +69,7 @@ class ListViewHolder(
             if (!movie.releaseDate.isNullOrEmpty()) movie.releaseDate else "--"
         overviewTextView.text =
             if (!movie.overView.isNullOrEmpty()) movie.overView else "no available overView ..."
-        movieCardView.setOnClickListener { onViewClicked(movie, view);storeMovieName(movie.title?:"haha") }
+        movieCardView.setOnClickListener { onViewClicked(movie, view);storeMovieName(movie.title?:"") }
     }
     private fun storeMovieName(movieName: String) {
         Single.fromCallable { movieInsert(movieName) }
@@ -91,11 +91,11 @@ class ListAdapter(movieList: MutableList<Movie>) : MovieAdapter<ListViewHolder>(
 class GridViewHolder(private val view: View) : MovieViewHolder(view) {
 
     private val boaster by lazy { view.findViewById<ImageView>(R.id.grid_movie_boaster)!! }
-    private val movieName by lazy { view.findViewById<TextView>(R.id.grid_movie_name)!! }
+   // private val movieName by lazy { view.findViewById<TextView>(R.id.grid_movie_name)!! }
     private val container by lazy { view.findViewById<CardView>(R.id.grid_item)!! }
 
     override fun bind(movie: Movie) {
-        movieName.text = movie.title?.replace("\n", "")
+      //  movieName.text = movie.title?.replace("\n", "")
         drawPhoto(POSTER_SIZE, movie.poster, boaster)
         container.setOnClickListener { onViewClicked(movie, view) }
     }

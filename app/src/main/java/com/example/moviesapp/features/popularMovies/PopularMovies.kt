@@ -25,7 +25,9 @@ class PopularMovies : AppCompatActivity() {
         setContentView(R.layout.activity_popular_movies)
         supportActionBar?.hide()
 
-        viewModel.getPopularMovies(fragment.onConnectivityCheck())
+        viewModel.run {
+            if (movies.isEmpty()) getPopularMovies(fragment.onConnectivityCheck())
+        }
 
         val layoutManager = GridLayoutManager(this, 3)
 
@@ -34,7 +36,7 @@ class PopularMovies : AppCompatActivity() {
         val scrollListener = PaginationScrollListener.Builder<Unit>()
             .queryParameters(viewModel.parameters)
             .lifecycleOwner(this)
-            .layoutManager(layoutManager)
+            .layoutManager(layoutManager )
             .retrieve { viewModel.getPopularMovies(fragment.onConnectivityCheck(), it.pageNumber + 1) }
             .build()
 

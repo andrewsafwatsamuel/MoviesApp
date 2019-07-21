@@ -18,9 +18,7 @@ import com.example.moviesapp.features.details.RecentSearchesAdapter
 import com.example.moviesapp.hideKeyboard
 import com.example.moviesapp.pageCount
 import com.example.moviesapp.subFeatures.movies.*
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_search.*
-import java.util.concurrent.TimeUnit
 
 private const val NO_RESULTS = "It seems that there are no movies with that name"
 
@@ -30,8 +28,7 @@ class SearchActivity : AppCompatActivity() {
     private val fragment by lazy { movies_fragment as MoviesFragment }
     private val searchReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
-            viewModel.searchPublishSubject.onNext(intent.getStringExtra(EXTRA_KEY))
-
+            startSearch(intent.getStringExtra(EXTRA_KEY))
         }
     }
 
@@ -78,13 +75,7 @@ class SearchActivity : AppCompatActivity() {
             loading.observe(this@SearchActivity, Observer {
                 fragment.run { if (it) onStartLoading() else onFinishLoading() }
             })
-            searchPublishSubject
-                .debounce(500, TimeUnit.MILLISECONDS)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { startSearch(it) }
-                .also { disposables.add(it) }
-        }
+            }
         registerReceiver(searchReceiver, IntentFilter(ACTION_SEARCH))
     }
 

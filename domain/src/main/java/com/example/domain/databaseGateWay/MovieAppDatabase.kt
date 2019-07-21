@@ -7,6 +7,8 @@ import com.example.SuccessfulQuery
 import com.example.domain.engine.applicationLiveData
 import com.example.domain.engine.getApplication
 
+const val DATABASE_NAME = "DatabaseGateway.db"
+
 val movieAppDatabase by lazy {
     Room.databaseBuilder(
         applicationLiveData.getApplication(),

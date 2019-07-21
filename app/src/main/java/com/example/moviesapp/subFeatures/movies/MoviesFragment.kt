@@ -1,6 +1,6 @@
 package com.example.moviesapp.subFeatures.movies
 
- import android.content.BroadcastReceiver
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -54,8 +54,14 @@ class MoviesFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         activity?.unregisterReceiver(resultsReceiver)
+      //  disposables.clear()
+    }
+
+    override fun onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu()
         disposables.dispose()
     }
+
     private fun startDetailsScreen(movie: Serializable) {
         Intent(context, DetailsActivity::class.java)
             .putExtra(EXTRA_MOVIE, movie)
