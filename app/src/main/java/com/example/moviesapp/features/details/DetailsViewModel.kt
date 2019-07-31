@@ -14,6 +14,7 @@ import io.reactivex.schedulers.Schedulers
 class DetailsViewModel(
     val disposables: CompositeDisposable = CompositeDisposable(),
     val detailsResult: MutableLiveData<DetailsResponse> = MutableLiveData(),
+    val genres: MutableLiveData<List<String>> = MutableLiveData(),
     val relatedResult: MutableLiveData<MovieResponse> = MutableLiveData(),
     val creditsResult: MutableLiveData<CreditsResponse> = MutableLiveData(),
     val loadingDetails: MutableLiveData<Boolean> = MutableLiveData(),

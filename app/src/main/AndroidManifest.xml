@@ -28,6 +28,7 @@
         <activity android:name=".features.popularMovies.PopularMovies"/>
         <activity android:name=".features.search.SearchActivity"/>
         <activity android:name=".features.details.DetailsActivity"/>
+        <activity android:name=".features.credits.CreditsActivity"/>
     </application>
 
 </manifest>

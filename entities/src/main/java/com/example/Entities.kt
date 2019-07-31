@@ -32,7 +32,6 @@ data class Movie(
 data class DetailsResponse(
     @field:SerializedName("adult") val isAdult: Boolean?,
     @field:SerializedName("backdrop_path") val backDropPhoto: String?,
-    @field:SerializedName("belongs_to_collection") val collection: String?,
     @field:SerializedName("budget") val budget: Int?,
     @field:SerializedName("genres") val genres: List<Genre>?,
     @field:SerializedName("homepage") val homePage: String?,
@@ -59,8 +58,8 @@ data class DetailsResponse(
 )
 
 data class Genre(
-    @field: SerializedName("id") val id: Int,
-    @field:SerializedName("name") val name: String
+    @field: SerializedName("id") val id: Int?,
+    @field:SerializedName("name") val name: String?
 ) : Serializable
 
 data class Company(
@@ -101,6 +100,8 @@ data class CreditsResponse(
 
 )
 
+data class CreditsMember(val title:String?,val role:String?,val url:String?)
+
 data class CastMember(
     @field:SerializedName("cast_id") val castId: Int?,
     @field:SerializedName("character") val character: String?,
@@ -111,7 +112,6 @@ data class CastMember(
     @field:SerializedName("order") val order: Int?,
     @field:SerializedName("profile_path") val photo: String?
 )
-
 data class CrewMember(
     @field:SerializedName("credit_id") val creditId: String?,
     @field:SerializedName("department") val department: String?,

@@ -8,6 +8,8 @@ import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.example.CreditsMember
+import com.example.CreditsResponse
 
 const val BASE_POSTER_URL = "http://image.tmdb.org/t/p/"
 const val POSTER_SIZE = "w185"
@@ -35,3 +37,7 @@ fun hideKeyboard(activity: Activity) = activity.getSystemService(Activity.INPUT_
     .let { it as InputMethodManager }
     .also { it.hideSoftInputFromWindow(activity.currentFocus?.windowToken, 0) }
 fun pageCount(count:Int)=if (count<=60) count else 60
+
+fun drawRecycler(it: CreditsResponse, withCrew: Boolean) = mutableListOf<CreditsMember>()
+    .apply { it.cast.forEach { i -> add(CreditsMember(i?.name, i?.character, i?.photo)) } }
+    .apply { if (withCrew) it.crew.forEach { i -> add(CreditsMember(i?.name, i?.job, i?.photo)) } }
