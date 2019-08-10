@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.CreditsResponse
 import com.example.DetailsResponse
+import com.example.Movie
 import com.example.MovieResponse
 import com.example.domain.useCases.DetailsUseCases
 import io.reactivex.Single
@@ -12,14 +13,15 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class DetailsViewModel(
-    val disposables: CompositeDisposable = CompositeDisposable(),
+    private val disposables: CompositeDisposable = CompositeDisposable(),
     val detailsResult: MutableLiveData<DetailsResponse> = MutableLiveData(),
     val genres: MutableLiveData<List<String>> = MutableLiveData(),
     val relatedResult: MutableLiveData<MovieResponse> = MutableLiveData(),
     val creditsResult: MutableLiveData<CreditsResponse> = MutableLiveData(),
-    val loadingDetails: MutableLiveData<Boolean> = MutableLiveData(),
-    val loadingCredits: MutableLiveData<Boolean> = MutableLiveData(),
-    val loadingRelated: MutableLiveData<Boolean> = MutableLiveData(),
+    val movieList:MutableList<Movie> = mutableListOf(),
+    private val loadingDetails: MutableLiveData<Boolean> = MutableLiveData(),
+    private val loadingCredits: MutableLiveData<Boolean> = MutableLiveData(),
+    private val loadingRelated: MutableLiveData<Boolean> = MutableLiveData(),
     private val detailsUseCases: DetailsUseCases = DetailsUseCases()
 ) : ViewModel() {
 

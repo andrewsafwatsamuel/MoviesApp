@@ -20,4 +20,6 @@
     <string name="director">Director</string>
     <string name="writers">Writers</string>
     <string name="all_cast"><![CDATA[All Cast & Crew]]></string>
+    <string name="you_might_like">You might also like</string>
+    <string name="check_your_internet_connection">Check your internet connection</string>
 </resources>

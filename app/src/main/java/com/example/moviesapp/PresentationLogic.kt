@@ -38,6 +38,6 @@ fun hideKeyboard(activity: Activity) = activity.getSystemService(Activity.INPUT_
     .also { it.hideSoftInputFromWindow(activity.currentFocus?.windowToken, 0) }
 fun pageCount(count:Int)=if (count<=60) count else 60
 
-fun drawRecycler(it: CreditsResponse, withCrew: Boolean) = mutableListOf<CreditsMember>()
+fun drawCredits(it: CreditsResponse, withCrew: Boolean) = mutableListOf<CreditsMember>()
     .apply { it.cast.forEach { i -> add(CreditsMember(i?.name, i?.character, i?.photo)) } }
     .apply { if (withCrew) it.crew.forEach { i -> add(CreditsMember(i?.name, i?.job, i?.photo)) } }

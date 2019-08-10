@@ -11,6 +11,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapp.R
+import com.example.moviesapp.adapters.ACTION_OPEN_DETAILS_SCREEN
+import com.example.moviesapp.adapters.ID_EXTRA
+import com.example.moviesapp.adapters.MovieAdapter
 import com.example.moviesapp.checkConnectivity
 import com.example.moviesapp.features.details.DetailsActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -33,13 +36,15 @@ class MoviesFragment : Fragment() {
         }
     }
 
+    var close = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         inflater.inflate(R.layout.fragment_movies, container, false)!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showMovieDetails.debounce(500, TimeUnit.MILLISECONDS)
+        showMovieDetails.debounce(300, TimeUnit.MILLISECONDS)
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe { startDetailsScreen(it) }
             .also { disposables.add(it) }
@@ -65,6 +70,7 @@ class MoviesFragment : Fragment() {
         Intent(context, DetailsActivity::class.java)
             .putExtra(ID_EXTRA, id)
             .also { startActivity(it) }
+            .also { if (close) activity?.finish() }
     }
 
     fun onStartLoading() {
@@ -99,7 +105,7 @@ class MoviesFragment : Fragment() {
     }
 
     fun getToTop() {
-        movies_recycler_view.smoothScrollToPosition(0)
+        movies_recycler_view.scrollToPosition(0)
     }
 
     fun drawRecycler(

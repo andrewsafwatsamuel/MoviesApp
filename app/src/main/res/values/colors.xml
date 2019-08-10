@@ -6,7 +6,7 @@
     <color name="black">#000000</color>
     <color name="gainsboro">#DCDCDC</color>
     <color name="dark_gray">#808080</color>
-    <color name="off_white">#ececec</color>
+    <color name="off_white">#ECECEC</color>
     <color name="tmdb_secondary_color">#081C24</color>
     <color name="transparent_tmdb_secondary_color">#66081C24</color>
     <color name="tmdb_primary_color">#01D277</color>
