@@ -2,9 +2,7 @@ package com.example.moviesapp.subFeatures.movies
 
 import android.app.Activity
 import android.widget.AbsListView
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapp.hideKeyboard
@@ -22,12 +20,16 @@ data class QueryParameters<I>(
 class PaginationScrollListener<I> private constructor(
     private val queryParameters: MutableLiveData<QueryParameters<I>>,
     private val lifecycleOwner: LifecycleOwner,
-    private val layoutManager: LinearLayoutManager,
+    private var layoutManager: LinearLayoutManager?,
     private var loading: Boolean,
     private var scrolling: Boolean,
-    private val activity: Activity?,
+    private var activity: Activity?,
     private val retrieve: (QueryParameters<I>) -> Unit
-) : RecyclerView.OnScrollListener() {
+) : RecyclerView.OnScrollListener(), LifecycleObserver {
+
+    init {
+        lifecycleOwner.lifecycle.addObserver(this)
+    }
 
     data class Builder<I>(
         private var queryParameters: MutableLiveData<QueryParameters<I>>? = null,
@@ -69,9 +71,9 @@ class PaginationScrollListener<I> private constructor(
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
         if (scrolling) activity?.let { hideKeyboard(it) }
-        val currentItems = layoutManager.childCount
-        val totalItems = layoutManager.itemCount
-        val scrollOutItems = layoutManager.findFirstVisibleItemPosition()
+        val currentItems = layoutManager!!.childCount
+        val totalItems = layoutManager!!.itemCount
+        val scrollOutItems = layoutManager!!.findFirstVisibleItemPosition()
 
         if (!loading && (currentItems + scrollOutItems == totalItems)) {
             queryParameters.observe(lifecycleOwner, Observer { paginate(it) })
@@ -90,5 +92,12 @@ class PaginationScrollListener<I> private constructor(
         loading = true
         retrieve(parameters)
         loading = false
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    private fun clear() {
+        println("pagination cleared")
+        activity = null
+        layoutManager = null
     }
 }

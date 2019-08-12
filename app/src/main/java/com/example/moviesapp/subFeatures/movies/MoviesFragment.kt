@@ -20,9 +20,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_movies.*
+import kotlinx.android.synthetic.main.no_internet_connection.*
 import java.util.concurrent.TimeUnit
-
-private const val NOT_CONNECTED = "Please check your internet connection"
 
 class MoviesFragment : Fragment() {
 
@@ -32,7 +31,7 @@ class MoviesFragment : Fragment() {
 
     private val resultsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            showMovieDetails.onNext(intent.getLongExtra(ID_EXTRA,0))
+            showMovieDetails.onNext(intent.getLongExtra(ID_EXTRA, 0))
         }
     }
 
@@ -58,7 +57,7 @@ class MoviesFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         activity?.unregisterReceiver(resultsReceiver)
-      //  disposables.clear()
+        //  disposables.clear()
     }
 
     override fun onDestroyOptionsMenu() {
@@ -96,12 +95,13 @@ class MoviesFragment : Fragment() {
     fun onNonEmptyState() {
         empty_movies_text_view.visibility = View.GONE
         movies_recycler_view.visibility = View.VISIBLE
+        not_connected_layout.visibility=View.GONE
     }
 
     private fun notConnected() {
         movies_progress_bar.visibility = View.GONE
-        onEmptyState(NOT_CONNECTED)
-//        TODO("add more user friendly way")
+        onEmptyState("")
+        not_connected_layout.visibility = View.VISIBLE
     }
 
     fun getToTop() {

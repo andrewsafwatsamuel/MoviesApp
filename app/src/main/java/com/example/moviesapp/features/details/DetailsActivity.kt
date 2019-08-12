@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.fragment_credits.*
 import kotlinx.android.synthetic.main.no_internet_connection.*
 
+const val EXTRA_CREDITS = "com.example.moviesapp.features.details.extraCredits"
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -87,7 +88,7 @@ class DetailsActivity : AppCompatActivity() {
             addCast(drawCredits(it, false))
             setDirector(getMembers(it) { it?.job.equals("Director") })
             setWriters(getMembers(it) { it?.department.equals("Writing") })
-            openCreditsScreen()
+            openCreditsScreen(it)
         }
     })
 
@@ -142,9 +143,7 @@ class CreditsFragment : Fragment() {
         writers_text_view.text = writers
     }
 
-    fun openCreditsScreen() = Intent(context, CreditsActivity::class.java)
-        .also { /*data to be viewed in credits*/ }
-        .also { intent ->
-            credits_details_text_view.setOnClickListener { startActivity(intent) }
-        }
+    fun openCreditsScreen(credits: CreditsResponse) = Intent(context, CreditsActivity::class.java)
+        .apply { putExtra(EXTRA_CREDITS, credits) }
+        .also { intent -> credits_details_text_view.setOnClickListener { startActivity(intent) } }
 }
