@@ -1,14 +1,25 @@
 package com.example.domain.repositories
 
-import com.example.domain.databaseGateWay.movieAppDatabase
+import com.example.CreditsResponse
+import com.example.DetailsResponse
+import com.example.MovieResponse
+import com.example.domain.serverGateWay.movieDetails
+import io.reactivex.Single
 
 interface DetailsRepository {
-    fun retrieveGenres(genreIds: List<Int>): List<String>
+    fun retrieveDetails(id: Long): Single<DetailsResponse>
+    fun retrieveCredits(id: Long): Single<CreditsResponse>
+    fun retrieveRelated(id: Long, page: Int): Single<MovieResponse>
 }
 
 val detailsRepository by lazy { DetailsRepositoryImplementer() }
 
 class DetailsRepositoryImplementer : DetailsRepository {
-    override fun retrieveGenres(genreIds: List<Int>): List<String> =
-        movieAppDatabase.genreDao.retrieveGenres(genreIds)
+
+    override fun retrieveDetails(id: Long) = movieDetails.retrieveDetails(id)
+
+    override fun retrieveCredits(id: Long) = movieDetails.retrieveCredits(id)
+
+    override fun retrieveRelated(id: Long, page: Int): Single<MovieResponse> =
+        movieDetails.retrieveRelated(id, page)
 }

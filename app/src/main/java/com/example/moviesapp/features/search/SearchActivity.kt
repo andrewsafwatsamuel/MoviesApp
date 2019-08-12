@@ -12,15 +12,16 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapp.BaseTextWatcher
 import com.example.moviesapp.R
-import com.example.moviesapp.features.details.ACTION_SEARCH
-import com.example.moviesapp.features.details.EXTRA_KEY
-import com.example.moviesapp.features.details.RecentSearchesAdapter
+import com.example.moviesapp.adapters.ACTION_SEARCH
+import com.example.moviesapp.adapters.EXTRA_KEY
+import com.example.moviesapp.adapters.ListAdapter
+import com.example.moviesapp.adapters.RecentSearchesAdapter
 import com.example.moviesapp.hideKeyboard
 import com.example.moviesapp.pageCount
-import com.example.moviesapp.subFeatures.movies.*
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.example.moviesapp.subFeatures.movies.MoviesFragment
+import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
+import com.example.moviesapp.subFeatures.movies.QueryParameters
 import kotlinx.android.synthetic.main.activity_search.*
-import java.util.concurrent.TimeUnit
 
 private const val NO_RESULTS = "It seems that there are no movies with that name"
 
@@ -30,8 +31,7 @@ class SearchActivity : AppCompatActivity() {
     private val fragment by lazy { movies_fragment as MoviesFragment }
     private val searchReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
-            viewModel.searchPublishSubject.onNext(intent.getStringExtra(EXTRA_KEY))
-
+            startSearch(intent.getStringExtra(EXTRA_KEY))
         }
     }
 
@@ -41,7 +41,8 @@ class SearchActivity : AppCompatActivity() {
         supportActionBar?.hide()
         if (viewModel.movieList.isEmpty()) retrieveRecents()
 
-        val listAdapter = AdapterFactory(LIST_MOVIE_ADAPTER).create(viewModel.movieList)
+        val listAdapter = ListAdapter(viewModel.movieList)
+
         val manager = LinearLayoutManager(this)
         val scrollListener = PaginationScrollListener.Builder<String>()
             .queryParameters(viewModel.parameterLiveData)
@@ -57,7 +58,8 @@ class SearchActivity : AppCompatActivity() {
 
         recent_searches_recyclerView.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
-            adapter = RecentSearchesAdapter(viewModel.storedMovieNames, this@SearchActivity)
+            adapter =
+                RecentSearchesAdapter(viewModel.storedMovieNames, this@SearchActivity)
         }
 
         back_image_view.setOnClickListener { finish() }
@@ -78,12 +80,6 @@ class SearchActivity : AppCompatActivity() {
             loading.observe(this@SearchActivity, Observer {
                 fragment.run { if (it) onStartLoading() else onFinishLoading() }
             })
-            searchPublishSubject
-                .debounce(500, TimeUnit.MILLISECONDS)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { startSearch(it) }
-                .also { disposables.add(it) }
         }
         registerReceiver(searchReceiver, IntentFilter(ACTION_SEARCH))
     }

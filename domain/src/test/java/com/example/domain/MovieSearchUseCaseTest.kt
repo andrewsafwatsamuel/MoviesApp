@@ -32,7 +32,7 @@ class MovieSearchUseCaseTest {
         val result = MutableLiveData<MovieResponse>()
         val movieSearchUseCase = MovieSearchUseCase(mockRepository)
 
-        movieSearchUseCase(movieName, loading, result, pageNumber)
+        movieSearchUseCase(true,movieName, loading, result, pageNumber)
             ?.subscribeOn(Schedulers.trampoline())
             ?.observeOn(Schedulers.trampoline())
             ?.subscribe({}, Throwable::printStackTrace)
@@ -53,7 +53,7 @@ class MovieSearchUseCaseTest {
         val result = MutableLiveData<MovieResponse>()
         val movieSearchUseCase = MovieSearchUseCase(mockRepository)
 
-        movieSearchUseCase("", loading, result, pageNumber)
+        movieSearchUseCase(true,"", loading, result, pageNumber)
             ?.subscribeOn(Schedulers.trampoline())
             ?.observeOn(Schedulers.trampoline())
             ?.subscribe({}, Throwable::printStackTrace)
@@ -75,7 +75,7 @@ class MovieSearchUseCaseTest {
         val movieSearchUseCase = MovieSearchUseCase(mockRepository)
 
         loading.value = true
-        movieSearchUseCase(movieName, loading, result, pageNumber)
+        movieSearchUseCase(true,movieName, loading, result, pageNumber)
             ?.subscribeOn(Schedulers.trampoline())
             ?.observeOn(Schedulers.trampoline())
             ?.subscribe({}, Throwable::printStackTrace)
@@ -96,7 +96,7 @@ class MovieSearchUseCaseTest {
         val result = MutableLiveData<MovieResponse>()
         val movieSearchUseCase = MovieSearchUseCase(mockRepository)
 
-        movieSearchUseCase(movieName, loading, result, pageNumber)
+        movieSearchUseCase(true,movieName, loading, result, pageNumber)
             ?.subscribeOn(Schedulers.trampoline())
             ?.observeOn(Schedulers.trampoline())
             ?.subscribe({}, Throwable::printStackTrace)

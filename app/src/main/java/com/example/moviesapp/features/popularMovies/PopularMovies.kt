@@ -7,9 +7,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviesapp.R
+import com.example.moviesapp.adapters.GridAdapter
 import com.example.moviesapp.features.search.SearchActivity
 import com.example.moviesapp.pageCount
-import com.example.moviesapp.subFeatures.movies.*
+import com.example.moviesapp.subFeatures.movies.MoviesFragment
+import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
+import com.example.moviesapp.subFeatures.movies.QueryParameters
 import kotlinx.android.synthetic.main.activity_popular_movies.*
 
 class PopularMovies : AppCompatActivity() {
@@ -25,16 +28,18 @@ class PopularMovies : AppCompatActivity() {
         setContentView(R.layout.activity_popular_movies)
         supportActionBar?.hide()
 
-        viewModel.getPopularMovies(fragment.onConnectivityCheck())
+        viewModel.run {
+            if (movies.isEmpty()) getPopularMovies(fragment.onConnectivityCheck())
+        }
 
         val layoutManager = GridLayoutManager(this, 3)
 
-        val adapter = AdapterFactory(GRID_MOVIE_ADAPTER).create(viewModel.movies)
-
+        val adapter = GridAdapter(viewModel.movies)
+        
         val scrollListener = PaginationScrollListener.Builder<Unit>()
             .queryParameters(viewModel.parameters)
             .lifecycleOwner(this)
-            .layoutManager(layoutManager)
+            .layoutManager(layoutManager )
             .retrieve { viewModel.getPopularMovies(fragment.onConnectivityCheck(), it.pageNumber + 1) }
             .build()
 

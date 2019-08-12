@@ -1,4 +1,4 @@
-package com.example.moviesapp.features.details
+package com.example.moviesapp.adapters
 
 import android.content.Intent
 import android.view.LayoutInflater
