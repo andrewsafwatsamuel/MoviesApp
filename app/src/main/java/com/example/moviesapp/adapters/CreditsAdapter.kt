@@ -17,7 +17,6 @@ class CreditsHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val image by lazy { view.findViewById<ImageView>(R.id.photo_image_view) }
 
     fun bind(member: CreditsMember) {
-        println(member.title)
         name.text = member.title
         role.text = member.role
         drawPhoto(POSTER_SIZE, member.url, image)
