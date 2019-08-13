@@ -48,7 +48,8 @@
                     android:layout_marginStart="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textColor="@color/tmdb_primary_color"/>
+                    android:textColor="@color/tmdb_primary_color" android:fontFamily="@font/aladin"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
         </LinearLayout>
     </LinearLayout>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

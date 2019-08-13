@@ -10,11 +10,15 @@ import com.example.moviesapp.adapters.CreditsAdapter
 import com.example.moviesapp.drawCredits
 import com.example.moviesapp.features.details.EXTRA_CREDITS
 import com.example.moviesapp.subFeatures.movies.MoviesFragment
-import kotlinx.android.synthetic.main.activity_details.*
+import com.example.moviesapp.subFeatures.movies.TopBarFragment
+import kotlinx.android.synthetic.main.activity_credits.*
+import kotlinx.android.synthetic.main.activity_details.credits_fragment
 
 class CreditsActivity : AppCompatActivity() {
 
     private val fragment by lazy { credits_fragment as MoviesFragment }
+
+    private val topBarFragment by lazy { top_bar_fragment as TopBarFragment}
 
     private val recyclerView by lazy {
         fragment.view?.findViewById<RecyclerView>(R.id.movies_recycler_view)
@@ -25,6 +29,8 @@ class CreditsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credits)
+
+        topBarFragment.activityTitle("Credits")
 
         fragment.onConnectivityCheck()
 

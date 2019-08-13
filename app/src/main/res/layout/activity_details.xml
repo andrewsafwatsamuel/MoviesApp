@@ -6,9 +6,16 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
 >
+    <fragment
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:name="com.example.moviesapp.subFeatures.movies.TopBarFragment"
+            android:id="@+id/top_bar_fragment"/>
     <ScrollView
             android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_below="@+id/top_bar_fragment"
             android:background="@color/off_white">
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

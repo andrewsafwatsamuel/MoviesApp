@@ -21,10 +21,7 @@ import com.example.moviesapp.adapters.GenreAdapter
 import com.example.moviesapp.adapters.GridAdapter
 import com.example.moviesapp.adapters.ID_EXTRA
 import com.example.moviesapp.features.credits.CreditsActivity
-import com.example.moviesapp.subFeatures.movies.DetailsStarter
-import com.example.moviesapp.subFeatures.movies.HorizontalMovieFragment
-import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
-import com.example.moviesapp.subFeatures.movies.QueryParameters
+import com.example.moviesapp.subFeatures.movies.*
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.fragment_credits.*
 import kotlinx.android.synthetic.main.no_internet_connection.*
@@ -37,12 +34,13 @@ class DetailsActivity : AppCompatActivity() {
     private val creditsFragment by lazy { credits_fragment as CreditsFragment }
     private val moviesFragment by lazy { related_movies_fragment as HorizontalMovieFragment }
     private val parameters = MutableLiveData<QueryParameters<Unit>>()
-    private val movieAdapter by lazy { GridAdapter(viewModel.movieList, R.layout.horizontal_list_item) }
+    private val movieAdapter by lazy { GridAdapter(viewModel.movieList, R.layout.horizontal_movie_item) }
+    private val topBarFragment by lazy { top_bar_fragment as TopBarFragment }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
-        DetailsStarter(this, DetailsActivity::class.java,true)
+        DetailsStarter(this, DetailsActivity::class.java, true)
         not_connected_layout.visibility = if (checkConnectivity(this)) View.GONE else View.VISIBLE
         viewModel.relatedResult.observe(this, Observer {
             parameters.value = QueryParameters(it.pageNumber, it.pageCount, Unit)
@@ -79,7 +77,7 @@ class DetailsActivity : AppCompatActivity() {
         revenue_text_view.text = setText(R.string.revenue, "${it.revenue}$")
         duration_text_view.text = setText(R.string.play_time, "${it.runTime} min")
         overview_text_view.text = it.overView
-        println(it)
+        topBarFragment.activityTitle(it?.title?:"")
     })
 
     private fun setText(resource: Int, text: String) = "${getString(resource)} $text"
@@ -114,7 +112,7 @@ class DetailsActivity : AppCompatActivity() {
         .apply { showMore()?.visibility = View.GONE }
         .apply { category()?.visibility = View.GONE }
         .recyclerView()
-        ?.apply { layoutManager=manager }
+        ?.apply { layoutManager = manager }
         ?.apply { adapter = movieAdapter }
         ?.addOnScrollListener(pagination(manager))
 
