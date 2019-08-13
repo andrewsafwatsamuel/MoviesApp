@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.CreditsMember
 import com.example.CreditsResponse
 import com.example.CrewMember
@@ -20,7 +21,8 @@ import com.example.moviesapp.adapters.GenreAdapter
 import com.example.moviesapp.adapters.GridAdapter
 import com.example.moviesapp.adapters.ID_EXTRA
 import com.example.moviesapp.features.credits.CreditsActivity
-import com.example.moviesapp.subFeatures.movies.MoviesFragment
+import com.example.moviesapp.subFeatures.movies.DetailsStarter
+import com.example.moviesapp.subFeatures.movies.HorizontalMovieFragment
 import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
 import com.example.moviesapp.subFeatures.movies.QueryParameters
 import kotlinx.android.synthetic.main.activity_details.*
@@ -33,19 +35,18 @@ class DetailsActivity : AppCompatActivity() {
 
     private val viewModel by lazy { ViewModelProviders.of(this)[DetailsViewModel::class.java] }
     private val creditsFragment by lazy { credits_fragment as CreditsFragment }
-    private val moviesFragment by lazy {
-        (related_movies_fragment as MoviesFragment).apply { close = true }
-    }
+    private val moviesFragment by lazy { related_movies_fragment as HorizontalMovieFragment }
     private val parameters = MutableLiveData<QueryParameters<Unit>>()
-    private val adapter by lazy { GridAdapter(viewModel.movieList, R.layout.horizontal_list_item) }
+    private val movieAdapter by lazy { GridAdapter(viewModel.movieList, R.layout.horizontal_list_item) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
+        DetailsStarter(this, DetailsActivity::class.java,true)
         not_connected_layout.visibility = if (checkConnectivity(this)) View.GONE else View.VISIBLE
         viewModel.relatedResult.observe(this, Observer {
             parameters.value = QueryParameters(it.pageNumber, it.pageCount, Unit)
-            adapter.addItems(it.results)
+            movieAdapter.addItems(it.results)
             onMoviesRetrieved()
         })
         retrieveData(checkConnectivity(this))
@@ -74,7 +75,7 @@ class DetailsActivity : AppCompatActivity() {
         genres_recycler_view
             .apply { layoutManager = LinearLayoutManager(this@DetailsActivity, LinearLayoutManager.HORIZONTAL, false) }
             .apply { adapter = GenreAdapter(viewModel.genres, this@DetailsActivity) }
-        release_date_text_view.text = setText(R.string.released_in, it.releaseDate ?: "-/-/-/-")
+        release_date_text_view.text = setText(R.string.released_in, it.releaseDate ?: "-/-/-")
         revenue_text_view.text = setText(R.string.revenue, "${it.revenue}$")
         duration_text_view.text = setText(R.string.play_time, "${it.runTime} min")
         overview_text_view.text = it.overView
@@ -109,11 +110,13 @@ class DetailsActivity : AppCompatActivity() {
         false
     )
 
-    private fun drawRelated() = moviesFragment.drawRecycler(
-        manager,
-        adapter,
-        pagination(manager)
-    )
+    private fun drawRelated() = moviesFragment
+        .apply { showMore()?.visibility = View.GONE }
+        .apply { category()?.visibility = View.GONE }
+        .recyclerView()
+        ?.apply { layoutManager=manager }
+        ?.apply { adapter = movieAdapter }
+        ?.addOnScrollListener(pagination(manager))
 
     private fun pagination(manager: LinearLayoutManager) = PaginationScrollListener.Builder<Unit>()
         .layoutManager(manager)
@@ -131,7 +134,7 @@ class CreditsFragment : Fragment() {
     ): View =
         inflater.inflate(R.layout.fragment_credits, container, false)
 
-    fun addCast(cast: List<CreditsMember>) = cast_recycler_view
+    fun addCast(cast: List<CreditsMember>): RecyclerView = cast_recycler_view
         .apply { layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) }
         .apply { adapter = CreditsAdapter(R.layout.credits_horizonal_card, cast) }
 

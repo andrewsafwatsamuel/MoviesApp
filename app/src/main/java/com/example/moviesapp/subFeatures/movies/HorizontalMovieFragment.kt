@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapp.R
 import com.example.moviesapp.features.popularMovies.PopularMovies
@@ -15,6 +14,7 @@ import com.example.moviesapp.features.popularMovies.PopularMovies
 const val MOVIE_CATEGORY = "com.example.moviesapp.subFeatures.movies.movieCategory"
 
 class HorizontalMovieFragment : Fragment() {
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.fragment_horizontal_movies, container, false)
 
@@ -33,5 +33,5 @@ class HorizontalMovieFragment : Fragment() {
         .let { startActivity(it) }
 
     fun recyclerView() = view?.findViewById<RecyclerView>(R.id.horizontal_movie_recycler_view)
-        ?.apply { layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) }
+
 }

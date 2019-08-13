@@ -39,6 +39,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         supportActionBar?.hide()
+
         if (viewModel.movieList.isEmpty()) retrieveRecents()
 
         val listAdapter = ListAdapter(viewModel.movieList)

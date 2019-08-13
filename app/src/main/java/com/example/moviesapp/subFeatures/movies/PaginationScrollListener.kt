@@ -96,7 +96,6 @@ class PaginationScrollListener<I> private constructor(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun clear() {
-        println("pagination cleared")
         activity = null
         layoutManager = null
     }
