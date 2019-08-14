@@ -21,12 +21,14 @@ import com.example.moviesapp.adapters.GenreAdapter
 import com.example.moviesapp.adapters.GridAdapter
 import com.example.moviesapp.adapters.ID_EXTRA
 import com.example.moviesapp.features.credits.CreditsActivity
+import com.example.moviesapp.features.trailer.TrailerActivity
 import com.example.moviesapp.subFeatures.movies.*
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.fragment_credits.*
 import kotlinx.android.synthetic.main.no_internet_connection.*
 
 const val EXTRA_CREDITS = "com.example.moviesapp.features.details.extraCredits"
+const val EXTRA_TRAILER = "com.example.moviesapp.features.details.extraTrailer"
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -51,6 +53,11 @@ class DetailsActivity : AppCompatActivity() {
         drawDetails()
         drawCredits()
         drawRelated()
+        play_button.setOnClickListener {
+            Intent(this, TrailerActivity::class.java)
+                .apply { putExtra(EXTRA_TRAILER, "36oE0EBeESM") }
+                .let { startActivity(it) }
+        }
     }
 
     private fun onMoviesRetrieved() {
@@ -74,10 +81,9 @@ class DetailsActivity : AppCompatActivity() {
             .apply { layoutManager = LinearLayoutManager(this@DetailsActivity, LinearLayoutManager.HORIZONTAL, false) }
             .apply { adapter = GenreAdapter(viewModel.genres, this@DetailsActivity) }
         release_date_text_view.text = setText(R.string.released_in, it.releaseDate ?: "-/-/-")
-        //revenue_text_view.text = setText(R.string.revenue, "${it.revenue}$")
         duration_text_view.text = setText(R.string.play_time, "${it.runTime} min")
         overview_text_view.text = it.overView
-        topBarFragment.activityTitle(it?.title?:"")
+        topBarFragment.activityTitle(it?.title ?: "")
     })
 
     private fun setText(resource: Int, text: String) = "${getString(resource)} $text"
