@@ -13,13 +13,15 @@
     <string name="search">search</string>
     <string name="back">back</string>
     <string name="above_eighteen">18+</string>
-    <string name="released_in">Released in:</string>
+    <string name="released_in">Release date:</string>
     <string name="revenue">Revenue:</string>
     <string name="play_time">Play time:</string>
     <string name="cast">Cast</string>
     <string name="director">Director</string>
     <string name="writers">Writers</string>
-    <string name="all_cast"><![CDATA[All Cast & Crew]]></string>
+    <string name="all_cast"><u><![CDATA[All Cast & Crew]]></u></string>
     <string name="you_might_like">You might also like</string>
     <string name="check_your_internet_connection">Check your internet connection</string>
+    <string name="show_more"><u>Show more</u></string>
+
 </resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:background="@color/colorPrimary"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingStart="8dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"
+        android:id="@+id/linearLayout" tools:ignore="RtlSymmetry">
+    <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/arrow_back"
+            android:layout_weight="1"
+            android:contentDescription="@string/tmdb_green"/>
+    <TextView
+            tools:text="Activity name"
+            android:layout_marginStart="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:layout_height="match_parent"
+            android:textColor="@color/tmdb_primary_color" android:id="@+id/activity_title_text_view"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" android:fontFamily="@font/aladin"
+            android:textStyle="bold"/>
+</LinearLayout>

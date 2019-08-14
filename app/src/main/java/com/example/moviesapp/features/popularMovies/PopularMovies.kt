@@ -35,7 +35,7 @@ class PopularMovies : AppCompatActivity() {
         val layoutManager = GridLayoutManager(this, 3)
 
         val adapter = GridAdapter(viewModel.movies)
-        
+
         val scrollListener = PaginationScrollListener.Builder<Unit>()
             .queryParameters(viewModel.parameters)
             .lifecycleOwner(this)
@@ -75,4 +75,5 @@ class PopularMovies : AppCompatActivity() {
         .also { viewModel.movies.clear() }
         .also { viewModel.getPopularMovies(it) }
         .also { if (!it) popular_swipe_refresh.isRefreshing = false }
+
 }

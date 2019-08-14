@@ -97,8 +97,7 @@ data class Video(
 data class CreditsResponse(
     @field:SerializedName("cast") val cast: List<CastMember?>,
     @field:SerializedName("crew") val crew: List<CrewMember?>
-
-)
+):Serializable
 
 data class CreditsMember(val title:String?,val role:String?,val url:String?)
 
@@ -111,7 +110,7 @@ data class CastMember(
     @field:SerializedName("name") val name: String?,
     @field:SerializedName("order") val order: Int?,
     @field:SerializedName("profile_path") val photo: String?
-)
+):Serializable
 data class CrewMember(
     @field:SerializedName("credit_id") val creditId: String?,
     @field:SerializedName("department") val department: String?,
@@ -120,7 +119,7 @@ data class CrewMember(
     @field:SerializedName("job") val job: String?,
     @field:SerializedName("name") val name: String?,
     @field:SerializedName("profile_path") val photo: String?
-)
+):Serializable
 
 @Entity
 data class SuccessfulQuery(

@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.CreditsMember
 import com.example.CreditsResponse
 import com.example.CrewMember
@@ -20,31 +21,30 @@ import com.example.moviesapp.adapters.GenreAdapter
 import com.example.moviesapp.adapters.GridAdapter
 import com.example.moviesapp.adapters.ID_EXTRA
 import com.example.moviesapp.features.credits.CreditsActivity
-import com.example.moviesapp.subFeatures.movies.MoviesFragment
-import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
-import com.example.moviesapp.subFeatures.movies.QueryParameters
+import com.example.moviesapp.subFeatures.movies.*
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.fragment_credits.*
 import kotlinx.android.synthetic.main.no_internet_connection.*
 
+const val EXTRA_CREDITS = "com.example.moviesapp.features.details.extraCredits"
 
 class DetailsActivity : AppCompatActivity() {
 
     private val viewModel by lazy { ViewModelProviders.of(this)[DetailsViewModel::class.java] }
     private val creditsFragment by lazy { credits_fragment as CreditsFragment }
-    private val moviesFragment by lazy {
-        (related_movies_fragment as MoviesFragment).apply { close = true }
-    }
+    private val moviesFragment by lazy { related_movies_fragment as HorizontalMovieFragment }
     private val parameters = MutableLiveData<QueryParameters<Unit>>()
-    private val adapter by lazy { GridAdapter(viewModel.movieList, R.layout.horizontal_list_item) }
+    private val movieAdapter by lazy { GridAdapter(viewModel.movieList, R.layout.horizontal_movie_item) }
+    private val topBarFragment by lazy { top_bar_fragment as TopBarFragment }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
+        DetailsStarter(this, DetailsActivity::class.java, true)
         not_connected_layout.visibility = if (checkConnectivity(this)) View.GONE else View.VISIBLE
         viewModel.relatedResult.observe(this, Observer {
             parameters.value = QueryParameters(it.pageNumber, it.pageCount, Unit)
-            adapter.addItems(it.results)
+            movieAdapter.addItems(it.results)
             onMoviesRetrieved()
         })
         retrieveData(checkConnectivity(this))
@@ -54,7 +54,7 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun onMoviesRetrieved() {
-        you_may_like.visibility = if (viewModel.movieList.isEmpty()) View.GONE else View.VISIBLE
+        related_movies_container.visibility = if (viewModel.movieList.isEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun retrieveData(connected: Boolean) = with(viewModel) {
@@ -73,11 +73,11 @@ class DetailsActivity : AppCompatActivity() {
         genres_recycler_view
             .apply { layoutManager = LinearLayoutManager(this@DetailsActivity, LinearLayoutManager.HORIZONTAL, false) }
             .apply { adapter = GenreAdapter(viewModel.genres, this@DetailsActivity) }
-        release_date_text_view.text = setText(R.string.released_in, it.releaseDate ?: "-/-/-/-")
-        revenue_text_view.text = setText(R.string.revenue, "${it.revenue}$")
+        release_date_text_view.text = setText(R.string.released_in, it.releaseDate ?: "-/-/-")
+        //revenue_text_view.text = setText(R.string.revenue, "${it.revenue}$")
         duration_text_view.text = setText(R.string.play_time, "${it.runTime} min")
         overview_text_view.text = it.overView
-        println(it)
+        topBarFragment.activityTitle(it?.title?:"")
     })
 
     private fun setText(resource: Int, text: String) = "${getString(resource)} $text"
@@ -87,7 +87,7 @@ class DetailsActivity : AppCompatActivity() {
             addCast(drawCredits(it, false))
             setDirector(getMembers(it) { it?.job.equals("Director") })
             setWriters(getMembers(it) { it?.department.equals("Writing") })
-            openCreditsScreen()
+            openCreditsScreen(it)
         }
     })
 
@@ -108,11 +108,13 @@ class DetailsActivity : AppCompatActivity() {
         false
     )
 
-    private fun drawRelated() = moviesFragment.drawRecycler(
-        manager,
-        adapter,
-        pagination(manager)
-    )
+    private fun drawRelated() = moviesFragment
+        .apply { showMore()?.visibility = View.GONE }
+        .apply { setCategory(getString(R.string.you_might_like)) }
+        .recyclerView()
+        ?.apply { layoutManager = manager }
+        ?.apply { adapter = movieAdapter }
+        ?.addOnScrollListener(pagination(manager))
 
     private fun pagination(manager: LinearLayoutManager) = PaginationScrollListener.Builder<Unit>()
         .layoutManager(manager)
@@ -130,7 +132,7 @@ class CreditsFragment : Fragment() {
     ): View =
         inflater.inflate(R.layout.fragment_credits, container, false)
 
-    fun addCast(cast: List<CreditsMember>) = cast_recycler_view
+    fun addCast(cast: List<CreditsMember>): RecyclerView = cast_recycler_view
         .apply { layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) }
         .apply { adapter = CreditsAdapter(R.layout.credits_horizonal_card, cast) }
 
@@ -142,9 +144,7 @@ class CreditsFragment : Fragment() {
         writers_text_view.text = writers
     }
 
-    fun openCreditsScreen() = Intent(context, CreditsActivity::class.java)
-        .also { /*data to be viewed in credits*/ }
-        .also { intent ->
-            credits_details_text_view.setOnClickListener { startActivity(intent) }
-        }
+    fun openCreditsScreen(credits: CreditsResponse) = Intent(context, CreditsActivity::class.java)
+        .apply { putExtra(EXTRA_CREDITS, credits) }
+        .also { intent -> credits_details_text_view.setOnClickListener { startActivity(intent) } }
 }

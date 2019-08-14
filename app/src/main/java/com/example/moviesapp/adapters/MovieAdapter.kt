@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers
 
 const val ACTION_OPEN_DETAILS_SCREEN =
     "com.example.moviesapp.adapters.ACTION_OPEN_DETAILS_SCREEN"
-const val ID_EXTRA = "com.example.moviesapp.subFeatures.movies.EXTRA_MOVIE"
+const val ID_EXTRA = "com.example.moviesapp.subFeatures.movies.EXTRA_ID"
 const val LIST_MOVIE_ADAPTER = "listMovieAdapter"
 const val GRID_MOVIE_ADAPTER = "gridMovieAdapter"
 
