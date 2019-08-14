@@ -54,7 +54,7 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun onMoviesRetrieved() {
-        you_may_like.visibility = if (viewModel.movieList.isEmpty()) View.GONE else View.VISIBLE
+        related_movies_container.visibility = if (viewModel.movieList.isEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun retrieveData(connected: Boolean) = with(viewModel) {
@@ -74,7 +74,7 @@ class DetailsActivity : AppCompatActivity() {
             .apply { layoutManager = LinearLayoutManager(this@DetailsActivity, LinearLayoutManager.HORIZONTAL, false) }
             .apply { adapter = GenreAdapter(viewModel.genres, this@DetailsActivity) }
         release_date_text_view.text = setText(R.string.released_in, it.releaseDate ?: "-/-/-")
-        revenue_text_view.text = setText(R.string.revenue, "${it.revenue}$")
+        //revenue_text_view.text = setText(R.string.revenue, "${it.revenue}$")
         duration_text_view.text = setText(R.string.play_time, "${it.runTime} min")
         overview_text_view.text = it.overView
         topBarFragment.activityTitle(it?.title?:"")
@@ -110,7 +110,7 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun drawRelated() = moviesFragment
         .apply { showMore()?.visibility = View.GONE }
-        .apply { category()?.visibility = View.GONE }
+        .apply { setCategory(getString(R.string.you_might_like)) }
         .recyclerView()
         ?.apply { layoutManager = manager }
         ?.apply { adapter = movieAdapter }

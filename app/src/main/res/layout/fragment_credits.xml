@@ -40,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/director_text_view" app:layout_constraintStart_toStartOf="@+id/director"
+            android:fontFamily="sans-serif-light"
             app:layout_constraintEnd_toEndOf="@+id/director" android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/director" app:layout_constraintHorizontal_bias="0.0"
             android:layout_marginStart="4dp" android:textColor="@color/_transparent_tmdb_primary_color"/>
@@ -57,6 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/writers_text_view" android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif-light"
             app:layout_constraintTop_toBottomOf="@+id/writers"
             app:layout_constraintStart_toStartOf="@+id/director_text_view"
             android:textColor="@color/_transparent_tmdb_primary_color"
@@ -71,6 +73,6 @@
             app:layout_constraintTop_toBottomOf="@+id/writers_text_view" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintVertical_bias="0.0" android:layout_marginTop="32dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" android:textColor="@color/navy_blue"
-            android:fontFamily="monospace" android:layout_marginStart="8dp"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" android:textColor="@color/navy_blue"
+            android:fontFamily="sans-serif-condensed" android:layout_marginStart="8dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
