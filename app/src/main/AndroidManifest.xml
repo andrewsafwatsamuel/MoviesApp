@@ -18,6 +18,7 @@
         <activity
                 android:name=".features.trailer.TrailerActivity"
                 android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.popup"
         />
         <activity
                 android:name=".features.splashScreen.SplashActivity"

@@ -87,11 +87,12 @@ class DetailsActivity : AppCompatActivity() {
         ?.takeUnless { it.isEmpty() }
         ?.run { trailer(get(0)?.key ?: "") }
 
-    private fun startTrailer(trailerId: String) = play_button.setOnClickListener {
-        Intent(this, TrailerActivity::class.java)
-            .apply { putExtra(EXTRA_TRAILER, trailerId) }
-            .let { startActivity(it) }
-    }
+    private fun startTrailer(trailerId: String) = play_button.apply { visibility = View.VISIBLE }
+        .setOnClickListener {
+            Intent(this, TrailerActivity::class.java)
+                .apply { putExtra(EXTRA_TRAILER, trailerId) }
+                .let { startActivity(it) }
+        }
 
     private fun setText(resource: Int, text: String) = "${getString(resource)} $text"
 
