@@ -19,7 +19,7 @@ class DetailsViewModel(
     val relatedResult: MutableLiveData<MovieResponse> = MutableLiveData(),
     val creditsResult: MutableLiveData<CreditsResponse> = MutableLiveData(),
     val movieList:MutableList<Movie> = mutableListOf(),
-    private val loadingDetails: MutableLiveData<Boolean> = MutableLiveData(),
+    val loadingDetails: MutableLiveData<Boolean> = MutableLiveData(),
     private val loadingCredits: MutableLiveData<Boolean> = MutableLiveData(),
     private val loadingRelated: MutableLiveData<Boolean> = MutableLiveData(),
     private val detailsUseCases: DetailsUseCases = DetailsUseCases()

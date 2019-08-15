@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.CreditsMember
 import com.example.CreditsResponse
 import com.example.CrewMember
+import com.example.DetailsResponse
 import com.example.moviesapp.*
 import com.example.moviesapp.adapters.CreditsAdapter
 import com.example.moviesapp.adapters.GenreAdapter
@@ -53,11 +54,6 @@ class DetailsActivity : AppCompatActivity() {
         drawDetails()
         drawCredits()
         drawRelated()
-        play_button.setOnClickListener {
-            Intent(this, TrailerActivity::class.java)
-                .apply { putExtra(EXTRA_TRAILER, "36oE0EBeESM") }
-                .let { startActivity(it) }
-        }
     }
 
     private fun onMoviesRetrieved() {
@@ -84,7 +80,18 @@ class DetailsActivity : AppCompatActivity() {
         duration_text_view.text = setText(R.string.play_time, "${it.runTime} min")
         overview_text_view.text = it.overView
         topBarFragment.activityTitle(it?.title ?: "")
+        getTrailer(it) { id -> startTrailer(id) }
     })
+
+    private inline fun getTrailer(response: DetailsResponse, trailer: (String) -> Unit) = response.trailers?.videos
+        ?.takeUnless { it.isEmpty() }
+        ?.run { trailer(get(0)?.key ?: "") }
+
+    private fun startTrailer(trailerId: String) = play_button.setOnClickListener {
+        Intent(this, TrailerActivity::class.java)
+            .apply { putExtra(EXTRA_TRAILER, trailerId) }
+            .let { startActivity(it) }
+    }
 
     private fun setText(resource: Int, text: String) = "${getString(resource)} $text"
 

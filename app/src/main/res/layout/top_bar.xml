@@ -23,6 +23,8 @@
     <TextView
             tools:text="Activity name"
             android:layout_marginStart="5dp"
+            android:lines="1"
+            android:layout_marginEnd="8dp"
             android:layout_width="0dp"
             android:layout_weight="8"
             android:layout_height="match_parent"
