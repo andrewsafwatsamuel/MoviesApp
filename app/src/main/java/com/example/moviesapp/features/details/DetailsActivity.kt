@@ -15,18 +15,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.CreditsMember
 import com.example.CreditsResponse
 import com.example.CrewMember
+import com.example.DetailsResponse
 import com.example.moviesapp.*
 import com.example.moviesapp.adapters.CreditsAdapter
 import com.example.moviesapp.adapters.GenreAdapter
 import com.example.moviesapp.adapters.GridAdapter
 import com.example.moviesapp.adapters.ID_EXTRA
 import com.example.moviesapp.features.credits.CreditsActivity
+import com.example.moviesapp.features.trailer.TrailerActivity
 import com.example.moviesapp.subFeatures.movies.*
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.fragment_credits.*
 import kotlinx.android.synthetic.main.no_internet_connection.*
 
 const val EXTRA_CREDITS = "com.example.moviesapp.features.details.extraCredits"
+const val EXTRA_TRAILER = "com.example.moviesapp.features.details.extraTrailer"
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -74,11 +77,22 @@ class DetailsActivity : AppCompatActivity() {
             .apply { layoutManager = LinearLayoutManager(this@DetailsActivity, LinearLayoutManager.HORIZONTAL, false) }
             .apply { adapter = GenreAdapter(viewModel.genres, this@DetailsActivity) }
         release_date_text_view.text = setText(R.string.released_in, it.releaseDate ?: "-/-/-")
-        //revenue_text_view.text = setText(R.string.revenue, "${it.revenue}$")
         duration_text_view.text = setText(R.string.play_time, "${it.runTime} min")
         overview_text_view.text = it.overView
-        topBarFragment.activityTitle(it?.title?:"")
+        topBarFragment.activityTitle(it?.title ?: "")
+        getTrailer(it) { id -> startTrailer(id) }
     })
+
+    private inline fun getTrailer(response: DetailsResponse, trailer: (String) -> Unit) = response.trailers?.videos
+        ?.takeUnless { it.isEmpty() }
+        ?.run { trailer(get(0)?.key ?: "") }
+
+    private fun startTrailer(trailerId: String) = play_button.apply { visibility = View.VISIBLE }
+        .setOnClickListener {
+            Intent(this, TrailerActivity::class.java)
+                .apply { putExtra(EXTRA_TRAILER, trailerId) }
+                .let { startActivity(it) }
+        }
 
     private fun setText(resource: Int, text: String) = "${getString(resource)} $text"
 
