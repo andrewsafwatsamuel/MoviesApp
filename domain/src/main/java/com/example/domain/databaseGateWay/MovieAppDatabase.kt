@@ -14,8 +14,7 @@ val movieAppDatabase by lazy {
         applicationLiveData.getApplication(),
         MovieAppDatabase::class.java,
         DATABASE_NAME
-    )
-        .build()
+    ).build()
 }
 
 @Database(entities = [SuccessfulQuery::class], version = 1, exportSchema = false)

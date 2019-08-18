@@ -26,7 +26,7 @@ class DetailsUseCasesKtTest {
             on { retrieveDetails(1010) } doReturn just(
                 DetailsResponse(
                     false,
-                    "", "", 0, listOf(), "",
+                    "", 0, listOf(),"",
                     1010, "", "", "", "", 0.0f,
                     "", listOf(), listOf(), "", 0, 0, listOf(),
                     "", "", "", false, 0.0, 0, Videos(listOf())
@@ -54,7 +54,7 @@ class DetailsUseCasesKtTest {
             on { retrieveDetails(1010) } doReturn just(
                 DetailsResponse(
                     false,
-                    "", "", 0, listOf(), "",
+                    "", 0, listOf(),"",
                     1010, "", "", "", "", 0.0f,
                     "", listOf(), listOf(), "", 0, 0, listOf(),
                     "", "", "", false, 0.0, 0, Videos(listOf())
@@ -83,7 +83,7 @@ class DetailsUseCasesKtTest {
             on { retrieveDetails(1010) } doReturn just(
                 DetailsResponse(
                     false,
-                    "", "", 0, listOf(), "",
+                    "", 0, listOf(),"",
                     1010, "", "", "", "", 0.0f,
                     "", listOf(), listOf(), "", 0, 0, listOf(),
                     "", "", "", false, 0.0, 0, Videos(listOf())
@@ -111,7 +111,7 @@ class DetailsUseCasesKtTest {
             on { retrieveDetails(1010) } doReturn just(
                 DetailsResponse(
                     false,
-                    "", "", 0, listOf(), "",
+                    "", 0, listOf(),"",
                     1010, "", "", "", "", 0.0f,
                     "", listOf(), listOf(), "", 0, 0, listOf(),
                     "", "", "", false, 0.0, 0, Videos(listOf())

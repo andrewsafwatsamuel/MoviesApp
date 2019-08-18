@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.Movie
 import com.example.MovieResponse
-import com.example.domain.useCases.PopularUseCase
+import com.example.domain.useCases.MoviesUseCase
 import com.example.moviesapp.subFeatures.movies.QueryParameters
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -16,7 +16,7 @@ class PopularViewModel(
     val loading:MutableLiveData<Boolean> = MutableLiveData(),
     val parameters:MutableLiveData<QueryParameters<Unit>> = MutableLiveData(),
     val disposable: CompositeDisposable= CompositeDisposable(),
-    private val popularUseCase: PopularUseCase= PopularUseCase()
+    private val popularUseCase: MoviesUseCase= MoviesUseCase()
 ):ViewModel(){
 fun getPopularMovies(isConnected:Boolean,pageNumber: Int=1)=
     popularUseCase(isConnected,loading,result,pageNumber)
