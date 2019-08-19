@@ -13,17 +13,17 @@ import io.reactivex.schedulers.Schedulers
 class PopularViewModel(
     val movies: MutableList<Movie> = mutableListOf(),
     val result: MutableLiveData<MovieResponse> = MutableLiveData(),
-    val loading:MutableLiveData<Boolean> = MutableLiveData(),
-    val parameters:MutableLiveData<QueryParameters<Unit>> = MutableLiveData(),
-    val disposable: CompositeDisposable= CompositeDisposable(),
-    private val popularUseCase: MoviesUseCase= MoviesUseCase()
-):ViewModel(){
-fun getPopularMovies(isConnected:Boolean,pageNumber: Int=1)=
-    popularUseCase(isConnected,loading,result,pageNumber)
-        ?.subscribeOn(Schedulers.io())
-        ?.observeOn(AndroidSchedulers.mainThread())
-        ?.subscribe({},Throwable::printStackTrace)
-        ?.also { disposable.add(it) } ?: Unit
+    val loading: MutableLiveData<Boolean> = MutableLiveData(),
+    val parameters: MutableLiveData<QueryParameters<Unit>> = MutableLiveData(),
+    val disposable: CompositeDisposable = CompositeDisposable(),
+    private val popularUseCase: MoviesUseCase = MoviesUseCase()
+) : ViewModel() {
+    fun getPopularMovies(isConnected: Boolean, pageNumber: Int = 1) =
+        popularUseCase(isConnected, loading, pageNumber) { result.postValue(it)}
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe({}, Throwable::printStackTrace)
+            ?.also { disposable.add(it) } ?: Unit
 
     override fun onCleared() {
         super.onCleared()

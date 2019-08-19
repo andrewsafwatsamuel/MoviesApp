@@ -9,13 +9,13 @@ class MoviesUseCase(private val repository: BaseMoviesRepository = moviesReposit
     operator fun invoke(
         isConnected: Boolean,
         loading: MutableLiveData<Boolean>,
-        result: MutableLiveData<MovieResponse>,
         pageNumber: Int,
-        category: String="popular"
-    ) = repository.getMovies(category,pageNumber)
+        category: String = "popular",
+        result: (MovieResponse) -> Unit
+    ) = repository.getMovies(category, pageNumber)
         .takeIf { isConnected }
         ?.takeUnless { loading.value ?: false }
         ?.also { loading.postValue(true) }
-        ?.doOnSuccess { result.postValue(it)}
+        ?.doOnSuccess { result(it) }
         ?.doFinally { loading.postValue(false) }
 }

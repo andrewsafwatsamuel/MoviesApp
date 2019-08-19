@@ -31,7 +31,7 @@ class MoviesUseCaseTest {
         val result = MutableLiveData<MovieResponse>()
         val popularUseCase = MoviesUseCase(repositoryMock)
 
-        popularUseCase(connected, loading, result,1,"")!!
+        popularUseCase(connected, loading,1,""){result.value=it}!!
             .observeOn(Schedulers.trampoline())
             .subscribeOn(Schedulers.trampoline())
             .subscribe()
@@ -51,7 +51,7 @@ class MoviesUseCaseTest {
         val result = MutableLiveData<MovieResponse>()
         val popularUseCase = MoviesUseCase(repositoryMock)
 
-        popularUseCase(connected, loading, result,1,"")!!
+        popularUseCase(connected, loading, 1,""){result.value=it}!!
             .observeOn(Schedulers.trampoline())
             .subscribeOn(Schedulers.trampoline())
             .subscribe()
@@ -71,7 +71,7 @@ class MoviesUseCaseTest {
         val result = MutableLiveData<MovieResponse>()
         val popularUseCase = MoviesUseCase(repositoryMock)
 
-        popularUseCase(connected, loading, result,1,"")!!
+        popularUseCase(connected, loading, 1,""){result.value=it}!!
             .observeOn(Schedulers.trampoline())
             .subscribeOn(Schedulers.trampoline())
             .doOnSubscribe { throw Exception() }
@@ -92,7 +92,7 @@ class MoviesUseCaseTest {
         val result = MutableLiveData<MovieResponse>()
         val popularUseCase = MoviesUseCase(repositoryMock)
 
-        popularUseCase(connected, loading, result,1)
+        popularUseCase(connected, loading, 1,""){result.value=it}
             ?.observeOn(Schedulers.trampoline())
             ?.subscribeOn(Schedulers.trampoline())
             ?.subscribe()
@@ -114,7 +114,7 @@ class MoviesUseCaseTest {
         val popularUseCase = MoviesUseCase(repositoryMock)
 
         loading.value = true
-        popularUseCase(connected, loading, result,1)
+        popularUseCase(connected, loading, 1,""){result.value=it}
             ?.observeOn(Schedulers.trampoline())
             ?.subscribeOn(Schedulers.trampoline())
             ?.subscribe()
