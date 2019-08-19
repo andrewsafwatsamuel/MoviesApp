@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moviesapp.R
+import com.example.moviesapp.features.home.HomeActivity
 import com.example.moviesapp.features.popularMovies.PopularMovies
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -23,7 +24,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startSearchScreen() {
-        Intent(this, PopularMovies::class.java)
+        Intent(this, HomeActivity::class.java)
             .also { startActivity(it) }
             .also { finish() }
     }

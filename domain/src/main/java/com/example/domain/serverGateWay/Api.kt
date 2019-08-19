@@ -35,6 +35,13 @@ interface MoviesApi {
         @Path("category") category: String,
         @Query(PAGE_QUERY_PARAMETER) pageNumber: Int
     ): Single<MovieResponse>
+
+    @GET(POPULAR_API_END_POINT)
+    fun getCategories(
+        @Path("category") category: String,
+        @Query(PAGE_QUERY_PARAMETER) pageNumber: Int
+    ): Single<MovieResponse>
+
 }
 
 val movieDetails: DetailsApi by lazy {
