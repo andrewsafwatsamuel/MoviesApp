@@ -10,7 +10,7 @@ class MoviesUseCase(private val repository: BaseMoviesRepository = moviesReposit
         isConnected: Boolean,
         loading: MutableLiveData<Boolean>,
         pageNumber: Int,
-        category: String = "popular",
+        category: String,
         result: (MovieResponse) -> Unit
     ) = repository.getMovies(category, pageNumber)
         .takeIf { isConnected }

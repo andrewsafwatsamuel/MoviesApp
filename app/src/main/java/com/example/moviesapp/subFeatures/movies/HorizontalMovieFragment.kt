@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapp.R
-import com.example.moviesapp.features.popularMovies.PopularMovies
+import com.example.moviesapp.features.popularMovies.MoviesActivity
 
 const val MOVIE_CATEGORY = "com.example.moviesapp.subFeatures.movies.movieCategory"
 
@@ -28,7 +28,7 @@ class HorizontalMovieFragment : Fragment() {
 
     fun showMore() = view?.findViewById<TextView>(R.id.show_more_text_view)
 
-    private fun startMovieScreen(text: String) = Intent(context, PopularMovies::class.java)
+    private fun startMovieScreen(text: String) = Intent(context, MoviesActivity::class.java)
         .apply { putExtra(MOVIE_CATEGORY, text) }
         .let { startActivity(it) }
 

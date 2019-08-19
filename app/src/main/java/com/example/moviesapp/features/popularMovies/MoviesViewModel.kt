@@ -10,7 +10,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class PopularViewModel(
+class MoviesViewModel(
     val movies: MutableList<Movie> = mutableListOf(),
     val result: MutableLiveData<MovieResponse> = MutableLiveData(),
     val loading: MutableLiveData<Boolean> = MutableLiveData(),
@@ -18,8 +18,8 @@ class PopularViewModel(
     val disposable: CompositeDisposable = CompositeDisposable(),
     private val popularUseCase: MoviesUseCase = MoviesUseCase()
 ) : ViewModel() {
-    fun getPopularMovies(isConnected: Boolean, pageNumber: Int = 1) =
-        popularUseCase(isConnected, loading, pageNumber) { result.postValue(it)}
+    fun getMovies(isConnected: Boolean, category: String, pageNumber: Int = 1) =
+        popularUseCase(isConnected, loading, pageNumber,category) { result.postValue(it)}
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe({}, Throwable::printStackTrace)

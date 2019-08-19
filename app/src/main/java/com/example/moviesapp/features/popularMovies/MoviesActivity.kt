@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviesapp.R
+import com.example.moviesapp.adapters.CATEGORY_EXTRA
 import com.example.moviesapp.adapters.GridAdapter
 import com.example.moviesapp.features.search.SearchActivity
 import com.example.moviesapp.pageCount
@@ -15,13 +16,15 @@ import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
 import com.example.moviesapp.subFeatures.movies.QueryParameters
 import kotlinx.android.synthetic.main.activity_popular_movies.*
 
-class PopularMovies : AppCompatActivity() {
+class MoviesActivity : AppCompatActivity() {
 
     private val viewModel by lazy {
-        ViewModelProviders.of(this)[PopularViewModel::class.java]
+        ViewModelProviders.of(this)[MoviesViewModel::class.java]
     }
 
     private val fragment by lazy { popular_fragment as MoviesFragment }
+
+    private val category by lazy { intent.getStringExtra(CATEGORY_EXTRA) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +32,7 @@ class PopularMovies : AppCompatActivity() {
         supportActionBar?.hide()
 
         viewModel.run {
-            if (movies.isEmpty()) getPopularMovies(fragment.onConnectivityCheck())
+            if (movies.isEmpty()) getMovies(fragment.onConnectivityCheck(),category)
         }
 
         val layoutManager = GridLayoutManager(this, 3)
@@ -40,14 +43,14 @@ class PopularMovies : AppCompatActivity() {
             .queryParameters(viewModel.parameters)
             .lifecycleOwner(this)
             .layoutManager(layoutManager )
-            .retrieve { viewModel.getPopularMovies(fragment.onConnectivityCheck(), it.pageNumber + 1) }
+            .retrieve { viewModel.getMovies(fragment.onConnectivityCheck(), category,it.pageNumber + 1) }
             .build()
 
         with(viewModel) {
-            loading.observe(this@PopularMovies, Observer {
+            loading.observe(this@MoviesActivity, Observer {
                 if (it) fragment.onStartLoading() else finishLoading()
             })
-            result.observe(this@PopularMovies, Observer {
+            result.observe(this@MoviesActivity, Observer {
                 adapter.addItems(it.results)
                 parameters.value = QueryParameters(it.pageNumber, pageCount(it.pageCount), Unit)
                 disposable.clear()
@@ -73,7 +76,7 @@ class PopularMovies : AppCompatActivity() {
 
     private fun swipeRefresh() = fragment.onConnectivityCheck()
         .also { viewModel.movies.clear() }
-        .also { viewModel.getPopularMovies(it) }
+        .also { viewModel.getMovies(it,category) }
         .also { if (!it) popular_swipe_refresh.isRefreshing = false }
 
 }
