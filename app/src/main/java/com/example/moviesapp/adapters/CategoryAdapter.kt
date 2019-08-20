@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.Movie
 import com.example.moviesapp.R
 import com.example.moviesapp.features.home.CategoryList
-import com.example.moviesapp.features.popularMovies.MoviesActivity
+import com.example.moviesapp.features.movies.MoviesActivity
 
 const val CATEGORY_EXTRA = "com.example.moviesapp.adapters.categoryExtra"
 

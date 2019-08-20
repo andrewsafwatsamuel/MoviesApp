@@ -17,7 +17,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         supportActionBar?.hide()
 
-        Observable.timer(3, TimeUnit.SECONDS, Schedulers.io())
+        Observable.timer(1700, TimeUnit.MILLISECONDS, Schedulers.io())
             .subscribe { startSearchScreen() }
             .also { disposable.addAll() }
     }

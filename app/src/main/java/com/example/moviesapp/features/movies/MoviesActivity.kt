@@ -1,4 +1,4 @@
-package com.example.moviesapp.features.popularMovies
+package com.example.moviesapp.features.movies
 
 import android.content.Intent
 import android.os.Bundle

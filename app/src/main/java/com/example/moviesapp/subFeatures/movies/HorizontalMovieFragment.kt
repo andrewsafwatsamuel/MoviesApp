@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapp.R
-import com.example.moviesapp.features.popularMovies.MoviesActivity
+import com.example.moviesapp.features.movies.MoviesActivity
 
 const val MOVIE_CATEGORY = "com.example.moviesapp.subFeatures.movies.movieCategory"
 
