@@ -79,9 +79,15 @@ class DetailsActivity : AppCompatActivity() {
         release_date_text_view.text = setText(R.string.released_in, it.releaseDate ?: "-/-/-")
         duration_text_view.text = setText(R.string.play_time, "${it.runTime} min")
         overview_text_view.text = it.overView
-        topBarFragment.activityTitle(it?.title ?: "")
+        drawTopBar(it.title)
         getTrailer(it) { id -> startTrailer(id) }
     })
+
+    private fun drawTopBar(title:String?)= with(topBarFragment){
+        activityTitle(title?:"")
+        searchButton().visibility=View.GONE
+        backButton().setOnClickListener { finish() }
+    }
 
     private inline fun getTrailer(response: DetailsResponse, trailer: (String) -> Unit) = response.trailers?.videos
         ?.takeUnless { it.isEmpty() }

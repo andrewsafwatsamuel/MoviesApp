@@ -1,6 +1,5 @@
 package com.example.moviesapp.features.movies
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -9,11 +8,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviesapp.R
 import com.example.moviesapp.adapters.CATEGORY_EXTRA
 import com.example.moviesapp.adapters.GridAdapter
-import com.example.moviesapp.features.search.SearchActivity
 import com.example.moviesapp.pageCount
 import com.example.moviesapp.subFeatures.movies.MoviesFragment
 import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
 import com.example.moviesapp.subFeatures.movies.QueryParameters
+import com.example.moviesapp.subFeatures.movies.TopBarFragment
 import kotlinx.android.synthetic.main.activity_popular_movies.*
 
 class MoviesActivity : AppCompatActivity() {
@@ -26,10 +25,11 @@ class MoviesActivity : AppCompatActivity() {
 
     private val category by lazy { intent.getStringExtra(CATEGORY_EXTRA) }
 
+    private val topBarFragment by lazy { movies_top_bar_fragment as TopBarFragment }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_popular_movies)
-        supportActionBar?.hide()
 
         viewModel.run {
             if (movies.isEmpty()) getMovies(fragment.onConnectivityCheck(),category)
@@ -59,15 +59,13 @@ class MoviesActivity : AppCompatActivity() {
 
         fragment.drawRecycler(layoutManager, adapter, scrollListener)
 
-        search_activity_button.setOnClickListener { startSearchScreen() }
-
-        first_item_button.setOnClickListener { fragment.getToTop() }
+        topBarFragment
+            .apply { activityTitle(category) }
+            .backButton().setOnClickListener{
+            if(layoutManager.findFirstVisibleItemPosition()!=0)  fragment.getToTop()else finish() }
 
         popular_swipe_refresh.setOnRefreshListener { swipeRefresh() }
     }
-
-    private val searchIntent by lazy { Intent(this, SearchActivity::class.java) }
-    private fun startSearchScreen() = startActivity(searchIntent)
 
     private fun finishLoading() {
         fragment.onFinishLoading()

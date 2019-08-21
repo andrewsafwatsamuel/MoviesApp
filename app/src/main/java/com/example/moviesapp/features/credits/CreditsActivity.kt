@@ -1,6 +1,7 @@
 package com.example.moviesapp.features.credits
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,25 +19,29 @@ class CreditsActivity : AppCompatActivity() {
 
     private val fragment by lazy { credits_fragment as MoviesFragment }
 
-    private val topBarFragment by lazy { top_bar_fragment as TopBarFragment}
+    private val topBarFragment by lazy { top_bar_fragment as TopBarFragment }
 
     private val recyclerView by lazy {
         fragment.view?.findViewById<RecyclerView>(R.id.movies_recycler_view)
     }
 
-    private val creditsResponse by lazy {intent.getSerializableExtra(EXTRA_CREDITS) as CreditsResponse }
+    private val creditsResponse by lazy { intent.getSerializableExtra(EXTRA_CREDITS) as CreditsResponse }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credits)
 
-        topBarFragment.activityTitle("Credits")
+        with(topBarFragment) {
+            activityTitle("Credits")
+            backButton().setOnClickListener { finish() }
+            searchButton().visibility = View.GONE
+        }
 
         fragment.onConnectivityCheck()
 
         with(recyclerView!!) {
             layoutManager = LinearLayoutManager(this@CreditsActivity)
-            adapter = CreditsAdapter(R.layout.credits_vertical_card, drawCredits(creditsResponse,true))
+            adapter = CreditsAdapter(R.layout.credits_vertical_card, drawCredits(creditsResponse, true))
         }
     }
 }

@@ -13,9 +13,9 @@ import kotlinx.android.synthetic.main.top_bar.*
 
 class TopBarFragment : Fragment() {
 
-    fun backButton() = view?.findViewById<ImageView>(R.id.back_button)
+    fun backButton() = view!!.findViewById<ImageView>(R.id.back_button)
 
-  fun searchButton() = view?.findViewById<ImageView>(R.id.search_image_view)
+    fun searchButton() = view!!.findViewById<ImageView>(R.id.search_image_view)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.top_bar, container, false)

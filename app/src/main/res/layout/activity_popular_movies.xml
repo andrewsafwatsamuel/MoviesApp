@@ -8,57 +8,19 @@
         tools:context=".features.movies.MoviesActivity">
 
 
-    <LinearLayout
-            android:background="@color/colorPrimary"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:paddingStart="8dp"
-            android:orientation="horizontal"
+    <fragment
+            android:id="@+id/movies_top_bar_fragment"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"
-            android:id="@+id/linearLayout" tools:ignore="RtlSymmetry">
-        <ImageView
-                android:id="@+id/first_item_button"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/tmdb_green"
-                android:layout_weight="1"
-                android:contentDescription="@string/tmdb_green"/>
-        <LinearLayout
-                android:id="@+id/search_activity_button"
-                android:layout_marginEnd="16dp"
-                android:paddingStart="2dp"
-                android:paddingEnd="2dp"
-                android:paddingBottom="3dp"
-                android:background="@drawable/bottom_shadow_tmdb"
-                android:orientation="horizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="7">
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/magnify_green"
-                    android:contentDescription="@string/search_green"/>
-            <TextView
-                    android:text="@string/search_for_movie"
-                    android:layout_marginStart="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textColor="@color/tmdb_primary_color" android:fontFamily="@font/aladin"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-        </LinearLayout>
-    </LinearLayout>
+            android:layout_height="wrap_content" android:name="com.example.moviesapp.subFeatures.movies.TopBarFragment"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" android:id="@+id/popular_swipe_refresh">
+            android:id="@+id/popular_swipe_refresh" app:layout_constraintTop_toBottomOf="@+id/movies_top_bar_fragment">
         <fragment
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
