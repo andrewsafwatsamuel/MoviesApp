@@ -30,5 +30,9 @@
             android:layout_height="match_parent"
             android:textColor="@color/tmdb_primary_color" android:id="@+id/activity_title_text_view"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" android:fontFamily="@font/aladin"
-            android:textStyle="bold"/>
+            android:textStyle="bold" android:gravity="center_vertical"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:srcCompat="@drawable/magnify_green"
+            android:id="@+id/search_image_view" android:layout_weight="1"/>
 </LinearLayout>
