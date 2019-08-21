@@ -59,11 +59,15 @@ class DetailsActivity : AppCompatActivity() {
         related_movies_container.visibility = if (viewModel.movieList.isEmpty()) View.GONE else View.VISIBLE
     }
 
-    private fun retrieveData(connected: Boolean) = viewModel
-        .apply { setId(intent.getLongExtra(ID_EXTRA, 0)) }
-        .apply { retrieveCredits(connected) }
-        .apply { retrieveDetails(connected) }
-        .apply { retrieveRelated(connected) }
+    private fun retrieveData(connected: Boolean) =
+
+
+        with(viewModel) {
+            setId(intent.getLongExtra(ID_EXTRA, 0))
+            retrieveCredits(connected)
+            retrieveDetails(connected)
+            retrieveRelated(connected)
+        }
 
 
     private fun drawDetails() = viewModel.detailsResult.observe(this, Observer {
