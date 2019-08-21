@@ -27,4 +27,5 @@
                 android:name="com.example.moviesapp.subFeatures.movies.MoviesFragment"
                 android:id="@+id/popular_fragment"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <include layout="@layout/no_internet_connection"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

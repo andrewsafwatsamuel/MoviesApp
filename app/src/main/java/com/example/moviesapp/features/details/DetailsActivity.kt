@@ -26,7 +26,6 @@ import com.example.moviesapp.features.trailer.TrailerActivity
 import com.example.moviesapp.subFeatures.movies.*
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.fragment_credits.*
-import kotlinx.android.synthetic.main.no_internet_connection.*
 
 const val EXTRA_CREDITS = "com.example.moviesapp.features.details.extraCredits"
 const val EXTRA_TRAILER = "com.example.moviesapp.features.details.extraTrailer"
@@ -44,13 +43,13 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
         DetailsStarter(this, DetailsActivity::class.java, true)
-        not_connected_layout.visibility = if (checkConnectivity(this)) View.GONE else View.VISIBLE
         viewModel.relatedResult.observe(this, Observer {
             parameters.value = QueryParameters(it.pageNumber, it.pageCount, Unit)
             movieAdapter.addItems(it.results)
             onMoviesRetrieved()
         })
-        retrieveData(checkConnectivity(this))
+        retrieveData(onConnectivityCheck())
+        reload { retrieveData(it) }
         drawDetails()
         drawCredits()
         drawRelated()
@@ -60,12 +59,12 @@ class DetailsActivity : AppCompatActivity() {
         related_movies_container.visibility = if (viewModel.movieList.isEmpty()) View.GONE else View.VISIBLE
     }
 
-    private fun retrieveData(connected: Boolean) = with(viewModel) {
-        setId(intent.getLongExtra(ID_EXTRA, 0))
-        retrieveCredits(connected)
-        retrieveDetails(connected)
-        retrieveRelated(connected)
-    }
+    private fun retrieveData(connected: Boolean) = viewModel
+        .apply { setId(intent.getLongExtra(ID_EXTRA, 0)) }
+        .apply { retrieveCredits(connected) }
+        .apply { retrieveDetails(connected) }
+        .apply { retrieveRelated(connected) }
+
 
     private fun drawDetails() = viewModel.detailsResult.observe(this, Observer {
         drawPhoto(POSTER_SIZE, it.poster, details_poster_image_view)
@@ -83,9 +82,9 @@ class DetailsActivity : AppCompatActivity() {
         getTrailer(it) { id -> startTrailer(id) }
     })
 
-    private fun drawTopBar(title:String?)= with(topBarFragment){
-        activityTitle(title?:"")
-        searchButton().visibility=View.GONE
+    private fun drawTopBar(title: String?) = with(topBarFragment) {
+        activityTitle(title ?: "")
+        searchButton().visibility = View.GONE
         backButton().setOnClickListener { finish() }
     }
 
@@ -140,7 +139,7 @@ class DetailsActivity : AppCompatActivity() {
         .layoutManager(manager)
         .lifecycleOwner(this)
         .queryParameters(parameters)
-        .retrieve { viewModel.retrieveRelated(checkConnectivity(this), it.pageNumber + 1) }
+        .retrieve { viewModel.retrieveRelated(onConnectivityCheck(), it.pageNumber + 1) }
         .build()
 }
 

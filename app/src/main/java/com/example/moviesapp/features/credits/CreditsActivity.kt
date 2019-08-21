@@ -10,10 +10,12 @@ import com.example.moviesapp.R
 import com.example.moviesapp.adapters.CreditsAdapter
 import com.example.moviesapp.drawCredits
 import com.example.moviesapp.features.details.EXTRA_CREDITS
+import com.example.moviesapp.onConnectivityCheck
 import com.example.moviesapp.subFeatures.movies.MoviesFragment
 import com.example.moviesapp.subFeatures.movies.TopBarFragment
 import kotlinx.android.synthetic.main.activity_credits.*
 import kotlinx.android.synthetic.main.activity_details.credits_fragment
+import kotlinx.android.synthetic.main.no_internet_connection.*
 
 class CreditsActivity : AppCompatActivity() {
 
@@ -31,17 +33,20 @@ class CreditsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credits)
 
-        with(topBarFragment) {
-            activityTitle("Credits")
-            backButton().setOnClickListener { finish() }
-            searchButton().visibility = View.GONE
-        }
+        drawTopFragment()
+        onConnectivityCheck()
+        reload_Text_view.setOnClickListener { onConnectivityCheck() }
+        drawCredits()
+    }
 
-        fragment.onConnectivityCheck()
+    private fun drawTopFragment()=with(topBarFragment) {
+        activityTitle("Credits")
+        backButton().setOnClickListener { finish() }
+        searchButton().visibility = View.GONE
+    }
 
-        with(recyclerView!!) {
-            layoutManager = LinearLayoutManager(this@CreditsActivity)
-            adapter = CreditsAdapter(R.layout.credits_vertical_card, drawCredits(creditsResponse, true))
-        }
+    private fun drawCredits()= with(recyclerView!!) {
+        layoutManager = LinearLayoutManager(this@CreditsActivity)
+        adapter = CreditsAdapter(R.layout.credits_vertical_card, drawCredits(creditsResponse, true))
     }
 }

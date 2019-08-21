@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviesapp.R
 import com.example.moviesapp.adapters.CATEGORY_EXTRA
 import com.example.moviesapp.adapters.GridAdapter
+import com.example.moviesapp.onConnectivityCheck
 import com.example.moviesapp.pageCount
+import com.example.moviesapp.reload
 import com.example.moviesapp.subFeatures.movies.MoviesFragment
 import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
 import com.example.moviesapp.subFeatures.movies.QueryParameters
@@ -32,8 +34,10 @@ class MoviesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_popular_movies)
 
         viewModel.run {
-            if (movies.isEmpty()) getMovies(fragment.onConnectivityCheck(),category)
+            if (movies.isEmpty()) getMovies(onConnectivityCheck(), category)
         }
+
+        reload { viewModel.getMovies(it, category) }
 
         val layoutManager = GridLayoutManager(this, 3)
 
@@ -42,8 +46,8 @@ class MoviesActivity : AppCompatActivity() {
         val scrollListener = PaginationScrollListener.Builder<Unit>()
             .queryParameters(viewModel.parameters)
             .lifecycleOwner(this)
-            .layoutManager(layoutManager )
-            .retrieve { viewModel.getMovies(fragment.onConnectivityCheck(), category,it.pageNumber + 1) }
+            .layoutManager(layoutManager)
+            .retrieve { viewModel.getMovies(onConnectivityCheck(), category, it.pageNumber + 1) }
             .build()
 
         with(viewModel) {
@@ -61,8 +65,9 @@ class MoviesActivity : AppCompatActivity() {
 
         topBarFragment
             .apply { activityTitle(category) }
-            .backButton().setOnClickListener{
-            if(layoutManager.findFirstVisibleItemPosition()!=0)  fragment.getToTop()else finish() }
+            .backButton().setOnClickListener {
+                if (layoutManager.findFirstVisibleItemPosition() != 0) fragment.getToTop() else finish()
+            }
 
         popular_swipe_refresh.setOnRefreshListener { swipeRefresh() }
     }
@@ -72,9 +77,9 @@ class MoviesActivity : AppCompatActivity() {
         popular_swipe_refresh.isRefreshing = false
     }
 
-    private fun swipeRefresh() = fragment.onConnectivityCheck()
+    private fun swipeRefresh() = onConnectivityCheck()
         .also { viewModel.movies.clear() }
-        .also { viewModel.getMovies(it,category) }
+        .also { viewModel.getMovies(it, category) }
         .also { if (!it) popular_swipe_refresh.isRefreshing = false }
 
 }
