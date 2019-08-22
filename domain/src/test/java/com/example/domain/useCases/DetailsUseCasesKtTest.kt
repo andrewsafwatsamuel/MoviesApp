@@ -86,7 +86,8 @@ class DetailsUseCasesKtTest {
                     "", 0, listOf(),"",
                     1010, "", "", "", "", 0.0f,
                     "", listOf(), listOf(), "", 0, 0, listOf(),
-                    "", "", "", false, 0.0, 0, Videos(listOf())
+                    "", "", "", false, 0.0, 0,
+                    Videos(listOf())
                 )
             )
         }
@@ -114,7 +115,8 @@ class DetailsUseCasesKtTest {
                     "", 0, listOf(),"",
                     1010, "", "", "", "", 0.0f,
                     "", listOf(), listOf(), "", 0, 0, listOf(),
-                    "", "", "", false, 0.0, 0, Videos(listOf())
+                    "", "", "", false, 0.0, 0,
+                    Videos(listOf())
                 )
             )
         }
