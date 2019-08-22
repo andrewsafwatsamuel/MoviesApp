@@ -8,10 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapp.R
 import com.example.moviesapp.adapters.MovieAdapter
-import com.example.moviesapp.checkConnectivity
 import com.example.moviesapp.features.details.DetailsActivity
 import kotlinx.android.synthetic.main.fragment_movies.*
-import kotlinx.android.synthetic.main.no_internet_connection.*
 
 class MoviesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,20 +36,9 @@ class MoviesFragment : Fragment() {
         empty_movies_text_view.text = emptyStateText
     }
 
-    fun onConnectivityCheck(): Boolean =
-        checkConnectivity(activity!!)
-            .also { if (!it) notConnected() else onNonEmptyState() }
-
     fun onNonEmptyState() {
         empty_movies_text_view.visibility = View.GONE
         movies_recycler_view.visibility = View.VISIBLE
-        not_connected_layout.visibility = View.GONE
-    }
-
-    private fun notConnected() {
-        movies_progress_bar.visibility = View.GONE
-        onEmptyState("")
-        not_connected_layout.visibility = View.VISIBLE
     }
 
     fun getToTop() {

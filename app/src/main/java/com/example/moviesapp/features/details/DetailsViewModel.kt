@@ -42,7 +42,7 @@ class DetailsViewModel(
     private fun <T> Single<T>?.subscribeSingle() = this
         ?.subscribeOn(Schedulers.io())
         ?.observeOn(AndroidSchedulers.mainThread())
-        ?.subscribe({}, Throwable::printStackTrace)
+        ?.subscribe({ println(it)}, Throwable::printStackTrace)
         ?.also { disposables.add(it) } ?: Unit
 
     override fun onCleared() {

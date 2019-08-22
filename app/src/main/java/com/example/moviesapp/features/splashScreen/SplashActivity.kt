@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moviesapp.R
-import com.example.moviesapp.features.popularMovies.PopularMovies
+import com.example.moviesapp.features.home.HomeActivity
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -17,13 +17,13 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         supportActionBar?.hide()
 
-        Observable.timer(3, TimeUnit.SECONDS, Schedulers.io())
+        Observable.timer(1700, TimeUnit.MILLISECONDS, Schedulers.io())
             .subscribe { startSearchScreen() }
             .also { disposable.addAll() }
     }
 
     private fun startSearchScreen() {
-        Intent(this, PopularMovies::class.java)
+        Intent(this, HomeActivity::class.java)
             .also { startActivity(it) }
             .also { finish() }
     }

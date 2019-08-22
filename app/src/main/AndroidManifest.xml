@@ -15,11 +15,12 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".features.home.HomeActivity">
+        </activity>
         <activity
                 android:name=".features.trailer.TrailerActivity"
                 android:screenOrientation="portrait"
-                android:theme="@style/AppTheme.popup"
-        />
+                android:theme="@style/AppTheme.popup"/>
         <activity
                 android:name=".features.splashScreen.SplashActivity"
                 android:screenOrientation="portrait">
@@ -29,7 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".features.popularMovies.PopularMovies"/>
+        <activity android:name=".features.movies.MoviesActivity"/>
         <activity android:name=".features.search.SearchActivity"/>
         <activity android:name=".features.details.DetailsActivity"/>
         <activity android:name=".features.credits.CreditsActivity"/>

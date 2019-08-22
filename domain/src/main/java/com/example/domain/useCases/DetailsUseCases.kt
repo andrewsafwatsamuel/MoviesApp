@@ -22,13 +22,13 @@ class DetailsUseCases(
     ) = id.also { if (it == 0L) throw IllegalStateException("Id must have value") }
         .takeIf { connected }
         .takeUnless { loading.value ?: false }
+        .also { if (connected) loading.postValue(true) }
 
     fun retrieveDetails(
         connected: Boolean,
         loading: MutableLiveData<Boolean>,
         result: MutableLiveData<DetailsResponse>
     ) = checkConditions(connected, loading)
-            .also { loading.postValue(true) }
             ?.let { repository.retrieveDetails(it) }
             ?.doOnSuccess { result.postValue(it) }
             ?.doFinally { loading.postValue(false )}
@@ -38,7 +38,6 @@ class DetailsUseCases(
         loading: MutableLiveData<Boolean>,
         result: MutableLiveData<CreditsResponse>
     ) = checkConditions(connected, loading)
-        .also { loading.postValue(true) }
         ?.let { repository.retrieveCredits(it) }
         ?.doOnSuccess { result.postValue(it) }
         ?.doFinally { loading.postValue(false )}
@@ -50,7 +49,6 @@ class DetailsUseCases(
         loading: MutableLiveData<Boolean>,
         result: MutableLiveData<MovieResponse>
     ) = checkConditions(connected, loading)
-        .also { loading.postValue(true) }
         ?.let { repository.retrieveRelated(it,pageNumber) }
         ?.doOnSuccess { result.postValue(it) }
         ?.doFinally { loading.postValue(false )}

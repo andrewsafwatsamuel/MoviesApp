@@ -17,11 +17,16 @@
             android:layout_above="@id/not_connected_text_view"/>
     <TextView
             android:text="@string/check_your_internet_connection"
-            android:gravity="center"
             android:layout_centerInParent="true"
             android:id="@+id/not_connected_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:textColor="@color/tmdb_secondary_color"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:fontFamily="monospace" android:layout_margin="16dp"/>
+            android:textColor="@color/tmdb_secondary_color"
+            style="@style/not_connected_style" android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp" android:layout_marginEnd="16dp"/>
+    <TextView
+            android:id="@+id/reload_Text_view"
+            android:text="@string/try_again"
+            style="@style/not_connected_style"
+            android:layout_below="@id/not_connected_text_view"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/navy_blue" android:fontFamily="@font/abhaya_libre"/>
 </RelativeLayout>

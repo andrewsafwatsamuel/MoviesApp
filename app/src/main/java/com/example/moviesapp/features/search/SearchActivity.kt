@@ -10,18 +10,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.moviesapp.BaseTextWatcher
-import com.example.moviesapp.R
+import com.example.moviesapp.*
 import com.example.moviesapp.adapters.ACTION_SEARCH
 import com.example.moviesapp.adapters.EXTRA_KEY
 import com.example.moviesapp.adapters.ListAdapter
 import com.example.moviesapp.adapters.RecentSearchesAdapter
-import com.example.moviesapp.hideKeyboard
-import com.example.moviesapp.pageCount
 import com.example.moviesapp.subFeatures.movies.MoviesFragment
 import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
 import com.example.moviesapp.subFeatures.movies.QueryParameters
 import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.no_internet_connection.*
 
 private const val NO_RESULTS = "It seems that there are no movies with that name"
 
@@ -38,7 +36,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        supportActionBar?.hide()
 
         if (viewModel.movieList.isEmpty()) retrieveRecents()
 
@@ -50,10 +47,12 @@ class SearchActivity : AppCompatActivity() {
             .lifecycleOwner(this)
             .layoutManager(manager)
             .retrieve {
-                viewModel.retrieveMovies(fragment.onConnectivityCheck(), it.parameters, it.pageNumber + 1)
+                viewModel.retrieveMovies(onConnectivityCheck(), it.parameters, it.pageNumber + 1)
             }
             .activity(this)
             .build()
+
+        reload_Text_view.setOnClickListener { onConnectivityCheck() }
 
         fragment.drawRecycler(manager, listAdapter, scrollListener)
 
@@ -104,7 +103,7 @@ class SearchActivity : AppCompatActivity() {
     private fun retrieveMovies(string: String) =
         with(viewModel) {
             movieList.clear()
-            retrieveMovies(fragment.onConnectivityCheck(), string)
+            retrieveMovies(onConnectivityCheck(), string)
         }
 
     private fun setParameters(pageNumber: Int, pageCount: Int) = viewModel.parameterLiveData
