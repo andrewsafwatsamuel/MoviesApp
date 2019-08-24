@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
->
+        tools:context=".features.details.DetailsActivity" >
     <fragment
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:context=".features.details.DetailsActivity" android:paddingBottom="10dp">
+                android:paddingBottom="10dp">
             <ImageView
                     android:layout_width="0dp"
                     android:layout_height="0dp" app:srcCompat="@drawable/movie_tape"
@@ -180,7 +180,9 @@
                         android:name="com.example.moviesapp.subFeatures.movies.HorizontalMovieFragment"
                         android:id="@+id/related_movies_fragment"/>
             </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-    <include layout="@layout/no_internet_connection"/>
+    <include layout="@layout/empty_state_layout"/>
+
 </RelativeLayout>

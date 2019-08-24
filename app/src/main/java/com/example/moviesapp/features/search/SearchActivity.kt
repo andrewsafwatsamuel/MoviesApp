@@ -19,7 +19,7 @@ import com.example.moviesapp.subFeatures.movies.MoviesFragment
 import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
 import com.example.moviesapp.subFeatures.movies.QueryParameters
 import kotlinx.android.synthetic.main.activity_search.*
-import kotlinx.android.synthetic.main.no_internet_connection.*
+import kotlinx.android.synthetic.main.empty_state_layout.*
 
 private const val NO_RESULTS = "It seems that there are no movies with that name"
 
@@ -52,7 +52,7 @@ class SearchActivity : AppCompatActivity() {
             .activity(this)
             .build()
 
-        reload_Text_view.setOnClickListener { onConnectivityCheck() }
+        reload { viewModel.retrieveMovies(it,search_edit_text.text.toString()) }
 
         fragment.drawRecycler(manager, listAdapter, scrollListener)
 
@@ -80,6 +80,7 @@ class SearchActivity : AppCompatActivity() {
             loading.observe(this@SearchActivity, Observer {
                 fragment.run { if (it) onStartLoading() else onFinishLoading() }
             })
+            viewModel.errorLiveData.observe(this@SearchActivity, Observer { setErrorState(it) })
         }
         registerReceiver(searchReceiver, IntentFilter(ACTION_SEARCH))
     }
@@ -107,7 +108,10 @@ class SearchActivity : AppCompatActivity() {
         }
 
     private fun setParameters(pageNumber: Int, pageCount: Int) = viewModel.parameterLiveData
-        .run { value = QueryParameters(pageNumber, pageCount(pageCount), search_edit_text.text.toString()) }
+        .run {
+            value =
+                QueryParameters(pageNumber, pageCount(pageCount), search_edit_text.text.toString())
+        }
 
 
     private fun retrieveRecents() {

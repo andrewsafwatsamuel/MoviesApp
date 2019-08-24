@@ -36,8 +36,16 @@ class DetailsActivity : AppCompatActivity() {
     private val creditsFragment by lazy { credits_fragment as CreditsFragment }
     private val moviesFragment by lazy { related_movies_fragment as HorizontalMovieFragment }
     private val parameters = MutableLiveData<QueryParameters<Unit>>()
-    private val movieAdapter by lazy { GridAdapter(viewModel.movieList, R.layout.horizontal_movie_item) }
+    private val movieAdapter by lazy {
+        GridAdapter(
+            viewModel.movieList,
+            R.layout.horizontal_movie_item
+        )
+    }
     private val topBarFragment by lazy { top_bar_fragment as TopBarFragment }
+    private val genresLayoutManager = LinearLayoutManager(
+        this@DetailsActivity, LinearLayoutManager.HORIZONTAL, false
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,21 +56,20 @@ class DetailsActivity : AppCompatActivity() {
             movieAdapter.addItems(it.results)
             onMoviesRetrieved()
         })
+        viewModel.errorLiveData.observe(this, Observer { setErrorState(it) })
         retrieveData(onConnectivityCheck())
-        reload { retrieveData(it) }
+        reload { retrieveData(it);viewModel.errorLiveData.value=null }
         drawDetails()
         drawCredits()
         drawRelated()
     }
 
     private fun onMoviesRetrieved() {
-        related_movies_container.visibility = if (viewModel.movieList.isEmpty()) View.GONE else View.VISIBLE
+        related_movies_container.visibility =
+            if (viewModel.movieList.isEmpty()) View.GONE else View.VISIBLE
     }
 
-    private fun retrieveData(connected: Boolean) =
-
-
-        with(viewModel) {
+    private fun retrieveData(connected: Boolean) = with(viewModel) {
             setId(intent.getLongExtra(ID_EXTRA, 0))
             retrieveCredits(connected)
             retrieveDetails(connected)
@@ -77,10 +84,10 @@ class DetailsActivity : AppCompatActivity() {
         rating_text_view.text = "${it.voteAverage}"
         viewModel.genres.value = it.genres?.map { g -> g.name ?: "" }
         genres_recycler_view
-            .apply { layoutManager = LinearLayoutManager(this@DetailsActivity, LinearLayoutManager.HORIZONTAL, false) }
+            .apply { layoutManager = genresLayoutManager }
             .apply { adapter = GenreAdapter(viewModel.genres, this@DetailsActivity) }
-        release_date_text_view.text = setText(R.string.released_in, it.releaseDate ?: "-/-/-")
-        duration_text_view.text = setText(R.string.play_time, "${it.runTime} min")
+        release_date_text_view.text = setDetailsText(R.string.released_in, it.releaseDate ?: "-/-/-")
+        duration_text_view.text = setDetailsText(R.string.play_time, "${it.runTime} min")
         overview_text_view.text = it.overView
         drawTopBar(it.title)
         getTrailer(it) { id -> startTrailer(id) }
@@ -92,9 +99,10 @@ class DetailsActivity : AppCompatActivity() {
         backButton().setOnClickListener { finish() }
     }
 
-    private inline fun getTrailer(response: DetailsResponse, trailer: (String) -> Unit) = response.trailers?.videos
-        ?.takeUnless { it.isEmpty() }
-        ?.run { trailer(get(0)?.key ?: "") }
+    private inline fun getTrailer(response: DetailsResponse, trailer: (String) -> Unit) =
+        response.trailers?.videos
+            ?.takeUnless { it.isEmpty() }
+            ?.run { trailer(get(0)?.key ?: "") }
 
     private fun startTrailer(trailerId: String) = play_button.apply { visibility = View.VISIBLE }
         .setOnClickListener {
@@ -103,7 +111,7 @@ class DetailsActivity : AppCompatActivity() {
                 .let { startActivity(it) }
         }
 
-    private fun setText(resource: Int, text: String) = "${getString(resource)} $text"
+    private fun setDetailsText(resource: Int, text: String) = "${getString(resource)} $text"
 
     private fun drawCredits() = viewModel.creditsResult.observe(this, Observer {
         with(creditsFragment) {
@@ -125,7 +133,7 @@ class DetailsActivity : AppCompatActivity() {
         .removePrefix("[")
         .removeSuffix("]")
 
-    private val manager = LinearLayoutManager(
+    private val relatedLayoutMAnager = LinearLayoutManager(
         this@DetailsActivity,
         LinearLayoutManager.HORIZONTAL,
         false
@@ -135,9 +143,9 @@ class DetailsActivity : AppCompatActivity() {
         .apply { showMore()?.visibility = View.GONE }
         .apply { setCategory(getString(R.string.you_might_like)) }
         .recyclerView()
-        ?.apply { layoutManager = manager }
+        ?.apply { layoutManager = relatedLayoutMAnager }
         ?.apply { adapter = movieAdapter }
-        ?.addOnScrollListener(pagination(manager))
+        ?.addOnScrollListener(pagination(relatedLayoutMAnager))
 
     private fun pagination(manager: LinearLayoutManager) = PaginationScrollListener.Builder<Unit>()
         .layoutManager(manager)
@@ -156,7 +164,9 @@ class CreditsFragment : Fragment() {
         inflater.inflate(R.layout.fragment_credits, container, false)
 
     fun addCast(cast: List<CreditsMember>): RecyclerView = cast_recycler_view
-        .apply { layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) }
+        .apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
         .apply { adapter = CreditsAdapter(R.layout.credits_horizonal_card, cast) }
 
     fun setDirector(director: String) {

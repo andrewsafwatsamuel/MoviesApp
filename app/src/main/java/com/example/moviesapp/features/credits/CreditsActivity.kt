@@ -15,7 +15,7 @@ import com.example.moviesapp.subFeatures.movies.MoviesFragment
 import com.example.moviesapp.subFeatures.movies.TopBarFragment
 import kotlinx.android.synthetic.main.activity_credits.*
 import kotlinx.android.synthetic.main.activity_details.credits_fragment
-import kotlinx.android.synthetic.main.no_internet_connection.*
+import kotlinx.android.synthetic.main.empty_state_layout.*
 
 class CreditsActivity : AppCompatActivity() {
 

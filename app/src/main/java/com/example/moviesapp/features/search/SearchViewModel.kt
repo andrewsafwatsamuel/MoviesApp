@@ -6,6 +6,7 @@ import com.example.Movie
 import com.example.MovieResponse
 import com.example.domain.useCases.MovieSearchUseCase
 import com.example.domain.useCases.ShowStoredMoviesUseCase
+import com.example.moviesapp.ERROR_MESSAGE
 import com.example.moviesapp.subFeatures.movies.QueryParameters
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,6 +20,7 @@ class SearchViewModel(
     val result: MutableLiveData<MovieResponse> = MutableLiveData(),
     val movieList: MutableList<Movie> = mutableListOf(),
     val disposables: CompositeDisposable = CompositeDisposable(),
+    val errorLiveData: MutableLiveData<String> = MutableLiveData(),
     private val movieSearch: MovieSearchUseCase = MovieSearchUseCase(),
     private val storedMovies: ShowStoredMoviesUseCase = ShowStoredMoviesUseCase()
 ) : ViewModel() {
@@ -36,7 +38,7 @@ class SearchViewModel(
         movieSearch(connected, movieName, loading, result, pageNumber)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe({}, Throwable::printStackTrace)
+            ?.subscribe({errorLiveData.value=null}, {errorLiveData.value= ERROR_MESSAGE})
             ?.also { disposables.add(it) } ?: Unit
     }
 

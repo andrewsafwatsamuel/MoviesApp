@@ -5,12 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.moviesapp.R
+import com.example.moviesapp.*
 import com.example.moviesapp.adapters.CATEGORY_EXTRA
 import com.example.moviesapp.adapters.GridAdapter
-import com.example.moviesapp.onConnectivityCheck
-import com.example.moviesapp.pageCount
-import com.example.moviesapp.reload
 import com.example.moviesapp.subFeatures.movies.MoviesFragment
 import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
 import com.example.moviesapp.subFeatures.movies.QueryParameters
@@ -59,6 +56,7 @@ class MoviesActivity : AppCompatActivity() {
                 parameters.value = QueryParameters(it.pageNumber, pageCount(it.pageCount), Unit)
                 disposable.clear()
             })
+            errorLiveData.observe(this@MoviesActivity, Observer { setErrorState(it) })
         }
 
         fragment.drawRecycler(layoutManager, adapter, scrollListener)

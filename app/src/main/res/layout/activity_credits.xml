@@ -18,6 +18,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/top_bar_fragment"/>
-    <include layout="@layout/no_internet_connection"
+    <include layout="@layout/empty_state_layout"
     />
 </androidx.constraintlayout.widget.ConstraintLayout>

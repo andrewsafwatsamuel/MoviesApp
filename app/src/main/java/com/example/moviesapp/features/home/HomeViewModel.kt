@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.Movie
 import com.example.domain.engine.toMutableLiveData
 import com.example.domain.useCases.MoviesUseCase
+import com.example.moviesapp.ERROR_MESSAGE
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -24,7 +25,7 @@ class HomeViewModel(
         moviesUseCase(isConnected, loadingLiveData, page, category) { addCategory(category, it.results) }
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe({}, { errorLiveData.value = it.message })
+            ?.subscribe({}, { errorLiveData.value = ERROR_MESSAGE})
             ?.let { disposable.add(it) } ?: Unit
 
     private fun addCategory(category: String, movies: List<Movie>) = result
