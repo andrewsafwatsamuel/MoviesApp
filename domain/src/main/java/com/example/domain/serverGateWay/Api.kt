@@ -14,7 +14,7 @@ private const val POPULAR_API_END_POINT = "movie/{category}"
 private const val PAGE_QUERY_PARAMETER = "page"
 
 val movieSearch: SearchApi by lazy {
-    RetrofitInstance().create(SearchApi::class.java)
+    retrofitInstance.create(SearchApi::class.java)
 }
 
 interface SearchApi {
@@ -26,7 +26,7 @@ interface SearchApi {
 }
 
 val moviesApi: MoviesApi by lazy {
-    RetrofitInstance().create(MoviesApi::class.java)
+    retrofitInstance.create(MoviesApi::class.java)
 }
 
 interface MoviesApi {
@@ -45,7 +45,7 @@ interface MoviesApi {
 }
 
 val movieDetails: DetailsApi by lazy {
-    RetrofitInstance().create(DetailsApi::class.java)
+    retrofitInstance.create(DetailsApi::class.java)
 }
 
 interface DetailsApi {

@@ -26,13 +26,12 @@ private fun request(chain: Interceptor.Chain): Response = with(chain.request()) 
         .let { request -> chain.proceed(request) }
 }
 
-object RetrofitInstance {
-    operator fun invoke(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(API_ROOT)
-            .client(httpClient)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-}
+val retrofitInstance: Retrofit by lazy {
+      Retrofit.Builder()
+          .baseUrl(API_ROOT)
+          .client(httpClient)
+          .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+          .addConverterFactory(GsonConverterFactory.create())
+          .build()
+
+  }

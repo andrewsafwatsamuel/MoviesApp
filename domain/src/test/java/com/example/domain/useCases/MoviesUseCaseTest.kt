@@ -32,10 +32,7 @@ class MoviesUseCaseTest {
         val popularUseCase = MoviesUseCase(repositoryMock)
 
         popularUseCase(connected, loading,1,""){result.value=it}!!
-            .observeOn(Schedulers.trampoline())
-            .subscribeOn(Schedulers.trampoline())
-            .subscribe()
-
+            .blockingGet()
         assertTrue(result.value != null)
     }
 
@@ -52,10 +49,7 @@ class MoviesUseCaseTest {
         val popularUseCase = MoviesUseCase(repositoryMock)
 
         popularUseCase(connected, loading, 1,""){result.value=it}!!
-            .observeOn(Schedulers.trampoline())
-            .subscribeOn(Schedulers.trampoline())
-            .subscribe()
-
+            .blockingGet()
         assertTrue(loading.value == false)
     }
 
@@ -72,11 +66,7 @@ class MoviesUseCaseTest {
         val popularUseCase = MoviesUseCase(repositoryMock)
 
         popularUseCase(connected, loading, 1,""){result.value=it}!!
-            .observeOn(Schedulers.trampoline())
-            .subscribeOn(Schedulers.trampoline())
-            .doOnSubscribe { throw Exception() }
-            .subscribe({}, Throwable::printStackTrace)
-
+            .blockingGet()
         assertTrue(loading.value == false)
     }
 
@@ -93,10 +83,7 @@ class MoviesUseCaseTest {
         val popularUseCase = MoviesUseCase(repositoryMock)
 
         popularUseCase(connected, loading, 1,""){result.value=it}
-            ?.observeOn(Schedulers.trampoline())
-            ?.subscribeOn(Schedulers.trampoline())
-            ?.subscribe()
-
+            ?.blockingGet()
         assertTrue(result.value == null)
     }
 
@@ -115,10 +102,7 @@ class MoviesUseCaseTest {
 
         loading.value = true
         popularUseCase(connected, loading, 1,""){result.value=it}
-            ?.observeOn(Schedulers.trampoline())
-            ?.subscribeOn(Schedulers.trampoline())
-            ?.subscribe()
-
+            ?.blockingGet()
         assertTrue(result.value == null)
     }
 }
