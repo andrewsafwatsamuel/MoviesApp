@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -18,8 +19,9 @@ import com.example.moviesapp.adapters.RecentSearchesAdapter
 import com.example.moviesapp.subFeatures.movies.MoviesFragment
 import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
 import com.example.moviesapp.subFeatures.movies.QueryParameters
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_search.*
-import kotlinx.android.synthetic.main.empty_state_layout.*
+import java.util.concurrent.TimeUnit
 
 private const val NO_RESULTS = "It seems that there are no movies with that name"
 
@@ -29,7 +31,7 @@ class SearchActivity : AppCompatActivity() {
     private val fragment by lazy { movies_fragment as MoviesFragment }
     private val searchReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
-            startSearch(intent.getStringExtra(EXTRA_KEY)?:"")
+            startSearch(intent.getStringExtra(EXTRA_KEY) ?: "")
         }
     }
 
@@ -52,7 +54,7 @@ class SearchActivity : AppCompatActivity() {
             .activity(this)
             .build()
 
-        reload { viewModel.retrieveMovies(it,search_edit_text.text.toString()) }
+        reload { viewModel.retrieveMovies(it, search_edit_text.text.toString()) }
 
         fragment.drawRecycler(manager, listAdapter, scrollListener)
 
@@ -75,12 +77,15 @@ class SearchActivity : AppCompatActivity() {
                 setParameters(it.pageNumber, it.pageCount)
                 if (search_edit_text.text.isEmpty()) retrieveRecents() else hideSearches()
                 fragment.run { if (movieList.isEmpty()) onEmptyState(NO_RESULTS) else onNonEmptyState() }
-                disposables.clear()
             })
             loading.observe(this@SearchActivity, Observer {
                 fragment.run { if (it) onStartLoading() else onFinishLoading() }
             })
             viewModel.errorLiveData.observe(this@SearchActivity, Observer { setErrorState(it) })
+            searchSubject.subscribeOn(AndroidSchedulers.mainThread())
+                .debounce(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                .subscribe { updateSearch(it) }/*,Throwable::printStackTrace)*/
+                .also { disposables.add(it) }
         }
         registerReceiver(searchReceiver, IntentFilter(ACTION_SEARCH))
     }
@@ -96,10 +101,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun onTextChanged(): BaseTextWatcher = object : BaseTextWatcher {
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) =
-            retrieveMovies(s.toString())
-                .also { if (s.isEmpty() || s.isBlank()) retrieveRecents() else hideSearches() }
+        override fun afterTextChanged(s: Editable)=viewModel.searchSubject.onNext(s)
     }
+
+    private fun updateSearch(s: CharSequence) = retrieveMovies(s.toString())
+        .also { if (s.isEmpty() || s.isBlank()) retrieveRecents() else hideSearches() }
 
     private fun retrieveMovies(string: String) =
         with(viewModel) {

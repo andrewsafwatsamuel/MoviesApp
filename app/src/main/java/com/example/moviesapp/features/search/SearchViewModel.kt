@@ -12,6 +12,8 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 
 class SearchViewModel(
     val storedMovieNames: MutableLiveData<List<String>> = MutableLiveData(),
@@ -21,6 +23,7 @@ class SearchViewModel(
     val movieList: MutableList<Movie> = mutableListOf(),
     val disposables: CompositeDisposable = CompositeDisposable(),
     val errorLiveData: MutableLiveData<String> = MutableLiveData(),
+    val searchSubject:BehaviorSubject<CharSequence> = BehaviorSubject.create(),
     private val movieSearch: MovieSearchUseCase = MovieSearchUseCase(),
     private val storedMovies: ShowStoredMoviesUseCase = ShowStoredMoviesUseCase()
 ) : ViewModel() {
