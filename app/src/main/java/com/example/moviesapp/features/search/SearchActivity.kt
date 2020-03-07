@@ -29,7 +29,7 @@ class SearchActivity : AppCompatActivity() {
     private val fragment by lazy { movies_fragment as MoviesFragment }
     private val searchReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
-            startSearch(intent.getStringExtra(EXTRA_KEY))
+            startSearch(intent.getStringExtra(EXTRA_KEY)?:"")
         }
     }
 

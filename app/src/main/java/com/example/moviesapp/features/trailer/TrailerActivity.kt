@@ -20,7 +20,7 @@ class TrailerActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListen
         ?.run { cueVideo(intent.getStringExtra(EXTRA_TRAILER)) } ?: Unit
 
     override fun onInitializationFailure(p0: YouTubePlayer.Provider?, p1: YouTubeInitializationResult?) {
-        Log.e(LOG_TAG, p1?.toString())
+        Log.e(LOG_TAG, p1?.toString()?:"")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION", "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 package com.example.moviesapp
 
 import android.app.Activity
