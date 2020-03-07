@@ -42,7 +42,7 @@ class MoviesFragment : Fragment() {
     }
 
     fun getToTop() {
-        movies_recycler_view.scrollToPosition(0)
+        movies_recycler_view.smoothScrollToPosition(0)
     }
 
     fun drawRecycler(
