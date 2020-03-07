@@ -9,7 +9,7 @@ import android.text.Editable
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapp.*
 import com.example.moviesapp.adapters.ACTION_SEARCH
@@ -27,7 +27,11 @@ private const val NO_RESULTS = "It seems that there are no movies with that name
 
 class SearchActivity : AppCompatActivity() {
 
-    private val viewModel by lazy { ViewModelProviders.of(this)[SearchViewModel::class.java] }
+    private val viewModel by lazy {
+        ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+            .let { ViewModelProvider(this, it)[SearchViewModel::class.java] }
+    }
+
     private val fragment by lazy { movies_fragment as MoviesFragment }
     private val searchReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
@@ -60,8 +64,7 @@ class SearchActivity : AppCompatActivity() {
 
         recent_searches_recyclerView.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
-            adapter =
-                RecentSearchesAdapter(viewModel.storedMovieNames, this@SearchActivity)
+            adapter = RecentSearchesAdapter(viewModel.storedMovieNames, this@SearchActivity)
         }
 
         back_image_view.setOnClickListener { finish() }
@@ -71,54 +74,14 @@ class SearchActivity : AppCompatActivity() {
             setOnClickListener { retrieveRecents() }
         }
 
-        with(viewModel) {
-            result.observe(this@SearchActivity, Observer {
-                listAdapter.addItems(it.results)
-                setParameters(it.pageNumber, it.pageCount)
-                if (search_edit_text.text.isEmpty()) retrieveRecents() else hideSearches()
-                fragment.run { if (movieList.isEmpty()) onEmptyState(NO_RESULTS) else onNonEmptyState() }
-            })
-            loading.observe(this@SearchActivity, Observer {
-                fragment.run { if (it) onStartLoading() else onFinishLoading() }
-            })
-            viewModel.errorLiveData.observe(this@SearchActivity, Observer { setErrorState(it) })
-            searchSubject.subscribeOn(AndroidSchedulers.mainThread())
-                .debounce(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-                .subscribe { updateSearch(it) }/*,Throwable::printStackTrace)*/
-                .also { disposables.add(it) }
-        }
+        observeOnViewModel(listAdapter)
+
         registerReceiver(searchReceiver, IntentFilter(ACTION_SEARCH))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(searchReceiver)
-    }
-
-    private fun hideSearches() {
-        recent_searches_recyclerView.visibility = View.GONE
-        movies_container.visibility = View.VISIBLE
-    }
-
-    private fun onTextChanged(): BaseTextWatcher = object : BaseTextWatcher {
-        override fun afterTextChanged(s: Editable)=viewModel.searchSubject.onNext(s)
-    }
-
-    private fun updateSearch(s: CharSequence) = retrieveMovies(s.toString())
-        .also { if (s.isEmpty() || s.isBlank()) retrieveRecents() else hideSearches() }
-
-    private fun retrieveMovies(string: String) =
-        with(viewModel) {
-            movieList.clear()
-            retrieveMovies(onConnectivityCheck(), string)
-        }
-
-    private fun setParameters(pageNumber: Int, pageCount: Int) = viewModel.parameterLiveData
-        .run {
-            value =
-                QueryParameters(pageNumber, pageCount(pageCount), search_edit_text.text.toString())
-        }
-
+    private fun startSearch(searchKey: String) =
+        search_edit_text.setText(searchKey)
+            .also { hideKeyboard(this@SearchActivity) }
 
     private fun retrieveRecents() {
         viewModel.retrieveMovieNames()
@@ -130,7 +93,48 @@ class SearchActivity : AppCompatActivity() {
         movies_container.visibility = View.GONE
     }
 
-    private fun startSearch(searchKey: String) =
-        search_edit_text.setText(searchKey)
-            .also { hideKeyboard(this@SearchActivity) }
+    private fun onTextChanged(): BaseTextWatcher = object : BaseTextWatcher {
+        override fun afterTextChanged(s: Editable) = viewModel.searchSubject.onNext(s)
+    }
+
+    private fun retrieveMovies(string: String) = with(viewModel) {
+        movieList.clear()
+        retrieveMovies(onConnectivityCheck(), string)
+    }
+
+    private fun observeOnViewModel(adapter: ListAdapter) = with(viewModel) {
+        result.observe(this@SearchActivity, Observer {
+            adapter.addItems(it.results)
+            setParameters(it.pageNumber, it.pageCount)
+            if (search_edit_text.text.isEmpty()) retrieveRecents() else hideSearches()
+            fragment.run { if (movieList.isEmpty()) onEmptyState(NO_RESULTS) else onNonEmptyState() }
+        })
+        loading.observe(this@SearchActivity, Observer {
+            fragment.run { if (it) onStartLoading() else onFinishLoading() }
+        })
+        viewModel.errorLiveData.observe(this@SearchActivity, Observer { setErrorState(it) })
+        searchSubject.subscribeOn(AndroidSchedulers.mainThread())
+            .debounce(500, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+            .subscribe { updateSearch(it) }/*,Throwable::printStackTrace)*/
+            .also { disposables.add(it) }
+    }
+
+    private fun setParameters(
+        pageNumber: Int,
+        pageCount: Int
+    ) = QueryParameters(pageNumber, pageCount(pageCount), search_edit_text.text.toString())
+        .let { viewModel.updateParametersLiveData(it) }
+
+    private fun updateSearch(s: CharSequence) = retrieveMovies(s.toString())
+        .also { if (s.isEmpty() || s.isBlank()) retrieveRecents() else hideSearches() }
+
+    private fun hideSearches() {
+        recent_searches_recyclerView.visibility = View.GONE
+        movies_container.visibility = View.VISIBLE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(searchReceiver)
+    }
 }

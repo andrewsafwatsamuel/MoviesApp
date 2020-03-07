@@ -13,7 +13,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 
 class SearchViewModel(
     val storedMovieNames: MutableLiveData<List<String>> = MutableLiveData(),
@@ -43,6 +42,10 @@ class SearchViewModel(
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe({errorLiveData.value=null}, {errorLiveData.value= ERROR_MESSAGE})
             ?.also { disposables.add(it) } ?: Unit
+    }
+
+    fun updateParametersLiveData(parameters:QueryParameters<String>){
+        parameterLiveData.value=parameters
     }
 
     override fun onCleared() {
