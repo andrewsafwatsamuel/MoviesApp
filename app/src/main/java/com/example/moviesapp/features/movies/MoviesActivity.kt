@@ -62,7 +62,7 @@ class MoviesActivity : AppCompatActivity() {
         fragment.drawRecycler(layoutManager, adapter, scrollListener)
 
         topBarFragment
-            .apply { activityTitle(category) }
+            .apply { activityTitle(category?:"") }
             .backButton().setOnClickListener {
                 if (layoutManager.findFirstVisibleItemPosition() != 0) fragment.getToTop() else finish()
             }

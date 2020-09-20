@@ -21,8 +21,8 @@ class MoviesViewModel(
     val errorLiveData: MutableLiveData<String> = MutableLiveData(),
     private val popularUseCase: MoviesUseCase = MoviesUseCase()
 ) : ViewModel() {
-    fun getMovies(isConnected: Boolean, category: String, pageNumber: Int = 1) =
-        popularUseCase(isConnected, loading, pageNumber,category) { result.postValue(it)}
+    fun getMovies(isConnected: Boolean, category: String?, pageNumber: Int = 1) =
+        popularUseCase(isConnected, loading, pageNumber,category?:"") { result.postValue(it)}
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe({errorLiveData.value=null},{errorLiveData.value= ERROR_MESSAGE})

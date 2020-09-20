@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.CreditsMember
 import com.example.CreditsResponse
@@ -60,17 +61,19 @@ fun drawCredits(response: CreditsResponse, withCrew: Boolean) = mutableListOf<Cr
 fun Activity.onConnectivityCheck(): Boolean = checkConnectivity()
     .also { empty_state_layout.visibility = if (it) View.GONE else View.VISIBLE }
     .also { empty_state_textView.text= getString(R.string.check_your_internet_connection) }
-    .also { empty_state_imageView.setImageDrawable(getDrawable(R.drawable.ic_wifi_black_24dp)) }
+    .also { empty_state_imageView.setImageDrawable(drawable(R.drawable.ic_wifi_black_24dp)) }
 
 fun Activity.checkConnectivity(): Boolean =
     (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-        .run { activeNetworkInfo != null && activeNetworkInfo.isConnected }
+        .run { activeNetworkInfo != null && activeNetworkInfo?.isConnected ?:false}
 
 fun Activity.setErrorState(message: String?) = message
     .takeUnless { it.isNullOrBlank() }
     ?.also { empty_state_textView.text = it }
-    ?.let { empty_state_imageView.setImageDrawable(getDrawable(R.drawable.error)) }
+    ?.let { empty_state_imageView.setImageDrawable(drawable(R.drawable.error)) }
     ?.also { empty_state_layout.visibility=View.VISIBLE }
+
+private fun Context.drawable(drawable:Int)=ContextCompat.getDrawable(this,drawable)
 
 fun Activity.reload(isConnected: (Boolean) -> Unit) =
     reload_Text_view.setOnClickListener { isConnected(onConnectivityCheck()) }
