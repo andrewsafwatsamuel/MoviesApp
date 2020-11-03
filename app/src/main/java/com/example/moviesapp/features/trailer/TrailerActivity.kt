@@ -30,6 +30,7 @@ class TrailerActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListen
         trailer_youtube_player.initialize("dummy", this)
     }
 
+    @Suppress("DEPRECATION")
     private fun setSize() = DisplayMetrics()
         .also { windowManager.defaultDisplay.getMetrics(it) }
         .apply { window.setLayout((widthPixels * 0.95).toInt(), (heightPixels * 0.4).toInt()) }

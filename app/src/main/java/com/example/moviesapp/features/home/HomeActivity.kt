@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapp.*
 import com.example.moviesapp.adapters.CategoryAdapter
@@ -15,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
 
-    private val viewModel by lazy { ViewModelProviders.of(this)[HomeViewModel::class.java] }
+    private val viewModel by lazy { inflateViewModel(HomeViewModel::class.java) }
 
     private val topFragment by lazy { home_top_bar_fragment as TopBarFragment }
 

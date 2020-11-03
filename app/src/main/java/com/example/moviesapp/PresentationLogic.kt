@@ -1,3 +1,5 @@
+
+
 @file:Suppress("DEPRECATION", "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 
 package com.example.moviesapp
@@ -11,6 +13,9 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import com.bumptech.glide.Glide
 import com.example.CreditsMember
 import com.example.CreditsResponse
@@ -77,3 +82,7 @@ private fun Context.drawable(drawable:Int)=ContextCompat.getDrawable(this,drawab
 
 fun Activity.reload(isConnected: (Boolean) -> Unit) =
     reload_Text_view.setOnClickListener { isConnected(onConnectivityCheck()) }
+
+fun<T :ViewModel> ViewModelStoreOwner.inflateViewModel(modelClass:Class<T>)=ViewModelProvider
+    .NewInstanceFactory()
+    .let{ ViewModelProvider(this,it)[modelClass] }

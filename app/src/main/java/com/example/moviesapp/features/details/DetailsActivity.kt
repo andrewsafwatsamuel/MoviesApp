@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.CreditsMember
@@ -32,7 +31,7 @@ const val EXTRA_TRAILER = "com.example.moviesapp.features.details.extraTrailer"
 
 class DetailsActivity : AppCompatActivity() {
 
-    private val viewModel by lazy { ViewModelProviders.of(this)[DetailsViewModel::class.java] }
+    private val viewModel by lazy { inflateViewModel(DetailsViewModel::class.java) }
     private val creditsFragment by lazy { credits_fragment as CreditsFragment }
     private val moviesFragment by lazy { related_movies_fragment as HorizontalMovieFragment }
     private val parameters = MutableLiveData<QueryParameters<Unit>>()

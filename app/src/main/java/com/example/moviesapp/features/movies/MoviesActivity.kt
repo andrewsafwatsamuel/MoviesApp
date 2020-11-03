@@ -3,7 +3,6 @@ package com.example.moviesapp.features.movies
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviesapp.*
 import com.example.moviesapp.adapters.CATEGORY_EXTRA
@@ -16,9 +15,7 @@ import kotlinx.android.synthetic.main.activity_popular_movies.*
 
 class MoviesActivity : AppCompatActivity() {
 
-    private val viewModel by lazy {
-        ViewModelProviders.of(this)[MoviesViewModel::class.java]
-    }
+    private val viewModel by lazy { inflateViewModel(MoviesViewModel::class.java) }
 
     private val fragment by lazy { popular_fragment as MoviesFragment }
 
