@@ -2,107 +2,80 @@ package com.example.domain.useCases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.example.MovieResponse
-import com.example.domain.repositories.BaseMoviesRepository
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import io.reactivex.Single.just
-import io.reactivex.schedulers.Schedulers
-import org.junit.Assert.assertTrue
+import com.example.domain.FakeMoviesRepository
+import com.example.domain.FakeMoviesRepositoryError
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 
+@ExperimentalCoroutinesApi
 class MoviesUseCaseTest {
 
     @get:Rule
     val rule: TestRule = InstantTaskExecutorRule()
 
+    private lateinit var useCase: MoviesUseCase
+    private var isConnected = true
+    private val state = MutableLiveData<MovieState>()
+    private val params = MovieParams("", 1,"")
+    private val context = TestCoroutineDispatcher()
 
-    @Test
-    fun `invoke with successful condition then return result`() {
-        val repositoryMock = mock<BaseMoviesRepository> {
-            on { getMovies("",1) } doReturn just(
-                MovieResponse(1, 1, 1, listOf())
-            )
-        }
-        val loading = MutableLiveData<Boolean>()
-        val connected = true
-        val result = MutableLiveData<MovieResponse>()
-        val popularUseCase = MoviesUseCase(repositoryMock)
-
-        popularUseCase(connected, loading,1,""){result.value=it}!!
-            .blockingGet()
-        assertTrue(result.value != null)
+    @Before
+    fun initialize() {
+        useCase = MoviesUseCase(FakeMoviesRepository())
+        state.value = null
+        isConnected = true
     }
 
     @Test
-    fun `invoke with successful condition then loading value equals false`() {
-        val repositoryMock = mock<BaseMoviesRepository> {
-            on { getMovies("",1) } doReturn just(
-                MovieResponse(1, 1, 1, listOf())
-            )
-        }
-        val loading = MutableLiveData<Boolean>()
-        val connected = true
-        val result = MutableLiveData<MovieResponse>()
-        val popularUseCase = MoviesUseCase(repositoryMock)
+    fun `invoke with successful conditions emits success state`() = runBlockingTest {
+        //act
+        useCase(isConnected, params, state, context)
 
-        popularUseCase(connected, loading, 1,""){result.value=it}!!
-            .blockingGet()
-        assertTrue(loading.value == false)
-    }
-
-    @Test
-    fun `invoke with unsuccessful condition then loading value equals false`() {
-        val repositoryMock = mock<BaseMoviesRepository> {
-            on { getMovies("",1) } doReturn just(
-                MovieResponse(1, 1, 1, listOf())
-            )
-        }
-        val loading = MutableLiveData<Boolean>()
-        val connected = true
-        val result = MutableLiveData<MovieResponse>()
-        val popularUseCase = MoviesUseCase(repositoryMock)
-
-        popularUseCase(connected, loading, 1,""){result.value=it}!!
-            .blockingGet()
-        assertTrue(loading.value == false)
-    }
-
-    @Test
-    fun `invoke when is not connected then do not return results`() {
-        val repositoryMock = mock<BaseMoviesRepository> {
-            on { getMovies("",1) } doReturn just(
-                MovieResponse(1, 1, 1, listOf())
-            )
-        }
-        val loading = MutableLiveData<Boolean>()
-        val connected = false
-        val result = MutableLiveData<MovieResponse>()
-        val popularUseCase = MoviesUseCase(repositoryMock)
-
-        popularUseCase(connected, loading, 1,""){result.value=it}
-            ?.blockingGet()
-        assertTrue(result.value == null)
+        //assert
+        assert(state.value is Success)
     }
 
 
     @Test
-    fun `invoke when loading then do not return results`() {
-        val repositoryMock = mock<BaseMoviesRepository> {
-            on { getMovies("",1) } doReturn   just(
-                MovieResponse(1, 1, 1, listOf())
-            )
-        }
-        val loading = MutableLiveData<Boolean>()
-        val connected = true
-        val result = MutableLiveData<MovieResponse>()
-        val popularUseCase = MoviesUseCase(repositoryMock)
+    fun `invoke when not connected flow will not continue and no states will be emitted`() = runBlockingTest {
+        //arrange
+        isConnected = false
 
-        loading.value = true
-        popularUseCase(connected, loading, 1,""){result.value=it}
-            ?.blockingGet()
-        assertTrue(result.value == null)
+        //act
+        useCase(isConnected, params, state, context)
+
+        //assert
+        assert(state.value == null)
     }
+
+    @Test
+    fun `invoke with loading state flow will not continue and state remains loading`() = runBlockingTest {
+        //arrange
+        state.value = Loading("")
+
+        //act
+        useCase(isConnected, params, state, context)
+
+        //assert
+        assert(state.value is Loading)
+    }
+
+    @Test
+    fun `invoke when error occur then error state emitted`() = runBlockingTest {
+        //arrange
+        useCase = MoviesUseCase(FakeMoviesRepositoryError())
+
+        //act
+        useCase(isConnected, params, state, context)
+
+        //assert
+        assert(state.value is Error)
+    }
+
+
 }

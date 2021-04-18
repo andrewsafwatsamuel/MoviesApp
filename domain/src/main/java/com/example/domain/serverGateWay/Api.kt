@@ -20,10 +20,10 @@ val apiEndPoints: ApiEndPoints by lazy {
 
 interface ApiEndPoints {
     @GET(POPULAR_API_END_POINT)
-    fun getMovies(
+    suspend fun getMovies(
         @Path("category") category: String,
         @Query(PAGE_QUERY_PARAMETER) pageNumber: Int
-    ): Single<MovieResponse>
+    ): MovieResponse
 
     @GET(SEARCH_API_END_POINT)
     fun search(

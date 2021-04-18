@@ -2,20 +2,41 @@ package com.example.domain.useCases
 
 import androidx.lifecycle.MutableLiveData
 import com.example.MovieResponse
-import com.example.domain.repositories.BaseMoviesRepository
+import com.example.domain.repositories.MoviesRepository
 import com.example.domain.repositories.moviesRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.lang.Exception
+import kotlin.coroutines.CoroutineContext
 
-class MoviesUseCase(private val repository: BaseMoviesRepository = moviesRepository) {
-    operator fun invoke(
+sealed class MovieState
+data class Loading(val type: String) : MovieState()
+object Error : MovieState()
+data class Success(val data: MovieResponse) : MovieState()
+
+data class MovieParams(val category: String, val pageNumber: Int, val loadingType: String)
+
+class MoviesUseCase(private val repository: MoviesRepository = moviesRepository) {
+
+    suspend operator fun invoke(
         isConnected: Boolean,
-        loading: MutableLiveData<Boolean>,
-        pageNumber: Int,
-        category: String,
-        result: (MovieResponse) -> Unit
-    ) = repository.getMovies(category, pageNumber)
+        params: MovieParams,
+        states: MutableLiveData<MovieState>,
+        context: CoroutineContext = Dispatchers.IO
+    ) = params
         .takeIf { isConnected }
-        ?.takeUnless { loading.value ?: false }
-        ?.also { loading.postValue(true) }
-        ?.doOnSuccess { result(it) }
-        ?.doFinally { loading.postValue(false) }
+        ?.takeUnless { states.value is Loading }
+        ?.also { states.value = Loading(params.loadingType) }
+        ?.run { makeRequest(context, states) }
+
+    private suspend fun MovieParams.makeRequest(
+        context: CoroutineContext,
+        states: MutableLiveData<MovieState>
+    ) = try {
+        val movieResponse = withContext(context) { repository.getMovies(category, pageNumber) }
+        states.value = Success(movieResponse)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        states.value = Error
+    }
 }
