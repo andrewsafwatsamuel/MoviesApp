@@ -13,42 +13,24 @@ private const val SEARCH_API_END_POINT = "search/movie"
 private const val POPULAR_API_END_POINT = "movie/{category}"
 private const val PAGE_QUERY_PARAMETER = "page"
 
-val movieSearch: SearchApi by lazy {
-    retrofitInstance.create(SearchApi::class.java)
+
+val apiEndPoints: ApiEndPoints by lazy {
+    retrofitInstance.create(ApiEndPoints::class.java)
 }
 
-interface SearchApi {
-    @GET(SEARCH_API_END_POINT)
-    fun search(
-        @Query("query") movieName: String,
-        @Query(PAGE_QUERY_PARAMETER) pageNumber: Int
-    ): Single<MovieResponse>
-}
-
-val moviesApi: MoviesApi by lazy {
-    retrofitInstance.create(MoviesApi::class.java)
-}
-
-interface MoviesApi {
+interface ApiEndPoints {
     @GET(POPULAR_API_END_POINT)
     fun getMovies(
         @Path("category") category: String,
         @Query(PAGE_QUERY_PARAMETER) pageNumber: Int
     ): Single<MovieResponse>
 
-    @GET(POPULAR_API_END_POINT)
-    fun getCategories(
-        @Path("category") category: String,
+    @GET(SEARCH_API_END_POINT)
+    fun search(
+        @Query("query") movieName: String,
         @Query(PAGE_QUERY_PARAMETER) pageNumber: Int
     ): Single<MovieResponse>
 
-}
-
-val movieDetails: DetailsApi by lazy {
-    retrofitInstance.create(DetailsApi::class.java)
-}
-
-interface DetailsApi {
     @GET(MOVIE_ID_END_POINT)
     fun retrieveDetails(
         @Path("id") id: Long,

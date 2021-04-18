@@ -3,7 +3,7 @@ package com.example.domain.repositories
 import com.example.CreditsResponse
 import com.example.DetailsResponse
 import com.example.MovieResponse
-import com.example.domain.serverGateWay.movieDetails
+import com.example.domain.serverGateWay.apiEndPoints
 import io.reactivex.Single
 
 interface DetailsRepository {
@@ -16,10 +16,10 @@ val detailsRepository by lazy { DetailsRepositoryImplementer() }
 
 class DetailsRepositoryImplementer : DetailsRepository {
 
-    override fun retrieveDetails(id: Long) = movieDetails.retrieveDetails(id)
+    override fun retrieveDetails(id: Long) = apiEndPoints.retrieveDetails(id)
 
-    override fun retrieveCredits(id: Long) = movieDetails.retrieveCredits(id)
+    override fun retrieveCredits(id: Long) = apiEndPoints.retrieveCredits(id)
 
     override fun retrieveRelated(id: Long, page: Int): Single<MovieResponse> =
-        movieDetails.retrieveRelated(id, page)
+        apiEndPoints.retrieveRelated(id, page)
 }

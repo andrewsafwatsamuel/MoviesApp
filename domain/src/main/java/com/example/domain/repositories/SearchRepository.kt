@@ -3,7 +3,7 @@ package com.example.domain.repositories
 import com.example.MovieResponse
 import com.example.SuccessfulQuery
 import com.example.domain.databaseGateWay.movieAppDatabase
-import com.example.domain.serverGateWay.movieSearch
+import com.example.domain.serverGateWay.apiEndPoints
 import io.reactivex.Single
 
 interface SearchRepository {
@@ -23,5 +23,5 @@ class SearchRepositoryImplementer : SearchRepository {
 
     override fun addSuccessfulQuery(query: SuccessfulQuery) = movieAppDatabase.successfulQueryDao.addQuery(query)
 
-    override fun searchMovie(movieName: String, pageNumber: Int)= movieSearch.search(movieName,pageNumber)
+    override fun searchMovie(movieName: String, pageNumber: Int)= apiEndPoints.search(movieName,pageNumber)
 }
