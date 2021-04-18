@@ -2,34 +2,37 @@ package com.example.moviesapp.features.movies
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.Movie
-import com.example.MovieResponse
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.example.domain.useCases.MovieParams
+import com.example.domain.useCases.MovieState
 import com.example.domain.useCases.MoviesUseCase
-import com.example.moviesapp.ERROR_MESSAGE
-import com.example.moviesapp.subFeatures.movies.QueryParameters
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import java.util.logging.ErrorManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.IllegalStateException
 
 class MoviesViewModel(
-    val movies: MutableList<Movie> = mutableListOf(),
-    val result: MutableLiveData<MovieResponse> = MutableLiveData(),
-    val loading: MutableLiveData<Boolean> = MutableLiveData(),
-    val parameters: MutableLiveData<QueryParameters<Unit>> = MutableLiveData(),
-    val disposable: CompositeDisposable = CompositeDisposable(),
-    val errorLiveData: MutableLiveData<String> = MutableLiveData(),
-    private val popularUseCase: MoviesUseCase = MoviesUseCase()
+    params: MovieParams,
+    isConnected: Boolean,
+    private val useCase: MoviesUseCase = MoviesUseCase(),
+    val state: MutableLiveData<MovieState> = MutableLiveData()
 ) : ViewModel() {
-    fun getMovies(isConnected: Boolean, category: String?, pageNumber: Int = 1) =
-        popularUseCase(isConnected, loading, pageNumber,category?:"") { result.postValue(it)}
-            ?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe({errorLiveData.value=null},{errorLiveData.value= ERROR_MESSAGE})
-            ?.also { disposable.add(it) } ?: Unit
 
-    override fun onCleared() {
-        super.onCleared()
-        disposable.dispose()
+    init {
+        getMovies(isConnected, params)
     }
+
+    fun getMovies(isConnected: Boolean, params: MovieParams) =
+        viewModelScope.launch(Dispatchers.Main) { useCase(isConnected, params, state) }
+
+}
+
+@Suppress("UNCHECKED_CAST")
+class MoviesViewModelFactory(
+    private val params: MovieParams,
+    private val isConnected: Boolean
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+        if (modelClass.isAssignableFrom(MoviesViewModel::class.java)) MoviesViewModel(params, isConnected) as T
+        else throw IllegalStateException("Bad ViewModel class")
 }

@@ -21,12 +21,12 @@ class HomeViewModel(
     val resultLiveData: MutableLiveData<CategoryList> = MutableLiveData()
 ) : ViewModel() {
 
-    fun loadSingleCategory(isConnected: Boolean, category: String, page: Int = 1) =
-        moviesUseCase(isConnected, loadingLiveData, page, category) { addCategory(category, it.results) }
+    fun loadSingleCategory(isConnected: Boolean, category: String, page: Int = 1) =Unit
+       /* moviesUseCase(isConnected, loadingLiveData, page, category) { addCategory(category, it.results) }
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe({}, { errorLiveData.value = ERROR_MESSAGE})
-            ?.let { disposable.add(it) } ?: Unit
+            ?.let { disposable.add(it) } ?: Unit*/
 
     private fun addCategory(category: String, movies: List<Movie>) = result
         .apply { add(category to movies) }

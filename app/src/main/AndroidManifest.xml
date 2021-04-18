@@ -24,13 +24,15 @@
         <activity
                 android:name=".features.splashScreen.SplashActivity"
                 android:screenOrientation="portrait">
+
+        </activity>
+        <activity android:name=".features.movies.MoviesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".features.movies.MoviesActivity"/>
         <activity android:name=".features.search.SearchActivity"/>
         <activity android:name=".features.details.DetailsActivity"/>
         <activity android:name=".features.credits.CreditsActivity"/>

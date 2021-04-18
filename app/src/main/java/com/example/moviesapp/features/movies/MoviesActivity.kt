@@ -1,80 +1,56 @@
 package com.example.moviesapp.features.movies
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.lifecycle.ViewModelProvider
+import com.example.MovieResponse
+import com.example.domain.useCases.Error
+import com.example.domain.useCases.Loading
+import com.example.domain.useCases.MovieParams
+import com.example.domain.useCases.MovieState
+import com.example.domain.useCases.Success
 import com.example.moviesapp.*
-import com.example.moviesapp.adapters.CATEGORY_EXTRA
-import com.example.moviesapp.adapters.GridAdapter
-import com.example.moviesapp.subFeatures.movies.MoviesFragment
-import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
-import com.example.moviesapp.subFeatures.movies.QueryParameters
-import com.example.moviesapp.subFeatures.movies.TopBarFragment
-import kotlinx.android.synthetic.main.activity_popular_movies.*
+import com.example.moviesapp.databinding.ActivityMoviesBinding
+import com.example.moviesapp.databinding.FragmentMoviesBinding
 
 class MoviesActivity : AppCompatActivity() {
 
-    private val viewModel by lazy { inflateViewModel(MoviesViewModel::class.java) }
+    private val params by lazy { MovieParams("popular", 1,"") }
 
-    private val fragment by lazy { popular_fragment as MoviesFragment }
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            MoviesViewModelFactory(params, checkConnectivity())
+        )[MoviesViewModel::class.java]
+    }
 
-    private val category by lazy { intent.getStringExtra(CATEGORY_EXTRA) }
-
-    private val topBarFragment by lazy { movies_top_bar_fragment as TopBarFragment }
+    private lateinit var binding: ActivityMoviesBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_popular_movies)
-
-        viewModel.run {
-            if (movies.isEmpty()) getMovies(onConnectivityCheck(), category)
-        }
-
-        reload { viewModel.getMovies(it, category) }
-
-        val layoutManager = GridLayoutManager(this, 3)
-
-        val adapter = GridAdapter(viewModel.movies)
-
-        val scrollListener = PaginationScrollListener.Builder<Unit>()
-            .queryParameters(viewModel.parameters)
-            .lifecycleOwner(this)
-            .layoutManager(layoutManager)
-            .retrieve { viewModel.getMovies(onConnectivityCheck(), category, it.pageNumber + 1) }
-            .build()
-
-        with(viewModel) {
-            loading.observe(this@MoviesActivity, Observer {
-                if (it) fragment.onStartLoading() else finishLoading()
-            })
-            result.observe(this@MoviesActivity, Observer {
-                adapter.addItems(it.results)
-                parameters.value = QueryParameters(it.pageNumber, pageCount(it.pageCount), Unit)
-                disposable.clear()
-            })
-            errorLiveData.observe(this@MoviesActivity, Observer { setErrorState(it) })
-        }
-
-        fragment.drawRecycler(layoutManager, adapter, scrollListener)
-
-        topBarFragment
-            .apply { activityTitle(category?:"") }
-            .backButton().setOnClickListener {
-                if (layoutManager.findFirstVisibleItemPosition() != 0) fragment.getToTop() else finish()
-            }
-
-        popular_swipe_refresh.setOnRefreshListener { swipeRefresh() }
+        binding = ActivityMoviesBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        viewModel.state.observe(this, Observer(::observerOnStates))
     }
 
-    private fun finishLoading() {
-        fragment.onFinishLoading()
-        popular_swipe_refresh.isRefreshing = false
+    private fun observerOnStates(state: MovieState) = when (state) {
+        is Loading -> onLoading()
+        is Success -> onSuccess(state.data)
+        is Error -> onError()
     }
 
-    private fun swipeRefresh() = onConnectivityCheck()
-        .also { viewModel.movies.clear() }
-        .also { viewModel.getMovies(it, category) }
-        .also { if (!it) popular_swipe_refresh.isRefreshing = false }
+    private fun onLoading() {
+        Log.d(MoviesActivity::class.simpleName, "loading")
+    }
+
+    private fun onSuccess(data: MovieResponse) {
+        Log.d(MoviesActivity::class.simpleName, data.toString())
+    }
+
+    private fun onError() {
+        Log.d(MoviesActivity::class.simpleName, "error")
+    }
 
 }
