@@ -1,11 +1,11 @@
 package com.example.moviesapp
 
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
+import androidx.paging.*
 import androidx.paging.PagingSource.LoadParams
 
 fun <T : Any> pagingDataSource(
-    load: suspend (LoadParams<Int>) -> PagingSource.LoadResult<Int, T>
+    pageSize: Int,
+    load: suspend (LoadParams<Int>,Int) -> PagingSource.LoadResult<Int, T>
 ) = object : PagingSource<Int, T>() {
 
     override fun getRefreshKey(state: PagingState<Int, T>): Int? = state.getClosestPage()
@@ -13,6 +13,14 @@ fun <T : Any> pagingDataSource(
 
     private fun PagingState<Int, T>.getClosestPage() = anchorPosition?.let(::closestPageToPosition)
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> = load(params)
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> = load(params,pageSize)
 
 }
+
+fun <T : Any> createPager(
+    pageSize: Int,
+    source: PagingSource<Int, T>
+) = Pager(
+    config = PagingConfig(pageSize, enablePlaceholders = false),
+    pagingSourceFactory = { source }
+)
