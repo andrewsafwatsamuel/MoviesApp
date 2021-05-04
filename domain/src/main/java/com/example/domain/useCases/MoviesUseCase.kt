@@ -12,7 +12,7 @@ import kotlin.coroutines.CoroutineContext
 sealed class MovieState
 data class Loading(val type: String) : MovieState()
 object Error : MovieState()
-object Success : MovieState()
+data class Success(val response: MovieResponse) : MovieState()
 
 data class MovieParams(val category: String, val pageNumber: Int, val loadingType: String)
 
@@ -23,7 +23,7 @@ class MoviesUseCase(private val repository: MoviesRepository = moviesRepository)
         params: MovieParams,
         states: MutableLiveData<MovieState>,
         context: CoroutineContext = Dispatchers.IO
-    ): MovieResponse? = params
+    ): Unit? = params
         .takeIf { isConnected }
         ?.takeUnless { states.value is Loading }
         ?.also { states.value = Loading(params.loadingType) }
@@ -33,11 +33,10 @@ class MoviesUseCase(private val repository: MoviesRepository = moviesRepository)
         context: CoroutineContext,
         states: MutableLiveData<MovieState>
     ) = try {
-        states.value = Success
-        withContext(context) { repository.getMovies(category, pageNumber) }
+        val response=withContext(context) { repository.getMovies(category, pageNumber) }
+        states.value = Success(response)
     } catch (e: Exception) {
         e.printStackTrace()
         states.value = Error
-        null
     }
 }
