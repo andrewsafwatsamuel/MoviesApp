@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.MovieResponse
 import com.example.domain.useCases.Error
 import com.example.domain.useCases.Loading
@@ -13,11 +14,12 @@ import com.example.domain.useCases.MovieState
 import com.example.domain.useCases.Success
 import com.example.moviesapp.*
 import com.example.moviesapp.databinding.ActivityMoviesBinding
-import com.example.moviesapp.databinding.FragmentMoviesBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MoviesActivity : AppCompatActivity() {
 
-    private val params by lazy { MovieParams("popular", 1,"") }
+    private val params by lazy { MovieParams("popular", 1, "") }
 
     private val viewModel by lazy {
         ViewModelProvider(
@@ -37,7 +39,7 @@ class MoviesActivity : AppCompatActivity() {
 
     private fun observerOnStates(state: MovieState) = when (state) {
         is Loading -> onLoading()
-        is Success -> onSuccess(state.data)
+        is Success -> onSuccess(state.response)
         is Error -> onError()
     }
 
@@ -46,7 +48,13 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun onSuccess(data: MovieResponse) {
-        Log.d(MoviesActivity::class.simpleName, data.toString())
+        lifecycleScope.launch {
+            data.createMoviePager(data.pageCount) {
+                viewModel.getMovies(true, params.copy(pageNumber = it))
+            }.collectLatest {
+Log.d("MovieActivity",it.toString())
+            }
+        }
     }
 
     private fun onError() {

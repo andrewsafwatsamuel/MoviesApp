@@ -1,9 +1,12 @@
 package com.example.moviesapp
 
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
 import androidx.paging.PagingSource.LoadParams
+import androidx.paging.PagingState
 
-fun <T : Any> pagingDataSource(
+fun <T : Any> createDataSource(
     pageSize: Int,
     load: suspend (LoadParams<Int>,Int) -> PagingSource.LoadResult<Int, T>
 ) = object : PagingSource<Int, T>() {
