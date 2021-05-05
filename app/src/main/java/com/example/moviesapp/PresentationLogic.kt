@@ -26,12 +26,12 @@ const val POSTER_SIZE = "w185"
 const val BACK_DRAW_SIZE = "w500"
 const val ERROR_MESSAGE="Error has occurred while loading"
 
-fun drawPhoto(size: String, url: String?, view: ImageView) = url
+fun ImageView.setImageUrl(size: String, url: String?) = url
     .takeUnless { it.isNullOrBlank() }
-    ?.let { Glide.with(view).load("$BASE_POSTER_URL$size$it") }
+    ?.let { Glide.with(this).load("$BASE_POSTER_URL$size$it") }
     ?.placeholder(R.drawable.movie_roll)
     ?.error(R.drawable.movie_roll)
-    ?.into(view) ?: view.setImageResource(R.drawable.movie_roll)
+    ?.into(this) ?: setImageResource(R.drawable.movie_roll)
 
 
 interface BaseTextWatcher : TextWatcher {

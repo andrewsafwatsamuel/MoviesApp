@@ -12,7 +12,7 @@ import com.example.Movie
 import com.example.domain.useCases.StoreMovieNameUseCase
 import com.example.moviesapp.POSTER_SIZE
 import com.example.moviesapp.R
-import com.example.moviesapp.drawPhoto
+import com.example.moviesapp.setImageUrl
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -61,7 +61,7 @@ class ListViewHolder(
     private val movieCardView by lazy { view.findViewById<CardView>(R.id.movie_card_view)!! }
 
     override fun bind(movie: Movie) {
-        drawPhoto(POSTER_SIZE, movie.poster ?: "", posterImageView)
+        posterImageView.setImageUrl(POSTER_SIZE, movie.poster)
         nameTextView.text = movie.title
         dateTextView.text =
             if (!movie.releaseDate.isNullOrEmpty()) movie.releaseDate else "--"
@@ -93,7 +93,7 @@ class GridViewHolder(private val view: View) : MovieViewHolder(view) {
     private val container by lazy { view.findViewById<CardView>(R.id.grid_item)!! }
 
     override fun bind(movie: Movie) {
-        drawPhoto(POSTER_SIZE, movie.poster, boaster)
+        boaster.setImageUrl(POSTER_SIZE, movie.poster)
         container.setOnClickListener { onViewClicked(movie, view) }
     }
 }

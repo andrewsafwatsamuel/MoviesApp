@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.CreditsMember
 import com.example.moviesapp.POSTER_SIZE
 import com.example.moviesapp.R
-import com.example.moviesapp.drawPhoto
+import com.example.moviesapp.setImageUrl
 
 class CreditsHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val name by lazy { view.findViewById<TextView>(R.id.name_text_view) }
@@ -19,7 +19,7 @@ class CreditsHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(member: CreditsMember) {
         name.text = member.title
         role.text = member.role
-        drawPhoto(POSTER_SIZE, member.url, image)
+        image.setImageUrl(POSTER_SIZE, member.url)
     }
 }
 

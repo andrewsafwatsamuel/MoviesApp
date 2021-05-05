@@ -38,7 +38,7 @@ class DetailsActivity : AppCompatActivity() {
     private val movieAdapter by lazy {
         GridAdapter(
             viewModel.movieList,
-            R.layout.horizontal_movie_item
+            R.layout.grid_movie_item
         )
     }
     private val topBarFragment by lazy { top_bar_fragment as TopBarFragment }
@@ -57,7 +57,7 @@ class DetailsActivity : AppCompatActivity() {
         })
         viewModel.errorLiveData.observe(this, Observer { setErrorState(it) })
         retrieveData(onConnectivityCheck())
-        reload { retrieveData(it);viewModel.errorLiveData.value=null }
+        reload { retrieveData(it);viewModel.errorLiveData.value = null }
         drawDetails()
         drawCredits()
         drawRelated()
@@ -69,23 +69,24 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun retrieveData(connected: Boolean) = with(viewModel) {
-            setId(intent.getLongExtra(ID_EXTRA, 0))
-            retrieveCredits(connected)
-            retrieveDetails(connected)
-            retrieveRelated(connected)
-        }
+        setId(intent.getLongExtra(ID_EXTRA, 0))
+        retrieveCredits(connected)
+        retrieveDetails(connected)
+        retrieveRelated(connected)
+    }
 
 
     private fun drawDetails() = viewModel.detailsResult.observe(this, Observer {
-        drawPhoto(POSTER_SIZE, it.poster, details_poster_image_view)
-        drawPhoto(BACK_DRAW_SIZE, it.backDropPhoto, cover_image_view)
+        details_poster_image_view.setImageUrl(POSTER_SIZE, it.poster)
+        cover_image_view.setImageUrl(BACK_DRAW_SIZE, it.backDropPhoto)
         adult_text_view.visibility = if (it.isAdult == true) View.VISIBLE else View.GONE
         rating_text_view.text = "${it.voteAverage}"
         viewModel.genres.value = it.genres?.map { g -> g.name ?: "" }
         genres_recycler_view
             .apply { layoutManager = genresLayoutManager }
             .apply { adapter = GenreAdapter(viewModel.genres, this@DetailsActivity) }
-        release_date_text_view.text = setDetailsText(R.string.released_in, it.releaseDate ?: "-/-/-")
+        release_date_text_view.text =
+            setDetailsText(R.string.released_in, it.releaseDate ?: "-/-/-")
         duration_text_view.text = setDetailsText(R.string.play_time, "${it.runTime} min")
         overview_text_view.text = it.overView
         drawTopBar(it.title)
