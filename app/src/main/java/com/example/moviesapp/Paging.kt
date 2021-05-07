@@ -1,29 +1,41 @@
 package com.example.moviesapp
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
-import androidx.paging.PagingSource.LoadParams
-import androidx.paging.PagingState
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
-fun <T : Any> createDataSource(
-    pageSize: Int,
-    load: suspend (LoadParams<Int>,Int) -> PagingSource.LoadResult<Int, T>
-) = object : PagingSource<Int, T>() {
+class PagingLifeCycle(
+    lifecycleOwner: LifecycleOwner,
+    private val view: RecyclerView,
+    private val scrollListener: RecyclerView.OnScrollListener
+) : LifecycleEventObserver {
 
-    override fun getRefreshKey(state: PagingState<Int, T>): Int? = state.getClosestPage()
-        ?.run { prevKey?.plus(1) ?: nextKey?.minus(1) }
+    init {
+        lifecycleOwner.lifecycle.addObserver(this)
+    }
 
-    private fun PagingState<Int, T>.getClosestPage() = anchorPosition?.let(::closestPageToPosition)
-
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> = load(params,pageSize)
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) = when (event) {
+        Lifecycle.Event.ON_START -> view.addOnScrollListener(scrollListener)
+        Lifecycle.Event.ON_STOP -> view.removeOnScrollListener(scrollListener)
+        else -> Unit
+    }
 
 }
 
-fun <T : Any> createPager(
-    pageSize: Int,
-    source: PagingSource<Int, T>
-) = Pager(
-    config = PagingConfig(pageSize, enablePlaceholders = false),
-    pagingSourceFactory = { source }
-)
+fun RecyclerView.createOnScrollListener(loadData: () -> Unit) =
+    object : RecyclerView.OnScrollListener() {
+
+        override fun onScrollStateChanged(
+            recyclerView: RecyclerView,
+            newState: Int
+        ) = (layoutManager as LinearLayoutManager?)?.run {
+            paginate(findLastVisibleItemPosition(), itemCount)
+        } ?: Unit
+
+        fun paginate(lastVisibleItem: Int, totalItems: Int) {
+            if (lastVisibleItem + 1 >= totalItems) loadData()
+        }
+
+    }
