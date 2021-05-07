@@ -2,8 +2,8 @@ package com.example.moviesapp.features.movies
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.Movie
 import com.example.moviesapp.POSTER_SIZE
@@ -27,7 +27,7 @@ class MovieViewHolder(
 
 class MoviesPagingAdapter(
     private val doOnClick: (Movie) -> Unit
-) : PagingDataAdapter<Movie, MovieViewHolder>(createUtils()) {
+) : ListAdapter<Movie, MovieViewHolder>(createUtils()) {
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) = with(holder) {
         val item = getItem(position) ?: return@with
