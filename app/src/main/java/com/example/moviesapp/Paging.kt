@@ -24,8 +24,7 @@ class PagingLifeCycle(
 
 }
 
-fun RecyclerView.createOnScrollListener(loadData: () -> Unit) =
-    object : RecyclerView.OnScrollListener() {
+fun RecyclerView.createOnScrollListener(loadData: () -> Unit) = object : RecyclerView.OnScrollListener() {
 
         override fun onScrollStateChanged(
             recyclerView: RecyclerView,
