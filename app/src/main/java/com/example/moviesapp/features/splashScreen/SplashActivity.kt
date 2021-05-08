@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moviesapp.R
-import com.example.moviesapp.features.home.HomeActivity
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -23,9 +22,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startSearchScreen() {
-        Intent(this, HomeActivity::class.java)
-            .also { startActivity(it) }
-            .also { finish() }
+
     }
 
     override fun onDestroy() {

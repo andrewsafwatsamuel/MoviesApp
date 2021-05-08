@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.Movie
 import com.example.moviesapp.R
-import com.example.moviesapp.features.home.CategoryList
 import com.example.moviesapp.features.movies.MainActivity
 
 const val CATEGORY_EXTRA = "com.example.moviesapp.adapters.categoryExtra"
@@ -39,19 +38,21 @@ class CategoryHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 }
 
 class CategoryAdapter(
-    owner: LifecycleOwner,
-    private val categories: MutableLiveData<CategoryList>
+    owner: LifecycleOwner
+    //private val categories: MutableLiveData<CategoryList>
 ) : RecyclerView.Adapter<CategoryHolder>() {
 
     init {
-        categories.observe(owner, Observer { notifyDataSetChanged()})
+      //  categories.observe(owner, Observer { notifyDataSetChanged()})
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         LayoutInflater.from(parent.context).inflate(R.layout.fragment_horizontal_movies, parent, false)
             .let { CategoryHolder(it) }
 
-    override fun getItemCount() = categories.value?.size ?: 0
+    override fun getItemCount() = 0
 
-    override fun onBindViewHolder(holder: CategoryHolder, position: Int) = holder.bind(categories.value!![position])
+    override fun onBindViewHolder(holder: CategoryHolder, position: Int) {
+
+    }
 }
