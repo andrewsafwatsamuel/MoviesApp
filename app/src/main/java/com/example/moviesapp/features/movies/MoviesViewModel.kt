@@ -16,13 +16,17 @@ import java.lang.IllegalStateException
 
 typealias MoviePagingPair = Pair<Int, List<Movie>>
 
+const val INIT_LOADING = "initial_loading"
+const val PAGED_LOADING = "paged_loading"
+const val REFRESH_LOADING = "refresh_loading"
+
 class MoviesViewModel(
     params: MovieParams,
     isConnected: Boolean,
     private val useCase: MoviesUseCase = MoviesUseCase(),
-    private val mutablePagingFlow: MutableStateFlow<MoviePagingPair> = MutableStateFlow(Pair(-1, listOf())),
+    private val mutablePagingFlow: MutableStateFlow<MoviePagingPair> = MutableStateFlow(Pair(0, listOf())),
     val state: MutableLiveData<MovieState> = MutableLiveData(),
-    val pagingFlow:StateFlow<MoviePagingPair> = mutablePagingFlow.asStateFlow()
+    val pagingFlow: StateFlow<MoviePagingPair> = mutablePagingFlow.asStateFlow()
 ) : ViewModel() {
 
     init {
@@ -32,10 +36,13 @@ class MoviesViewModel(
     fun getMovies(isConnected: Boolean, params: MovieParams) =
         viewModelScope.launch(Dispatchers.Main) { useCase(isConnected, params, state) }
 
-    suspend fun submitPage(response: MovieResponse) = mutablePagingFlow.value.second
-        .plus(response.results)
-        .distinct()
-        .let { emitPagingValue(response.pageNumber, it) }
+    suspend fun submitPage(response: MovieResponse) = response.run {
+        emitPagingValue(pageNumber, submitList(this))
+    }
+
+    private fun submitList(response: MovieResponse) =
+        if (response.pageNumber == 1) response.results
+        else mutablePagingFlow.value.second.plus(response.results).distinct()
 
     private suspend fun emitPagingValue(
         pageNumber: Int,
@@ -51,9 +58,6 @@ class MoviesViewModelFactory(
     private val isConnected: Boolean
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        if (modelClass.isAssignableFrom(MoviesViewModel::class.java)) MoviesViewModel(
-            params,
-            isConnected
-        ) as T
+        if (modelClass.isAssignableFrom(MoviesViewModel::class.java)) MoviesViewModel(params, isConnected) as T
         else throw IllegalStateException("Bad ViewModel class")
 }

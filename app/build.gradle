@@ -6,6 +6,7 @@ plugins {
 }
 
 def glide_version = '4.11.0'
+def scalable_version = "1.0.6"
 
 android {
     compileSdkVersion 30
@@ -68,7 +69,9 @@ dependencies {
     //swipeRefresh layout
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
-    //paging
-    implementation "androidx.paging:paging-runtime-ktx:3.0.0-beta03"
+    //scalable sizes
+    implementation "com.intuit.sdp:sdp-android:$scalable_version"
+    implementation "com.intuit.ssp:ssp-android:$scalable_version"
+
 
 }
