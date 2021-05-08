@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.Movie
 import com.example.moviesapp.R
 import com.example.moviesapp.features.home.CategoryList
-import com.example.moviesapp.features.movies.MoviesActivity
+import com.example.moviesapp.features.movies.MainActivity
 
 const val CATEGORY_EXTRA = "com.example.moviesapp.adapters.categoryExtra"
 
@@ -27,7 +27,7 @@ class CategoryHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         .also { category.text = it.first }
         .let { drawMovies(it.second) }
 
-    private fun showMoreOnClick(category: String) = Intent(view.context, MoviesActivity::class.java)
+    private fun showMoreOnClick(category: String) = Intent(view.context, MainActivity::class.java)
         .apply { putExtra(CATEGORY_EXTRA, category) }
         .let { view.context.startActivity(it) }
 

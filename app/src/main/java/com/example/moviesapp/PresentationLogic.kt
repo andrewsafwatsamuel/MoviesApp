@@ -68,7 +68,7 @@ fun Activity.onConnectivityCheck(): Boolean = checkConnectivity()
     .also { empty_state_textView.text= getString(R.string.check_your_internet_connection) }
     .also { empty_state_imageView.setImageDrawable(drawable(R.drawable.ic_wifi_black_24dp)) }
 
-fun Activity.checkConnectivity(): Boolean =
+fun Context.checkConnectivity(): Boolean =
     (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
         .run { activeNetworkInfo != null && activeNetworkInfo?.isConnected ?:false}
 

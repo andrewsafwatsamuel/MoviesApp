@@ -1,48 +1,49 @@
-package com.example.moviesapp.features.movies
+package com.example.moviesapp.subFeatures.movies
 
-import android.os.Bundle
+import android.content.Context
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.Movie
 import com.example.MovieResponse
 import com.example.domain.useCases.Error
 import com.example.domain.useCases.Loading
-import com.example.domain.useCases.MovieParams
 import com.example.domain.useCases.MovieState
 import com.example.domain.useCases.Success
-import com.example.moviesapp.*
+import com.example.moviesapp.PagingLifeCycle
+import com.example.moviesapp.checkConnectivity
+import com.example.moviesapp.createOnScrollListener
 import com.example.moviesapp.databinding.ActivityMoviesBinding
+import com.example.moviesapp.features.movies.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class MoviesActivity : AppCompatActivity() {
+class MoviesScreen(
+    private val lifecycleOwner: LifecycleOwner,
+    private val viewModelStoreOwner: ViewModelStoreOwner,
+    private val binding: ActivityMoviesBinding,
+    private val context: Context = binding.root.context
+) : LifecycleEventObserver {
 
-    private val params by lazy { MovieParams("popular", 1, INIT_LOADING) }
+    init {
+        lifecycleOwner.lifecycle.addObserver(this)
+    }
+
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        if (event == Lifecycle.Event.ON_START) doOnStart()
+    }
 
     private val viewModel by lazy {
         ViewModelProvider(
-            this,
-            MoviesViewModelFactory(params, checkConnectivity())
+            viewModelStoreOwner,
+            MoviesViewModelFactory(context.checkConnectivity(), "popular")
         )[MoviesViewModel::class.java]
     }
 
-    private lateinit var binding: ActivityMoviesBinding
-
-    private val adapter by lazy { MoviesPagingAdapter(::doOnItemClicked) }
-
     private val scrollListener by lazy {
         binding.moviesRecyclerView.createOnScrollListener {
-            viewModel.getMovies(
-                true,
-                params.copy(
-                    loadingType = PAGED_LOADING,
-                    pageNumber = viewModel.pagingFlow.value.first
-                )
-            )
+            val params = viewModel.createParams(PAGED_LOADING)
+            viewModel.getMovies(context.checkConnectivity(), params)
         }
     }
 
@@ -51,22 +52,29 @@ class MoviesActivity : AppCompatActivity() {
         Pair(PAGED_LOADING, ::drawPagedLoading)
     )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMoviesBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        viewModel.state.observe(this, Observer(::observerOnStates))
-        binding.moviesRecyclerView.adapter = adapter
-        PagingLifeCycle(this, binding.moviesRecyclerView, scrollListener)
-        viewModel.viewModelScope.launch {
-            viewModel.pagingFlow.collectLatest { adapter.submitList(it.second) }
-        }
+    private val adapter by lazy { MoviesPagingAdapter(::doOnItemClicked) }
+
+    private fun doOnItemClicked(movie: Movie) {
+        if (viewModel.state.value is Loading) return
+        Toast.makeText(context, movie.title, Toast.LENGTH_LONG).show()
+    }
+
+    private fun doOnStart() {
+        observeOnViewModel()
+        drawRecyclerView()
         binding.moviesSwipeRefresh.setOnRefreshListener {
-            viewModel.getMovies(
-                checkConnectivity(),
-                params.copy(loadingType = REFRESH_LOADING)
-            )
+            viewModel.run {
+                getMovies(
+                    context.checkConnectivity(),
+                    createParams(REFRESH_LOADING, 1)
+                )
+            }
         }
+    }
+
+    private fun observeOnViewModel() = with(viewModel) {
+        state.observe(lifecycleOwner, Observer(::observerOnStates))
+        viewModelScope.launch { viewModel.pagingFlow.collectLatest { adapter.submitList(it.second) } }
     }
 
     private fun observerOnStates(state: MovieState) = when (state) {
@@ -105,8 +113,9 @@ class MoviesActivity : AppCompatActivity() {
         moviesSwipeRefresh.isRefreshing = false
     }
 
-    private fun doOnItemClicked(movie: Movie) {
-        if (viewModel.state.value is Loading) return
-        Toast.makeText(this, movie.title, Toast.LENGTH_LONG).show()
+    private fun drawRecyclerView() = binding.moviesRecyclerView.let {
+        it.adapter = adapter
+        PagingLifeCycle(lifecycleOwner, it, scrollListener)
     }
+
 }
