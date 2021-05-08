@@ -38,7 +38,7 @@ class DetailsActivity : AppCompatActivity() {
     private val movieAdapter by lazy {
         GridAdapter(
             viewModel.movieList,
-            R.layout.grid_movie_item
+            R.layout.horizontal_movie_item
         )
     }
     private val topBarFragment by lazy { top_bar_fragment as TopBarFragment }

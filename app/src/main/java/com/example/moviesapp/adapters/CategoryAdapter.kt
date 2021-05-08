@@ -33,7 +33,7 @@ class CategoryHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 
     private fun drawMovies(movies: List<Movie>) = with(moviesRecycler) {
         layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
-        adapter = GridAdapter(movies.toMutableList(), R.layout.grid_movie_item)
+        adapter = GridAdapter(movies.toMutableList(), R.layout.horizontal_movie_item)
     }
 
 }

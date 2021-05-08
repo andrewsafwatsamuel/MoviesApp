@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/grid_item"
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
+        android:layout_height="@dimen/_120sdp"
+        android:layout_margin="10dp"
         app:cardCornerRadius="8dp"
-        android:layout_height="150dp" app:cardElevation="8dp">
+        app:cardElevation="8dp">
+
     <ImageView
             android:id="@+id/grid_movie_boaster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/movie_roll"
             android:contentDescription="@string/poster"
-            android:scaleType="fitXY"
-            android:visibility="visible"
-    />
+            android:scaleType="centerCrop"
+            android:src="@drawable/movie_roll"
+            android:visibility="visible" />
 </androidx.cardview.widget.CardView>

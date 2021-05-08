@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.Movie
 import com.example.moviesapp.POSTER_SIZE
 import com.example.moviesapp.R
-import com.example.moviesapp.databinding.GridMovieItemBinding
+import com.example.moviesapp.databinding.GridItemBinding
 import com.example.moviesapp.setImageUrl
 
 private fun createUtils() = object : DiffUtil.ItemCallback<Movie>() {
@@ -18,7 +18,7 @@ private fun createUtils() = object : DiffUtil.ItemCallback<Movie>() {
 }
 
 class MovieViewHolder(
-    private val binding: GridMovieItemBinding
+    private val binding: GridItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Movie) {
         binding.gridMovieBoaster.setImageUrl(POSTER_SIZE,item.poster)
@@ -37,7 +37,7 @@ class MoviesPagingAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LayoutInflater
         .from(parent.context)
-        .inflate(R.layout.grid_movie_item, parent, false)
-        .let(GridMovieItemBinding::bind)
+        .inflate(R.layout.grid_item, parent, false)
+        .let(GridItemBinding::bind)
         .let(::MovieViewHolder)
 }

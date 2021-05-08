@@ -1,12 +1,13 @@
 package com.example.moviesapp.features.movies
 
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.Movie
 import com.example.MovieResponse
 import com.example.domain.useCases.Error
 import com.example.domain.useCases.Loading
@@ -15,10 +16,6 @@ import com.example.domain.useCases.MovieState
 import com.example.domain.useCases.Success
 import com.example.moviesapp.*
 import com.example.moviesapp.databinding.ActivityMoviesBinding
-import kotlinx.android.synthetic.main.activity_splash.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -35,9 +32,9 @@ class MoviesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMoviesBinding
 
-    private val adapter by lazy { MoviesPagingAdapter {} }
+    private val adapter by lazy { MoviesPagingAdapter(::doOnItemClicked) }
 
-    val scrollListener by lazy {
+    private val scrollListener by lazy {
         binding.moviesRecyclerView.createOnScrollListener {
             viewModel.getMovies(
                 true,
@@ -49,7 +46,7 @@ class MoviesActivity : AppCompatActivity() {
         }
     }
 
-    val loadOnType = mapOf<String, () -> Unit>(
+    private val loadOnType = mapOf<String, () -> Unit>(
         Pair(INIT_LOADING, ::drawInitialLoading),
         Pair(PAGED_LOADING, ::drawPagedLoading)
     )
@@ -78,33 +75,38 @@ class MoviesActivity : AppCompatActivity() {
         is Error -> onError()
     }
 
-    private fun onLoading(loadingType: String) = with(binding){
+    private fun onLoading(loadingType: String) = with(binding) {
         loadOnType[loadingType]?.invoke()
         moviesSwipeRefresh.isEnabled = false
     }
 
-    private fun onSuccess(data: MovieResponse) =with(binding){
+    private fun onSuccess(data: MovieResponse) = with(binding) {
         viewModel.viewModelScope.launch { viewModel.submitPage(data) }
         hideLoading()
         moviesSwipeRefresh.isEnabled = true
     }
 
-    private fun onError()= with(binding) {
+    private fun onError() = with(binding) {
         moviesSwipeRefresh.isEnabled = true
         hideLoading()
     }
 
-    fun drawInitialLoading() {
+    private fun drawInitialLoading() {
         binding.moviesProgressBar.isVisible = true
     }
 
-    fun drawPagedLoading() =with(binding){
+    private fun drawPagedLoading() = with(binding) {
         pagingProgressBar.isVisible = true
     }
 
-    fun hideLoading() = with(binding) {
+    private fun hideLoading() = with(binding) {
         pagingProgressBar.isVisible = false
         moviesProgressBar.isVisible = false
         moviesSwipeRefresh.isRefreshing = false
+    }
+
+    private fun doOnItemClicked(movie: Movie) {
+        if (viewModel.state.value is Loading) return
+        Toast.makeText(this, movie.title, Toast.LENGTH_LONG).show()
     }
 }
