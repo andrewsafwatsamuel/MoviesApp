@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.Movie
 import com.example.moviesapp.R
-import com.example.moviesapp.features.movies.MainActivity
+import com.example.moviesapp.MainActivity
 
 const val CATEGORY_EXTRA = "com.example.moviesapp.adapters.categoryExtra"
 

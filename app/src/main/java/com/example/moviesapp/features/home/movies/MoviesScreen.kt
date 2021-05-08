@@ -1,4 +1,4 @@
-package com.example.moviesapp.subFeatures.movies
+package com.example.moviesapp.features.home.movies
 
 import android.content.Context
 import android.widget.Toast
@@ -13,15 +13,15 @@ import com.example.domain.useCases.Success
 import com.example.moviesapp.PagingLifeCycle
 import com.example.moviesapp.checkConnectivity
 import com.example.moviesapp.createOnScrollListener
-import com.example.moviesapp.databinding.ActivityMoviesBinding
-import com.example.moviesapp.features.movies.*
+import com.example.moviesapp.databinding.LayoutMoviesBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MoviesScreen(
+    private val category: String,
     private val lifecycleOwner: LifecycleOwner,
     private val viewModelStoreOwner: ViewModelStoreOwner,
-    private val binding: ActivityMoviesBinding,
+    private val binding: LayoutMoviesBinding,
     private val context: Context = binding.root.context
 ) : LifecycleEventObserver {
 
@@ -36,7 +36,7 @@ class MoviesScreen(
     private val viewModel by lazy {
         ViewModelProvider(
             viewModelStoreOwner,
-            MoviesViewModelFactory(context.checkConnectivity(), "popular")
+            MoviesViewModelFactory(context.checkConnectivity(), category)
         )[MoviesViewModel::class.java]
     }
 

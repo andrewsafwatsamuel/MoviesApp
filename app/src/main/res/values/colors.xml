@@ -10,6 +10,7 @@
     <color name="tmdb_secondary_color">#081C24</color>
     <color name="transparent_tmdb_secondary_color">#66081C24</color>
     <color name="tmdb_primary_color">#01D277</color>
+    <color name="tmdb_primary_color_dark">#03A15B</color>
     <color name="_transparent_tmdb_primary_color">#B301D277</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent_white">#60FFFFFF</color>

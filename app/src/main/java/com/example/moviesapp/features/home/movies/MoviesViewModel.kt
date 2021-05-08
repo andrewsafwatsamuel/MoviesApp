@@ -1,4 +1,4 @@
-package com.example.moviesapp.features.movies
+package com.example.moviesapp.features.home.movies
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package com.example.moviesapp.features.movies
+package com.example.moviesapp.features.home.movies
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
