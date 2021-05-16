@@ -22,7 +22,8 @@ class MoviesScreen(
     private val lifecycleOwner: LifecycleOwner,
     private val viewModelStoreOwner: ViewModelStoreOwner,
     private val binding: LayoutMoviesBinding,
-    private val context: Context = binding.root.context
+    private val context: Context = binding.root.context,
+    private var totalPages: Int = 0
 ) : LifecycleEventObserver {
 
     init {
@@ -41,11 +42,12 @@ class MoviesScreen(
     }
 
     private val scrollListener by lazy {
-        binding.moviesRecyclerView.createOnScrollListener {
-            val params = viewModel.createParams(PAGED_LOADING)
-            viewModel.getMovies(context.checkConnectivity(), params)
-        }
+        binding.moviesRecyclerView.createOnScrollListener { viewModel.paginate() }
     }
+
+    private fun MoviesViewModel.paginate() = createParams(PAGED_LOADING)
+        .takeUnless { (it.pageNumber >= totalPages) or (state.value is Error) }
+        ?.let { getMovies(context.checkConnectivity(), it) }
 
     private val loadOnType = mapOf<String, () -> Unit>(
         Pair(INIT_LOADING, ::drawInitialLoading),
@@ -64,11 +66,11 @@ class MoviesScreen(
         drawRecyclerView()
         binding.moviesSwipeRefresh.setOnRefreshListener {
             viewModel.run {
-                getMovies(
-                    context.checkConnectivity(),
-                    createParams(REFRESH_LOADING, 1)
-                )
+                getMovies(context.checkConnectivity(), createParams(REFRESH_LOADING, 1))
             }
+        }
+        binding.errorLayout?.retryButton?.setOnClickListener {
+            viewModel.getMovies(context.checkConnectivity(),viewModel.createParams(INIT_LOADING))
         }
     }
 
@@ -85,17 +87,21 @@ class MoviesScreen(
 
     private fun onLoading(loadingType: String) = with(binding) {
         loadOnType[loadingType]?.invoke()
+        binding.errorLayout?.root?.isVisible=false
         moviesSwipeRefresh.isEnabled = false
     }
 
     private fun onSuccess(data: MovieResponse) = with(binding) {
+        totalPages = data.pageCount
         viewModel.viewModelScope.launch { viewModel.submitPage(data) }
         hideLoading()
+        binding.errorLayout?.root?.isVisible=false
         moviesSwipeRefresh.isEnabled = true
     }
 
     private fun onError() = with(binding) {
         moviesSwipeRefresh.isEnabled = true
+        binding.errorLayout?.root?.isVisible=true
         hideLoading()
     }
 
