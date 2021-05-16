@@ -30,7 +30,7 @@ class MoviesScreen(
     }
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-        if (event == Lifecycle.Event.ON_START) doOnStart()
+        if (event == Lifecycle.Event.ON_CREATE) doOnStart()
     }
 
     private val viewModel by lazy {
