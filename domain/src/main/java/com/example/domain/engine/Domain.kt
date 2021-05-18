@@ -1,17 +1,13 @@
 package com.example.domain.engine
 
-import android.app.Application
-import androidx.lifecycle.MutableLiveData
-
-internal val applicationLiveData = MutableLiveData<Application>()
-
-internal fun MutableLiveData<Application>.getApplication() = value!!
+import android.content.Context
 
 object Domain {
-    operator fun invoke(application: Application) {
-        applicationLiveData.value = application
+
+    lateinit var applicationContext: Context
+        private set
+
+    operator fun invoke(context: Context) {
+        applicationContext = context
     }
 }
-
-fun <T> T.toMutableLiveData() =
-    MutableLiveData<T>().also { it.value = this }
