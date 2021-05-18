@@ -12,3 +12,5 @@ fun nullLifeCycleOwner(): Nothing = illegalState("$PAGINATION lifeCycleOwner $NO
 fun nullLayoutManager(): Nothing = illegalState("$PAGINATION layoutManager $NOT_Null")
 
 fun nullRetrieve(): Nothing = illegalState("$PAGINATION retrieve must have implementation")
+
+class NoConnectivityException(message: String = "No Internet Connectiont") : Exception(message)
