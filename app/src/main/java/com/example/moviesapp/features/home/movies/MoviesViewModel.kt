@@ -1,60 +1,37 @@
 package com.example.moviesapp.features.home.movies
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.Movie
-import com.example.MovieResponse
-import com.example.domain.useCases.MovieParams
-import com.example.domain.useCases.MovieState
 import com.example.domain.useCases.MoviesUseCase
+import com.example.moviesapp.createPager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.lang.IllegalStateException
-
-typealias MoviePagingPair = Pair<Int, List<Movie>>
-
-const val INIT_LOADING = "initial_loading"
-const val PAGED_LOADING = "paged_loading"
-const val REFRESH_LOADING = "refresh_loading"
+import kotlin.coroutines.CoroutineContext
 
 class MoviesViewModel(
-    private val category: String,
-    private val useCase: MoviesUseCase = MoviesUseCase(),
-    private val mutablePagingFlow: MutableStateFlow<MoviePagingPair> = MutableStateFlow(Pair(1, listOf())),
-    val state: MutableLiveData<MovieState> = MutableLiveData(),
-    val pagingFlow: StateFlow<MoviePagingPair> = mutablePagingFlow.asStateFlow()
+    category: String,
+    pager: Pager<Int, Movie> = createMoviesPager(category),
+    val movieFlow: MutableStateFlow<PagingData<Movie>> = MutableStateFlow(PagingData.empty()),
+    viewModelContext:CoroutineContext = Dispatchers.IO
 ) : ViewModel() {
-
     init {
-        getMovies(createParams(INIT_LOADING))
+        viewModelScope.launch(viewModelContext) { pager.flow.cachedIn(viewModelScope).collectLatest {movieFlow.emit(it) } }
     }
-
-    fun createParams(
-        loadingType: String,
-        pageNumber: Int = pagingFlow.value.first
-    ) = MovieParams(category, pageNumber, loadingType)
-
-    fun getMovies(params: MovieParams) =
-        viewModelScope.launch(Dispatchers.Main) { useCase(params, state) }
-
-    suspend fun submitPage(response: MovieResponse) = response.run {
-        emitPagingValue(pageNumber, submitList(this))
-    }
-
-    private fun submitList(response: MovieResponse) =
-        if (response.pageNumber == 1) response.results
-        else mutablePagingFlow.value.second.plus(response.results).distinct()
-
-    private suspend fun emitPagingValue(
-        pageNumber: Int,
-        value: List<Movie>
-    ) = Pair(pageNumber + 1, value)
-        .let { mutablePagingFlow.emit(it) }
-
 }
+
+fun createMoviesPager(
+    category: String,
+    useCase: MoviesUseCase = MoviesUseCase()
+) = createPager(20,{
+    useCase(category,it.key?:1)
+})
 
 @Suppress("UNCHECKED_CAST")
 class MoviesViewModelFactory(
