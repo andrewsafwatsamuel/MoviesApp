@@ -40,7 +40,10 @@ class MoviesScreen(
 
     private fun doOnStart() {
         observeOnViewModel()
-        binding.moviesRecyclerView.adapter = adapter
+        binding.moviesRecyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
+                StateAdapter { adapter.retry() },
+                StateAdapter { adapter.retry() }
+            )
 
     }
 

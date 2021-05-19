@@ -29,5 +29,6 @@
         <u>Show more</u>
     </string>
     <string name="home">The Movie App</string>
+    <string name="retry">retry</string>
 
 </resources>
