@@ -2,6 +2,7 @@ package com.example.moviesapp.features.home.movies
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +28,7 @@ class MovieViewHolder(
 
 class MoviesPagingAdapter(
     private val doOnClick: (Movie) -> Unit
-) : ListAdapter<Movie, MovieViewHolder>(createUtils()) {
+) : PagingDataAdapter<Movie, MovieViewHolder>(createUtils()) {
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) = with(holder) {
         val item = getItem(position) ?: return@with
