@@ -1,14 +1,11 @@
 package com.example.domain.useCases
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.example.CreditsResponse
 import com.example.DetailsResponse
 import com.example.MovieResponse
 import com.example.Videos
 import com.example.domain.repositories.DetailsRepository
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
 import io.reactivex.Single.just
 import io.reactivex.schedulers.Schedulers
 import org.junit.Rule
@@ -17,7 +14,7 @@ import org.junit.rules.TestRule
 
 class DetailsUseCasesKtTest {
 
-    @get:Rule
+    /*@get:Rule
     val rule: TestRule = InstantTaskExecutorRule()
 
     @Test
@@ -278,5 +275,5 @@ class DetailsUseCasesKtTest {
                 ?.observeOn(Schedulers.trampoline())
                 ?.subscribe()
         }
-    }
+    }*/
 }

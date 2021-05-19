@@ -1,12 +1,9 @@
 package com.example.domain
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.example.MovieResponse
 import com.example.domain.repositories.SearchRepository
 import com.example.domain.useCases.MovieSearchUseCase
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
 import io.reactivex.Single.just
 import io.reactivex.schedulers.Schedulers
 import org.junit.Rule
@@ -16,8 +13,8 @@ import org.junit.rules.TestRule
 
 class MovieSearchUseCaseTest {
 
-    @get:Rule
-    val rule: TestRule = InstantTaskExecutorRule()
+    /*@get:Rule
+    //val rule: TestRule = InstantTaskExecutorRule()
 
     @Test
     fun `invoke with successful conditions result is not null`() {
@@ -102,5 +99,5 @@ class MovieSearchUseCaseTest {
             ?.subscribe({}, Throwable::printStackTrace)
 
         assert(loading.value == false)
-    }
+    }*/
 }

@@ -1,81 +1,105 @@
 package com.example.domain.useCases
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
+import androidx.paging.PagingSource.LoadResult
+import com.example.MovieResponse
 import com.example.domain.FakeMoviesRepository
 import com.example.domain.FakeMoviesRepositoryError
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestRule
 
 @ExperimentalCoroutinesApi
 class MoviesUseCaseTest {
 
-    @get:Rule
-    val rule: TestRule = InstantTaskExecutorRule()
-
-    private lateinit var useCase: MoviesUseCase
-    private var isConnected = true
-    private val state = MutableLiveData<MovieState>()
-    private val params = MovieParams("", 1,"")
-    private val context = TestCoroutineDispatcher()
-
-    @Before
-    fun initialize() {
-        useCase = MoviesUseCase(FakeMoviesRepository())
-        state.value = null
-        isConnected = true
-    }
-
     @Test
-    fun `invoke with successful conditions emits success state`() = runBlockingTest {
-        //act
-        useCase(isConnected, params, state, context)
+    fun `invoke with successful conditions return new page`() = runBlockingTest {
 
-        //assert
-        assert(state.value is Success)
-    }
-
-
-    @Test
-    fun `invoke when not connected flow will not continue and no states will be emitted`() = runBlockingTest {
         //arrange
-        isConnected = false
+        val repository = FakeMoviesRepository()
+        val useCase = MoviesUseCase(repository)
 
         //act
-        useCase(isConnected, params, state, context)
+        val result = useCase("", 1)
 
         //assert
-        assert(state.value == null)
+        assert(result is LoadResult.Page)
+
     }
 
     @Test
-    fun `invoke with loading state flow will not continue and state remains loading`() = runBlockingTest {
+    fun `invoke when error thrown return error result`() = runBlockingTest {
+
         //arrange
-        state.value = Loading("")
+        val repository = FakeMoviesRepositoryError()
+        val useCase = MoviesUseCase(repository)
 
         //act
-        useCase(isConnected, params, state, context)
+        val result = useCase("", 1)
 
         //assert
-        assert(state.value is Loading)
+        assert(result is LoadResult.Error)
+
     }
 
     @Test
-    fun `invoke when error occur then error state emitted`() = runBlockingTest {
+    fun `invoke when current page is 1 then previous page is null`() = runBlockingTest {
+
         //arrange
-        useCase = MoviesUseCase(FakeMoviesRepositoryError())
+        val repository = FakeMoviesRepository()
+        val useCase = MoviesUseCase(repository)
 
         //act
-        useCase(isConnected, params, state, context)
+        val result = useCase("", 1) as LoadResult.Page
 
         //assert
-        assert(state.value is Error)
+        assert(result.prevKey == null)
+
     }
 
+    @Test
+    fun `invoke when current page is 2 then previous page is 1`() = runBlockingTest {
 
+        //arrange
+        val repository = FakeMoviesRepository(MovieResponse(2, 10, 10, listOf()))
+        val useCase = MoviesUseCase(repository)
+
+        //act
+        val result = useCase("", 1) as LoadResult.Page
+
+        //assert
+        assert(result.prevKey == 1)
+
+    }
+
+    @Test
+    fun `invoke when current page is last page then next page is null`() = runBlockingTest {
+
+        //arrange
+        val repository = FakeMoviesRepository(MovieResponse(10, 10, 10, listOf()))
+        val useCase = MoviesUseCase(repository)
+
+        //act
+        val result = useCase("", 1) as LoadResult.Page
+
+        //assert
+        assert(result.nextKey == null)
+
+    }
+
+    @Test
+    fun `invoke when current page number less than last page then next page equals current page + 1`() =
+        runBlockingTest {
+
+            //arrange
+            val currentPage=9
+            val repository = FakeMoviesRepository(MovieResponse(currentPage, 10, 10, listOf()))
+            val useCase = MoviesUseCase(repository)
+
+            //act
+            val result = useCase("", 1) as LoadResult.Page
+
+            //assert
+            assert(result.nextKey == currentPage.plus(1))
+
+        }
 }

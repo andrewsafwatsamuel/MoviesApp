@@ -19,14 +19,17 @@ class SearchRepositoryMock : SearchRepository {
 
     override fun addSuccessfulQuery(query: SuccessfulQuery) = Unit
 
-    override fun searchMovie(movieName: String, pageNumber: Int) = Single.just(MovieResponse(1, 1, 1, listOf()))
+    override fun searchMovie(movieName: String, pageNumber: Int) =
+        Single.just(MovieResponse(1, 1, 1, listOf()))
 }
 
-class FakeMoviesRepository:MoviesRepository{
+class FakeMoviesRepository(
+    private val response: MovieResponse = MovieResponse(1, 10, 10, listOf())
+) : MoviesRepository {
+    override suspend fun getMovies(category: String, pageNumber: Int): MovieResponse = response
+}
+
+class FakeMoviesRepositoryError : MoviesRepository {
     override suspend fun getMovies(category: String, pageNumber: Int): MovieResponse =
-        MovieResponse(1,10,10, listOf())
-}
-
-class FakeMoviesRepositoryError:MoviesRepository{
-    override suspend fun getMovies(category: String, pageNumber: Int): MovieResponse = throw Exception()
+        throw Exception()
 }
