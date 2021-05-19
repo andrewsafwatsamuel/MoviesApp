@@ -30,5 +30,7 @@
     </string>
     <string name="home">The Movie App</string>
     <string name="retry">retry</string>
+    <string name="no_items_to_show">no items to show</string>
+    <string name="unknown_eror">An Error Has Occurred Please Try Again</string>
 
 </resources>
