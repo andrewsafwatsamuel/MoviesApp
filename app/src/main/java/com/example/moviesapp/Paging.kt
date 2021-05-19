@@ -1,40 +1,33 @@
 package com.example.moviesapp
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
+import androidx.paging.PagingSource.LoadParams
+import androidx.paging.PagingSource.LoadResult
+import androidx.paging.PagingState
 
-class PagingLifeCycle(
-    lifecycleOwner: LifecycleOwner,
-    private val view: RecyclerView,
-    private val scrollListener: RecyclerView.OnScrollListener
-) : LifecycleEventObserver {
+fun <T : Any> createPager(
+    pageSize: Int,
+    load: suspend (params: LoadParams<Int>) -> LoadResult<Int, T>,
+    pagingSource: PagingSource<Int, T> = createPagingSource(load)
+) = Pager(
+    config = PagingConfig(pageSize, enablePlaceholders = false),
+    pagingSourceFactory = { pagingSource }
+)
 
-    init {
-        lifecycleOwner.lifecycle.addObserver(this)
-    }
+fun <T : Any> createPagingSource(
+    load: suspend (params: LoadParams<Int>) -> LoadResult<Int, T>
+) = object : PagingSource<Int, T>() {
 
-    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) = when (event) {
-        Lifecycle.Event.ON_START -> view.addOnScrollListener(scrollListener)
-        Lifecycle.Event.ON_STOP -> view.removeOnScrollListener(scrollListener)
-        else -> Unit
-    }
+    override fun getRefreshKey(state: PagingState<Int, T>): Int? = state.setRefreshKey()
+
+    private fun <T : Any> PagingState<Int, T>.setRefreshKey() =
+        getClosestPosition()?.prevKey?.plus(1) ?: getClosestPosition()?.nextKey?.minus(1)
+
+    private fun <T : Any> PagingState<Int, T>.getClosestPosition() =
+        anchorPosition?.let(::closestPageToPosition)
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> = load(params)
 
 }
-
-fun RecyclerView.createOnScrollListener(loadData: () -> Unit) = object : RecyclerView.OnScrollListener() {
-
-        override fun onScrollStateChanged(
-            recyclerView: RecyclerView,
-            newState: Int
-        ) = (layoutManager as LinearLayoutManager?)?.run {
-            paginate(findLastVisibleItemPosition(), itemCount)
-        } ?: Unit
-
-        fun paginate(lastVisibleItem: Int, totalItems: Int) {
-            if (lastVisibleItem + 1 >= totalItems) loadData()
-        }
-
-    }
