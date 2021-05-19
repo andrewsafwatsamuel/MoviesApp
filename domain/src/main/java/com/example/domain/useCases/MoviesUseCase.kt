@@ -19,13 +19,11 @@ data class MovieParams(val category: String, val pageNumber: Int, val loadingTyp
 class MoviesUseCase(private val repository: MoviesRepository = moviesRepository) {
 
     suspend operator fun invoke(
-        isConnected: Boolean,
         params: MovieParams,
         states: MutableLiveData<MovieState>,
         context: CoroutineContext = Dispatchers.IO
     ): Unit? = params
-        .takeIf { isConnected }
-        ?.takeUnless { states.value is Loading }
+        .takeUnless { states.value is Loading }
         ?.also { states.value = Loading(params.loadingType) }
         ?.makeRequest(context, states)
 

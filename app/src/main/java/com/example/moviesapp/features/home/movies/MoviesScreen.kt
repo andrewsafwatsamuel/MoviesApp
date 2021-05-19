@@ -11,7 +11,6 @@ import com.example.domain.useCases.Loading
 import com.example.domain.useCases.MovieState
 import com.example.domain.useCases.Success
 import com.example.moviesapp.PagingLifeCycle
-import com.example.moviesapp.checkConnectivity
 import com.example.moviesapp.createOnScrollListener
 import com.example.moviesapp.databinding.LayoutMoviesBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -37,7 +36,7 @@ class MoviesScreen(
     private val viewModel by lazy {
         ViewModelProvider(
             viewModelStoreOwner,
-            MoviesViewModelFactory(context.checkConnectivity(), category)
+            MoviesViewModelFactory(category)
         )[MoviesViewModel::class.java]
     }
 
@@ -47,7 +46,7 @@ class MoviesScreen(
 
     private fun MoviesViewModel.paginate() = createParams(PAGED_LOADING)
         .takeUnless { (it.pageNumber >= totalPages) or (state.value is Error) }
-        ?.let { getMovies(context.checkConnectivity(), it) }
+        ?.let { getMovies(it) }
 
     private val loadOnType = mapOf<String, () -> Unit>(
         Pair(INIT_LOADING, ::drawInitialLoading),
@@ -65,12 +64,10 @@ class MoviesScreen(
         observeOnViewModel()
         drawRecyclerView()
         binding.moviesSwipeRefresh.setOnRefreshListener {
-            viewModel.run {
-                getMovies(context.checkConnectivity(), createParams(REFRESH_LOADING, 1))
-            }
+            viewModel.run { getMovies(createParams(REFRESH_LOADING, 1)) }
         }
         binding.errorLayout?.retryButton?.setOnClickListener {
-            viewModel.getMovies(context.checkConnectivity(),viewModel.createParams(INIT_LOADING))
+            viewModel.getMovies(viewModel.createParams(INIT_LOADING))
         }
     }
 

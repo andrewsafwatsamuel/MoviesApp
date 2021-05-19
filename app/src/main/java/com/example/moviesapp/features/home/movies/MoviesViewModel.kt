@@ -21,7 +21,6 @@ const val PAGED_LOADING = "paged_loading"
 const val REFRESH_LOADING = "refresh_loading"
 
 class MoviesViewModel(
-    isConnected: Boolean,
     private val category: String,
     private val useCase: MoviesUseCase = MoviesUseCase(),
     private val mutablePagingFlow: MutableStateFlow<MoviePagingPair> = MutableStateFlow(Pair(1, listOf())),
@@ -30,7 +29,7 @@ class MoviesViewModel(
 ) : ViewModel() {
 
     init {
-        getMovies(isConnected, createParams(INIT_LOADING))
+        getMovies(createParams(INIT_LOADING))
     }
 
     fun createParams(
@@ -38,8 +37,8 @@ class MoviesViewModel(
         pageNumber: Int = pagingFlow.value.first
     ) = MovieParams(category, pageNumber, loadingType)
 
-    fun getMovies(isConnected: Boolean, params: MovieParams) =
-        viewModelScope.launch(Dispatchers.Main) { useCase(isConnected, params, state) }
+    fun getMovies(params: MovieParams) =
+        viewModelScope.launch(Dispatchers.Main) { useCase(params, state) }
 
     suspend fun submitPage(response: MovieResponse) = response.run {
         emitPagingValue(pageNumber, submitList(this))
@@ -59,10 +58,9 @@ class MoviesViewModel(
 
 @Suppress("UNCHECKED_CAST")
 class MoviesViewModelFactory(
-    private val isConnected: Boolean,
     private val category: String
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        if (modelClass.isAssignableFrom(MoviesViewModel::class.java)) MoviesViewModel(isConnected, category) as T
+        if (modelClass.isAssignableFrom(MoviesViewModel::class.java)) MoviesViewModel(category) as T
         else throw IllegalStateException("Bad ViewModel class")
 }

@@ -1,5 +1,7 @@
 package com.example
 
+import java.io.IOException
+
 const val NOT_Null = "can not be null"
 const val PAGINATION = "PaginationScrollListener"
 
@@ -13,4 +15,4 @@ fun nullLayoutManager(): Nothing = illegalState("$PAGINATION layoutManager $NOT_
 
 fun nullRetrieve(): Nothing = illegalState("$PAGINATION retrieve must have implementation")
 
-class NoConnectivityException(message: String = "No Internet Connectiont") : Exception(message)
+class NoConnectivityException(message: String = "No Internet Connection") : IOException(message)

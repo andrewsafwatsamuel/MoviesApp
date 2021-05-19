@@ -15,6 +15,9 @@ const val API_KEY_NAME = "api_key"
 private val httpClient by lazy {
     OkHttpClient().newBuilder()
         .addInterceptor { request(it) }
+        .addInterceptor {
+            createConnectivityInterceptor(it)
+        }
         .build()
 }
 
