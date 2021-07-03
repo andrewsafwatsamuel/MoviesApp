@@ -32,18 +32,18 @@ interface ApiEndPoints {
     ): Single<MovieResponse>
 
     @GET(MOVIE_ID_END_POINT)
-    fun retrieveDetails(
+    suspend fun retrieveDetails(
         @Path("id") id: Long,
         @Query("append_to_response") append: String = "videos"
     ): DetailsResponse
 
     @GET("$MOVIE_ID_END_POINT/credits")
-    fun retrieveCredits(
+    suspend fun retrieveCredits(
         @Path("id") id: Long
     ): CreditsResponse
 
     @GET("$MOVIE_ID_END_POINT/similar")
-    fun retrieveRelated(
+    suspend fun retrieveRelated(
         @Path("id") id: Long,
         @Query(PAGE_QUERY_PARAMETER) pageNumber: Int
     ): MovieResponse

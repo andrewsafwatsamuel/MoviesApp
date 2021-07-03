@@ -7,18 +7,19 @@ import com.example.domain.serverGateWay.apiEndPoints
 import io.reactivex.Single
 
 interface DetailsRepository {
-    fun retrieveDetails(id: Long): DetailsResponse
-    fun retrieveCredits(id: Long): CreditsResponse
-    fun retrieveRelated(id: Long, page: Int): MovieResponse
+    suspend fun retrieveDetails(id: Long): DetailsResponse
+    suspend fun retrieveCredits(id: Long): CreditsResponse
+    suspend fun retrieveRelated(id: Long, page: Int): MovieResponse
 }
 
 val detailsRepository by lazy { DetailsRepositoryImplementer() }
 
 class DetailsRepositoryImplementer : DetailsRepository {
 
-    override fun retrieveDetails(id: Long) = apiEndPoints.retrieveDetails(id)
+    override suspend fun retrieveDetails(id: Long) = apiEndPoints.retrieveDetails(id)
 
-    override fun retrieveCredits(id: Long) = apiEndPoints.retrieveCredits(id)
+    override suspend fun retrieveCredits(id: Long) = apiEndPoints.retrieveCredits(id)
 
-    override fun retrieveRelated(id: Long, page: Int) = apiEndPoints.retrieveRelated(id, page)
+    override suspend fun retrieveRelated(id: Long, page: Int) =
+        apiEndPoints.retrieveRelated(id, page)
 }
