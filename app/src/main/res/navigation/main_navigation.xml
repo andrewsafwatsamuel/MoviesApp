@@ -20,7 +20,7 @@
             tools:layout="@layout/fragment_details" >
         <argument
                 android:name="movieId"
-                app:argType="string" />
+                app:argType="long" />
         <argument
                 android:name="movieName"
                 app:argType="string" />
