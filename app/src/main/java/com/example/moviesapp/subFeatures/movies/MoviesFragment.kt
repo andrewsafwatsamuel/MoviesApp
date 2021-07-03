@@ -8,13 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapp.R
 import com.example.moviesapp.adapters.MovieAdapter
-import com.example.moviesapp.features.details.DetailsActivity
+import com.example.moviesapp.features.details.DetailsFragment
 import kotlinx.android.synthetic.main.fragment_movies.*
 
 class MoviesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DetailsStarter(activity!!, DetailsActivity::class.java)
+        DetailsStarter(activity!!, DetailsFragment::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =

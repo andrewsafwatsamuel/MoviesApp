@@ -45,7 +45,7 @@ class CategoryAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        LayoutInflater.from(parent.context).inflate(R.layout.fragment_horizontal_movies, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.layout_horizontal_movies, parent, false)
             .let { CategoryHolder(it) }
 
     override fun getItemCount() = 0
