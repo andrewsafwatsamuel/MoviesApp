@@ -9,27 +9,30 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
 sealed class DetailsState {
+    object Idle:DetailsState()
+    object Loading : DetailsState()
     data class Success<T>(val data: T) : DetailsState()
     object Error : DetailsState()
-    object Loading : DetailsState()
 }
 
-class GetDetailsUseCase(private val repository: DetailsRepository = detailsRepository) {
+class GetDetailsUseCase<T>(private val repository: DetailsRepository = detailsRepository) {
     suspend operator fun invoke(
         id: Long,
         states: MutableStateFlow<DetailsState>,
-        context: CoroutineContext = Dispatchers.IO
+        context: CoroutineContext = Dispatchers.IO,
+        makeRequest: suspend DetailsRepository.(Long)->T
     ) = id
         .takeUnless { states.value is DetailsState.Loading }
         ?.also { states.emit(DetailsState.Loading) }
-        ?.let { retrieveDetails(id, states, context) }
+        ?.let { retrieveDetails(id, states, context,makeRequest) }
 
     private suspend fun retrieveDetails(
         id: Long,
         states: MutableStateFlow<DetailsState>,
-        context: CoroutineContext
+        context: CoroutineContext,
+        makeRequest: suspend DetailsRepository.(Long)->T
     ) = try {
-        onSuccessfulRetrieve(id, states, context)
+        onSuccessfulRetrieve(id, states, context,makeRequest)
     } catch (e: java.lang.Exception) {
         onRetrieveError(e, states)
     }
@@ -37,8 +40,9 @@ class GetDetailsUseCase(private val repository: DetailsRepository = detailsRepos
     private suspend fun onSuccessfulRetrieve(
         id: Long,
         states: MutableStateFlow<DetailsState>,
-        context: CoroutineContext
-    ) = withContext(context) { repository.retrieveDetails(id) }
+        context: CoroutineContext,
+        makeRequest:suspend DetailsRepository.(Long)->T
+    ) = withContext(context) { repository.makeRequest(id) }
         .let(DetailsState::Success)
         .let { states.emit(it) }
 
@@ -48,55 +52,3 @@ class GetDetailsUseCase(private val repository: DetailsRepository = detailsRepos
     }
 
 }
-
-class GetRelatedMoviesUseCase
-
-class GetCreditsUseCase
-
-/*
-class DetailsUseCases(
-    private val repository: DetailsRepository = detailsRepository,
-    private var id: Long = 0
-) {
-
-    fun setId(id: Long) {
-        this.id = id
-    }
-
-    private fun checkConditions(
-        connected: Boolean,
-        loading: MutableLiveData<Boolean>
-    ) = id.also { if (it == 0L) throw IllegalStateException("Id must have value") }
-        .takeIf { connected }
-        .takeUnless { loading.value ?: false }
-        .also { if (connected) loading.postValue(true) }
-
-    fun retrieveDetails(
-        connected: Boolean,
-        loading: MutableLiveData<Boolean>,
-        result: MutableLiveData<DetailsResponse>
-    ) = checkConditions(connected, loading)
-            ?.let { repository.retrieveDetails(it) }
-            ?.doOnSuccess { result.postValue(it) }
-            ?.doFinally { loading.postValue(false )}
-
-    fun retrieveCredits(
-        connected: Boolean,
-        loading: MutableLiveData<Boolean>,
-        result: MutableLiveData<CreditsResponse>
-    ) = checkConditions(connected, loading)
-        ?.let { repository.retrieveCredits(it) }
-        ?.doOnSuccess { result.postValue(it) }
-        ?.doFinally { loading.postValue(false )}
-
-
-    fun retrieveRelated(
-        pageNumber : Int,
-        connected: Boolean,
-        loading: MutableLiveData<Boolean>,
-        result: MutableLiveData<MovieResponse>
-    ) = checkConditions(connected, loading)
-        ?.let { repository.retrieveRelated(it,pageNumber) }
-        ?.doOnSuccess { result.postValue(it) }
-        ?.doFinally { loading.postValue(false )}
-}*/
