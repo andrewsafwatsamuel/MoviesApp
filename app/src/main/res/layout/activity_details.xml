@@ -183,6 +183,8 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-    <include layout="@layout/empty_state_layout"/>
+    <include
+            android:id="@+id/empty_state_layout"
+            layout="@layout/empty_state_layout"/>
 
 </RelativeLayout>

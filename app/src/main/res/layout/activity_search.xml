@@ -77,7 +77,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:id="@+id/recent_searches_recyclerView"/>
-    <include layout="@layout/empty_state_layout"
+    <include
+            android:id="@+id/empty_state_layout"
+            layout="@layout/empty_state_layout"
              app:layout_constraintStart_toStartOf="parent"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"

@@ -3,35 +3,37 @@ package com.example.moviesapp.features.home
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapp.*
 import com.example.moviesapp.adapters.CategoryAdapter
+import com.example.moviesapp.databinding.ActivityHomeBinding
 import com.example.moviesapp.features.details.DetailsActivity
 import com.example.moviesapp.subFeatures.movies.DetailsStarter
 import com.example.moviesapp.subFeatures.movies.TopBarFragment
-import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
 
+    private var binding: ActivityHomeBinding? = null
     private val viewModel by lazy { ViewModelProviders.of(this)[HomeViewModel::class.java] }
-
-    private val topFragment by lazy { home_top_bar_fragment as TopBarFragment }
+    private val topFragment by lazy { supportFragmentManager.findFragmentById(R.id.home_top_bar_fragment) as TopBarFragment }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-        viewModel.loadingLiveData.observe(this, Observer {
-            home_progress_bar.visibility = if (it == true) View.VISIBLE else View.GONE
-        })
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding!!.root)
+        viewModel.loadingLiveData.observe(this) {
+            binding?.homeProgressBar?.visibility = if (it == true) View.VISIBLE else View.GONE
+        }
 
-        viewModel.errorLiveData.observe(this, Observer { setErrorState(it) })
+        viewModel.errorLiveData.observe(this) { binding?.emptyStateLayout?.setErrorState(it) }
 
         DetailsStarter(this, DetailsActivity::class.java)
         drawTopBar()
-        retrieveData(onConnectivityCheck())
-        reload { retrieveData(it) }
+        binding?.emptyStateLayout?.let {
+            retrieveData(onConnectivityCheck(it))
+            reload(it, ::retrieveData)
+        }
         drawList()
     }
 
@@ -47,14 +49,15 @@ class HomeActivity : AppCompatActivity() {
         loadSingleCategory(connected, "top_rated")
     }
 
-    private fun drawList() = with(home_recyclerView) {
+    private fun drawList() = binding?.homeRecyclerView?.run {
         layoutManager = LinearLayoutManager(this@HomeActivity)
         adapter = CategoryAdapter(this@HomeActivity, viewModel.resultLiveData)
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         viewModel.result.clear()
         viewModel.errorLiveData.value = null
+        binding = null
+        super.onDestroy()
     }
 }

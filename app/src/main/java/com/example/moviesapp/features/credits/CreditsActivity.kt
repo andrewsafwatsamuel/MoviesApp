@@ -8,20 +8,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.CreditsResponse
 import com.example.moviesapp.R
 import com.example.moviesapp.adapters.CreditsAdapter
+import com.example.moviesapp.databinding.ActivityCreditsBinding
 import com.example.moviesapp.drawCredits
 import com.example.moviesapp.features.details.EXTRA_CREDITS
 import com.example.moviesapp.onConnectivityCheck
 import com.example.moviesapp.subFeatures.movies.MoviesFragment
 import com.example.moviesapp.subFeatures.movies.TopBarFragment
-import kotlinx.android.synthetic.main.activity_credits.*
-import kotlinx.android.synthetic.main.activity_details.credits_fragment
-import kotlinx.android.synthetic.main.empty_state_layout.*
 
 class CreditsActivity : AppCompatActivity() {
 
-    private val fragment by lazy { credits_fragment as MoviesFragment }
+    private var binding: ActivityCreditsBinding? = null
+    private val fragment by lazy { supportFragmentManager.findFragmentById(R.id.credits_fragment) as MoviesFragment }
 
-    private val topBarFragment by lazy { top_bar_fragment as TopBarFragment }
+    private val topBarFragment by lazy { supportFragmentManager.findFragmentById(R.id.top_bar_fragment) as TopBarFragment }
 
     private val recyclerView by lazy {
         fragment.view?.findViewById<RecyclerView>(R.id.movies_recycler_view)
@@ -31,22 +30,30 @@ class CreditsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_credits)
+        binding = ActivityCreditsBinding.inflate(layoutInflater)
+        setContentView(binding!!.root)
 
         drawTopFragment()
-        onConnectivityCheck()
-        reload_Text_view.setOnClickListener { onConnectivityCheck() }
+        binding?.emptyStateLayout?.run {
+            onConnectivityCheck(this)
+            reloadTextView.setOnClickListener { onConnectivityCheck(this) }
+        }
         drawCredits()
     }
 
-    private fun drawTopFragment()=with(topBarFragment) {
+    private fun drawTopFragment() = with(topBarFragment) {
         activityTitle("Credits")
         backButton().setOnClickListener { finish() }
         searchButton().visibility = View.GONE
     }
 
-    private fun drawCredits()= with(recyclerView!!) {
+    private fun drawCredits() = with(recyclerView!!) {
         layoutManager = LinearLayoutManager(this@CreditsActivity)
         adapter = CreditsAdapter(R.layout.credits_vertical_card, drawCredits(creditsResponse, true))
+    }
+
+    override fun onDestroy() {
+        binding = null
+        super.onDestroy()
     }
 }

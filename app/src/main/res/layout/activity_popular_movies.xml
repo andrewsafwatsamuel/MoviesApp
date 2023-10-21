@@ -27,5 +27,7 @@
                 android:name="com.example.moviesapp.subFeatures.movies.MoviesFragment"
                 android:id="@+id/popular_fragment"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    <include layout="@layout/empty_state_layout"/>
+    <include
+            android:id="@+id/empty_state_layout"
+            layout="@layout/empty_state_layout"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
