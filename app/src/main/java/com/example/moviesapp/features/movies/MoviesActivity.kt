@@ -2,39 +2,47 @@ package com.example.moviesapp.features.movies
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviesapp.*
 import com.example.moviesapp.adapters.CATEGORY_EXTRA
 import com.example.moviesapp.adapters.GridAdapter
+import com.example.moviesapp.databinding.ActivityPopularMoviesBinding
 import com.example.moviesapp.subFeatures.movies.MoviesFragment
 import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
 import com.example.moviesapp.subFeatures.movies.QueryParameters
 import com.example.moviesapp.subFeatures.movies.TopBarFragment
-import kotlinx.android.synthetic.main.activity_popular_movies.*
 
 class MoviesActivity : AppCompatActivity() {
+
+    private var binding: ActivityPopularMoviesBinding? = null
 
     private val viewModel by lazy {
         ViewModelProviders.of(this)[MoviesViewModel::class.java]
     }
 
-    private val fragment by lazy { popular_fragment as MoviesFragment }
+    private val fragment by lazy { supportFragmentManager.findFragmentById(R.id.popular_fragment) as MoviesFragment }
 
-    private val category by lazy { intent.getStringExtra(CATEGORY_EXTRA) }
+    private val category by lazy { intent.getStringExtra(CATEGORY_EXTRA).orEmpty() }
 
-    private val topBarFragment by lazy { movies_top_bar_fragment as TopBarFragment }
+    private val topBarFragment by lazy { supportFragmentManager.findFragmentById(R.id.movies_top_bar_fragment) as TopBarFragment }
+    private val popularSwipeRefresh
+        get() = binding?.popularSwipeRefresh
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_popular_movies)
+        binding = ActivityPopularMoviesBinding.inflate(layoutInflater)
+        setContentView(binding!!.root)
 
         viewModel.run {
-            if (movies.isEmpty()) getMovies(onConnectivityCheck(), category)
+            if (movies.isEmpty()) binding?.emptyStateLayout?.let {
+                getMovies(onConnectivityCheck(it), category)
+            }
         }
 
-        reload { viewModel.getMovies(it, category) }
+        binding?.emptyStateLayout?.let {
+            reload(it) { viewModel.getMovies(it, category) }
+        }
 
         val layoutManager = GridLayoutManager(this, 3)
 
@@ -44,19 +52,28 @@ class MoviesActivity : AppCompatActivity() {
             .queryParameters(viewModel.parameters)
             .lifecycleOwner(this)
             .layoutManager(layoutManager)
-            .retrieve { viewModel.getMovies(onConnectivityCheck(), category, it.pageNumber + 1) }
-            .build()
+            .retrieve { params ->
+                binding?.emptyStateLayout?.let { emptyStateLayoutBinding ->
+                    viewModel.getMovies(
+                        onConnectivityCheck(emptyStateLayoutBinding),
+                        category,
+                        params.pageNumber + 1
+                    )
+                }
+            }.build()
 
         with(viewModel) {
-            loading.observe(this@MoviesActivity, Observer {
+            loading.observe(this@MoviesActivity) {
                 if (it) fragment.onStartLoading() else finishLoading()
-            })
-            result.observe(this@MoviesActivity, Observer {
+            }
+            result.observe(this@MoviesActivity) {
                 adapter.addItems(it.results)
                 parameters.value = QueryParameters(it.pageNumber, pageCount(it.pageCount), Unit)
                 disposable.clear()
-            })
-            errorLiveData.observe(this@MoviesActivity, Observer { setErrorState(it) })
+            }
+            errorLiveData.observe(this@MoviesActivity) {
+                binding?.emptyStateLayout?.setErrorState(it)
+            }
         }
 
         fragment.drawRecycler(layoutManager, adapter, scrollListener)
@@ -67,17 +84,24 @@ class MoviesActivity : AppCompatActivity() {
                 if (layoutManager.findFirstVisibleItemPosition() != 0) fragment.getToTop() else finish()
             }
 
-        popular_swipe_refresh.setOnRefreshListener { swipeRefresh() }
+        popularSwipeRefresh?.setOnRefreshListener { swipeRefresh() }
     }
 
     private fun finishLoading() {
         fragment.onFinishLoading()
-        popular_swipe_refresh.isRefreshing = false
+        popularSwipeRefresh?.isRefreshing = false
     }
 
-    private fun swipeRefresh() = onConnectivityCheck()
-        .also { viewModel.movies.clear() }
-        .also { viewModel.getMovies(it, category) }
-        .also { if (!it) popular_swipe_refresh.isRefreshing = false }
+    private fun swipeRefresh() = binding?.emptyStateLayout?.let {
+        onConnectivityCheck(it).also { isConnected ->
+            viewModel.movies.clear()
+            viewModel.getMovies(isConnected, category)
+            if (!isConnected) popularSwipeRefresh?.isRefreshing = false
+        }
+    }
 
+    override fun onDestroy() {
+        binding = null
+        super.onDestroy()
+    }
 }

@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION", "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-
 package com.example.moviesapp
 
 import android.app.Activity
@@ -13,12 +11,12 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.example.CreditsMember
 import com.example.CreditsResponse
-import kotlinx.android.synthetic.main.empty_state_layout.*
+import com.example.moviesapp.databinding.EmptyStateLayoutBinding
 
 const val BASE_POSTER_URL = "http://image.tmdb.org/t/p/"
 const val POSTER_SIZE = "w185"
 const val BACK_DRAW_SIZE = "w500"
-const val ERROR_MESSAGE="Error has occurred while loading"
+const val ERROR_MESSAGE = "Error has occurred while loading"
 
 fun drawPhoto(size: String, url: String?, view: ImageView) = url
     .takeUnless { it.isNullOrBlank() }
@@ -57,20 +55,20 @@ fun drawCredits(response: CreditsResponse, withCrew: Boolean) = mutableListOf<Cr
     }
 
 
-fun Activity.onConnectivityCheck(): Boolean = checkConnectivity()
-    .also { empty_state_layout.visibility = if (it) View.GONE else View.VISIBLE }
-    .also { empty_state_textView.text= getString(R.string.check_your_internet_connection) }
-    .also { empty_state_imageView.setImageDrawable(getDrawable(R.drawable.ic_wifi_black_24dp)) }
+fun Activity.onConnectivityCheck(binding: EmptyStateLayoutBinding): Boolean = checkConnectivity()
+    .also { binding.root.visibility = if (it) View.GONE else View.VISIBLE }
+    .also { binding.emptyStateTextView.text = getString(R.string.check_your_internet_connection) }
+    .also { binding.emptyStateImageView.setImageDrawable(getDrawable(R.drawable.ic_wifi_black_24dp)) }
 
 fun Activity.checkConnectivity(): Boolean =
     (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-        .run { activeNetworkInfo != null && activeNetworkInfo.isConnected }
+        .run { activeNetworkInfo != null && activeNetworkInfo?.isConnected == true }
 
-fun Activity.setErrorState(message: String?) = message
+fun EmptyStateLayoutBinding.setErrorState(message: String?) = message
     .takeUnless { it.isNullOrBlank() }
-    ?.also { empty_state_textView.text = it }
-    ?.let { empty_state_imageView.setImageDrawable(getDrawable(R.drawable.error)) }
-    ?.also { empty_state_layout.visibility=View.VISIBLE }
+    ?.also { emptyStateTextView.text = it }
+    ?.let { emptyStateImageView.setImageDrawable(root.context.getDrawable(R.drawable.error)) }
+    ?.also { root.visibility = View.VISIBLE }
 
-fun Activity.reload(isConnected: (Boolean) -> Unit) =
-    reload_Text_view.setOnClickListener { isConnected(onConnectivityCheck()) }
+fun Activity.reload(binding: EmptyStateLayoutBinding, isConnected: (Boolean) -> Unit) =
+    binding.reloadTextView.setOnClickListener { isConnected(onConnectivityCheck(binding)) }

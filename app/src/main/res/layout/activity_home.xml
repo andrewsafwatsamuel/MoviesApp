@@ -28,7 +28,9 @@
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/home_top_bar_fragment"/>
-    <include layout="@layout/empty_state_layout"
+    <include
+            android:id="@+id/empty_state_layout"
+            layout="@layout/empty_state_layout"
              app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
              app:layout_constraintEnd_toEndOf="parent" android:visibility="gone"
              app:layout_constraintTop_toBottomOf="@id/home_top_bar_fragment"
