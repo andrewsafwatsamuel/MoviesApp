@@ -3,8 +3,9 @@
 buildscript {
     ext {
         agp_version = '8.1.2'
+        room_version = '2.6.0'
+        kotlin_version = '1.9.10'
     }
-    ext.kotlin_version = '1.9.10'
     repositories {
         google()
         mavenCentral()
@@ -13,6 +14,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$agp_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.9.10-1.0.13"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
