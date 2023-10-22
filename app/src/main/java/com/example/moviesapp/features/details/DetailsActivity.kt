@@ -50,7 +50,7 @@ class DetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailsBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_details)
+        setContentView(binding!!.root)
         DetailsStarter(this, DetailsActivity::class.java, true)
         viewModel.relatedResult.observe(this) {
             parameters.value = QueryParameters(it.pageNumber, it.pageCount, Unit)
