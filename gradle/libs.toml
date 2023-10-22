@@ -17,6 +17,7 @@ android_lifecycle_extensions = "2.2.0"
 android_lifecycle_common = "1.1.1"
 retrofit = "2.5.0"
 room = "2.6.0"
+gson = "2.10.1"
 mokito_nharman = "2.0.0-RC1"
 mockito = "2.13.0"
 android_arch_core = "1.1.1"
@@ -52,6 +53,8 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit_rx_adapter = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "retrofit" }
 retrofit_gson_converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 room_annotationProcessor = { module = "androidx.room:room-compiler", version.ref = "room" }
+room_runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+gson = {module = "com.google.code.gson:gson",version.ref = "gson"}
 mockito_nharman = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mokito_nharman" }
 mockito = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
 android_arch_coreTesting = { module = "android.arch.core:core-testing", version.ref = "android_arch_core" }
