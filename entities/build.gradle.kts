@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
-    id("kotlin-android")
 }
 android {
     namespace = "com.example.entities"

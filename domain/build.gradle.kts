@@ -1,8 +1,10 @@
+import org.gradle.kotlin.dsl.libs
+
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
     id("kotlin-parcelize")
-    id("kotlin-android")
-    id("com.google.devtools.ksp")
 }
 
 android {
