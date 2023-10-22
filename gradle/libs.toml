@@ -1,0 +1,76 @@
+[versions]
+kotlin = "1.9.10"
+appCompat = "1.6.1"
+androidx_core = "1.12.0"
+constraint_layout = "2.1.4"
+junit = "4.13.2"
+androidx_testRunner = "1.5.2"
+espresso = "3.5.1"
+recyclerView = "1.3.2"
+cardView = "1.0.0"
+glide = "4.11.0"
+material = "1.10.0"
+swipeRefreshLayout = "1.1.0"
+rxjava2 = "2.2.9"
+rxAndroid = "2.1.1"
+android_lifecycle_extensions = "2.2.0"
+android_lifecycle_common = "1.1.1"
+retrofit = "2.5.0"
+room = "2.6.0"
+gson = "2.10.1"
+mokito_nharman = "2.0.0-RC1"
+mockito = "2.13.0"
+android_arch_core = "1.1.1"
+android_lugin = "8.1.1"
+ksp = "1.9.10-1.0.13"
+kotlin_parcelize = "1.9.20-RC"
+
+# shared versions
+buildTools = "34.0.0"
+versionCodeInt = "1"
+versionNameString = "1.0.0"
+jdkVersion = "1.8"
+minSdkVersion = "21"
+compileSdkVersion = "34"
+
+
+[libraries]
+kotlin_jdk = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
+app_compat = { module = "androidx.appcompat:appcompat", version.ref = "appCompat" }
+androidx_core = { module = "androidx.core:core-ktx", version.ref = "androidx_core" }
+constraint_layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraint_layout" }
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx_testRunner = { module = "androidx.test:runner", version.ref = "androidx_testRunner" }
+espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+recyclerView = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerView" }
+cardView = { module = "androidx.cardview:cardview", version.ref = "cardView" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glide_annotationProcessor = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+swipeRefreshLayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swipeRefreshLayout" }
+rx_java = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava2" }
+rx_android = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxAndroid" }
+androidx_lifecycleExtensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "android_lifecycle_extensions" }
+android_arch_lifcycleCommon = { module = "android.arch.lifecycle:common", version.ref = "android_lifecycle_common" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit_rx_adapter = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "retrofit" }
+retrofit_gson_converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+room_annotationProcessor = { module = "androidx.room:room-compiler", version.ref = "room" }
+room_runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+mockito_nharman = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mokito_nharman" }
+mockito = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
+android_arch_coreTesting = { module = "android.arch.core:core-testing", version.ref = "android_arch_core" }
+
+[plugins]
+android_application = { id = "com.android.application", version.ref = "android_lugin" }
+android_library = { id = "com.android.library", version.ref = "android_lugin" }
+kotlin_android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+[bundles]
+unitTesting = ["junit", "mockito_nharman", "mockito", "android_arch_coreTesting"]
+androidUi = ["app_compat", "androidx_core", "constraint_layout", "recyclerView", "cardView", "swipeRefreshLayout"]
+androidAutomation = ["androidx_testRunner", "espresso"]
+retrofit = ["retrofit", "retrofit_rx_adapter", "retrofit_gson_converter"]
+rx = ["rx_java", "rx_android"]

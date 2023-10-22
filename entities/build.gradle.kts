@@ -1,13 +1,14 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
-    id("kotlin-android")
 }
 android {
-    buildToolsVersion = "34.0.0"
-    compileSdk = 34
     namespace = "com.example.entities"
-
+    libs.versions.apply {
+        buildToolsVersion = buildTools.get()
+        compileSdk = compileSdkVersion.get().toInt()
+    }
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -23,16 +24,16 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = libs.versions.jdkVersion.get()
     }
 }
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    testImplementation("junit:junit:4.13.2")
-    api("androidx.room:room-runtime:2.6.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.10")
-    implementation("com.google.code.gson:gson:2.10.1")
+    api(libs.room.runtime)
+    implementation(libs.kotlin.jdk)
+    implementation(libs.gson)
 
+    testImplementation(libs.junit)
 }
