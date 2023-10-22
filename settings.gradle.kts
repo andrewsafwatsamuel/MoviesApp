@@ -13,6 +13,11 @@ dependencyResolutionManagement {
         mavenCentral()
         maven("https://jitpack.io")
     }
+    versionCatalogs {
+        create("libs") {
+            from(files("\\gradle\\libs.toml"))
+        }
+    }
 }
 rootProject.name = "MoviesApp"
 include(":app")
