@@ -9,10 +9,6 @@ android {
     buildToolsVersion = "34.0.0"
     compileSdk = 34
     namespace = "com.example.domain"
-    defaultConfig {
-        minSdk = 21
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
 
     buildTypes {
         release {
@@ -29,12 +25,12 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = "1.8"
     }
 }
 
 dependencies {
-    implementation(files(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
     testImplementation("junit:junit:4.13.2")
     implementation(project(":entities"))
