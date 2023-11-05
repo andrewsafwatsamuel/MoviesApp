@@ -44,7 +44,6 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
     implementation(project(":domain"))
-    implementation(project(":entities"))
 
     implementation(libs.bundles.androidUi)
     implementation(libs.kotlin.jdk)
