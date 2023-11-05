@@ -32,5 +32,8 @@ android {
 dependencies {
     api(project(":entities"))
 
+    implementation(libs.bundles.ktor)
+    implementation(libs.kotlin.coroutines)
+
     testImplementation(libs.bundles.unitTesting)
 }

@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlinx.serialization)
 }
 android {
     namespace = "com.moviesapp.entities"
@@ -34,6 +34,7 @@ dependencies {
     api(libs.room.runtime)
     implementation(libs.kotlin.jdk)
     implementation(libs.gson)
+    implementation(libs.ktor.jsonSerialization)
 
     testImplementation(libs.junit)
 }
