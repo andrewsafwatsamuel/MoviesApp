@@ -1,14 +1,10 @@
-import org.gradle.kotlin.dsl.libs
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    id("kotlin-parcelize")
 }
 
 android {
-    namespace = "com.example.domain"
+    namespace = "com.example.data_sources"
     libs.versions.apply {
         buildToolsVersion = buildTools.get()
         compileSdk = compileSdkVersion.get().toInt()
@@ -34,17 +30,7 @@ android {
 }
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-
-    api(project(":data_sources"))
-
-    api(libs.bundles.rx)
-    api(libs.androidx.lifecycleExtensions)
-    api(libs.android.arch.lifcycleCommon)
-    implementation(libs.bundles.retrofit)
-    implementation(libs.androidx.core)
-    implementation(libs.kotlin.jdk)
-    ksp(libs.room.annotationProcessor)
+    api(project(":entities"))
 
     testImplementation(libs.bundles.unitTesting)
 }

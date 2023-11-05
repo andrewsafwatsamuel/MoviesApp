@@ -23,3 +23,4 @@ rootProject.name = "MoviesApp"
 include(":app")
 include(":entities")
 include(":domain")
+include(":data_sources")
