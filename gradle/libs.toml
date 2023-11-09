@@ -15,9 +15,7 @@ rxjava2 = "2.2.9"
 rxAndroid = "2.1.1"
 android_lifecycle_extensions = "2.2.0"
 android_lifecycle_common = "1.1.1"
-retrofit = "2.5.0"
 room = "2.6.0"
-gson = "2.10.1"
 mokito_nharman = "2.0.0-RC1"
 mockito = "2.13.0"
 android_arch_core = "1.1.1"
@@ -55,12 +53,8 @@ rx_java = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava2" }
 rx_android = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxAndroid" }
 androidx_lifecycleExtensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "android_lifecycle_extensions" }
 android_arch_lifcycleCommon = { module = "android.arch.lifecycle:common", version.ref = "android_lifecycle_common" }
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-retrofit_rx_adapter = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "retrofit" }
-retrofit_gson_converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 room_annotationProcessor = { module = "androidx.room:room-compiler", version.ref = "room" }
 room_runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 mockito_nharman = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mokito_nharman" }
 mockito = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
 android_arch_coreTesting = { module = "android.arch.core:core-testing", version.ref = "android_arch_core" }
@@ -87,6 +81,5 @@ kotlinx_serialization = {id = "org.jetbrains.kotlin.plugin.serialization", versi
 unitTesting = ["junit", "mockito_nharman", "mockito", "android_arch_coreTesting"]
 androidUi = ["app_compat", "androidx_core", "constraint_layout", "recyclerView", "cardView", "swipeRefreshLayout"]
 androidAutomation = ["androidx_testRunner", "espresso"]
-retrofit = ["retrofit", "retrofit_rx_adapter", "retrofit_gson_converter"]
 rx = ["rx_java", "rx_android"]
 ktor = ["ktor_core", "ktor_cio", "ktor_jsonSerialization", "ktor_contentNegotiation", "ktor_logging"]
