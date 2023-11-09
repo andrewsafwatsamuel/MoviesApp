@@ -1,11 +1,11 @@
-package com.moviesapp.domain.useCases
+package com.example.domain.useCases
 
 import androidx.lifecycle.MutableLiveData
-import com.moviesapp.MovieResponse
-import com.moviesapp.domain.repositories.BaseMoviesRepository
-import com.moviesapp.domain.repositories.moviesRepository
+import com.example.MovieResponse
+import com.example.data_sources.DataSourcesServiceLocator
+import com.example.data_sources.repositories.MoviesRepository
 
-class MoviesUseCase(private val repository: BaseMoviesRepository = moviesRepository) {
+class MoviesUseCase(private val repository: MoviesRepository = DataSourcesServiceLocator.moviesRepository) {
     operator fun invoke(
         isConnected: Boolean,
         loading: MutableLiveData<Boolean>,

@@ -36,7 +36,6 @@ dependencies {
 
     api(project(":data_sources"))
 
-    api(libs.bundles.rx)
     api(libs.androidx.lifecycleExtensions)
     api(libs.android.arch.lifcycleCommon)
     implementation(libs.bundles.retrofit)
