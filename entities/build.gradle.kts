@@ -33,7 +33,6 @@ dependencies {
 
     api(libs.room.runtime)
     implementation(libs.kotlin.jdk)
-    implementation(libs.gson)
     implementation(libs.ktor.jsonSerialization)
 
     testImplementation(libs.junit)

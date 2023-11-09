@@ -40,7 +40,6 @@ dependencies {
 
     api(libs.androidx.lifecycleExtensions)
     api(libs.android.arch.lifcycleCommon)
-    implementation(libs.bundles.retrofit)
     implementation(libs.androidx.core)
     implementation(libs.kotlin.jdk)
     ksp(libs.room.annotationProcessor)
