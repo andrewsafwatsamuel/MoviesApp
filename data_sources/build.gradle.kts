@@ -32,6 +32,7 @@ android {
 dependencies {
     api(project(":entities"))
 
+    api(libs.bundles.rx)
     implementation(libs.bundles.ktor)
     implementation(libs.kotlin.coroutines)
 

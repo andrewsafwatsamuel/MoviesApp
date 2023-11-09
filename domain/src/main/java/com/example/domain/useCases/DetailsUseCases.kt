@@ -4,11 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import com.example.CreditsResponse
 import com.example.DetailsResponse
 import com.example.MovieResponse
-import com.example.domain.repositories.DetailsRepository
-import com.example.domain.repositories.detailsRepository
+import com.example.data_sources.DataSourcesServiceLocator
+import com.example.data_sources.repositories.MoviesRepository
 
 class DetailsUseCases(
-    private val repository: DetailsRepository = detailsRepository,
+    private val repository: MoviesRepository = DataSourcesServiceLocator.moviesRepository,
     private var id: Long = 0
 ) {
 

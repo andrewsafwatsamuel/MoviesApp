@@ -3,14 +3,16 @@ package com.example.domain.useCases
 import androidx.lifecycle.MutableLiveData
 import com.example.MovieResponse
 import com.example.SuccessfulQuery
+import com.example.data_sources.DataSourcesServiceLocator
+import com.example.data_sources.repositories.MoviesRepository
 import com.example.domain.repositories.SearchRepository
 import com.example.domain.repositories.searchRepository
 
 class MovieSearchUseCase(
-    private val repository: SearchRepository = searchRepository
+    private val repository: MoviesRepository = DataSourcesServiceLocator.moviesRepository
 ) {
     operator fun invoke(
-        connected:Boolean,
+        connected: Boolean,
         movieName: String,
         loading: MutableLiveData<Boolean>,
         result: MutableLiveData<MovieResponse>,
