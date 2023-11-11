@@ -7,7 +7,7 @@ import kotlinx.coroutines.runBlocking
 
 class ResponseToSingleMapper {
 
-    operator fun <T> invoke(runner: SuspendResponseRunner<T>): Single<T> =
+    operator fun <T> invoke(runner: SuspendResponseRunnable<T>): Single<T> =
         Single.create { emitter ->
             try {
                 runBlocking { runner.run() }.emitOnSingleEmitter(emitter)
@@ -23,6 +23,6 @@ class ResponseToSingleMapper {
 
 }
 
-fun interface SuspendResponseRunner<T> {
+fun interface SuspendResponseRunnable<T> {
     suspend fun run(): Response<T>
 }
