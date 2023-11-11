@@ -37,4 +37,9 @@ dependencies {
     implementation(libs.kotlin.coroutines)
 
     testImplementation(libs.bundles.unitTesting)
+    testRuntimeOnly(libs.junit.engine)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

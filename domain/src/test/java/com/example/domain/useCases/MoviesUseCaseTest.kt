@@ -3,11 +3,10 @@ package com.example.domain.useCases
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.example.MovieResponse
-import com.example.domain.repositories.BaseMoviesRepository
+import com.example.data_sources.repositories.MoviesRepository
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import io.reactivex.Single.just
-import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -21,7 +20,7 @@ class MoviesUseCaseTest {
 
     @Test
     fun `invoke with successful condition then return result`() {
-        val repositoryMock = mock<BaseMoviesRepository> {
+        val repositoryMock = mock<MoviesRepository> {
             on { getMovies("",1) } doReturn just(
                 MovieResponse(1, 1, 1, listOf())
             )
@@ -38,7 +37,7 @@ class MoviesUseCaseTest {
 
     @Test
     fun `invoke with successful condition then loading value equals false`() {
-        val repositoryMock = mock<BaseMoviesRepository> {
+        val repositoryMock = mock<MoviesRepository> {
             on { getMovies("",1) } doReturn just(
                 MovieResponse(1, 1, 1, listOf())
             )
@@ -55,7 +54,7 @@ class MoviesUseCaseTest {
 
     @Test
     fun `invoke with unsuccessful condition then loading value equals false`() {
-        val repositoryMock = mock<BaseMoviesRepository> {
+        val repositoryMock = mock<MoviesRepository> {
             on { getMovies("",1) } doReturn just(
                 MovieResponse(1, 1, 1, listOf())
             )
@@ -72,7 +71,7 @@ class MoviesUseCaseTest {
 
     @Test
     fun `invoke when is not connected then do not return results`() {
-        val repositoryMock = mock<BaseMoviesRepository> {
+        val repositoryMock = mock<MoviesRepository> {
             on { getMovies("",1) } doReturn just(
                 MovieResponse(1, 1, 1, listOf())
             )
@@ -90,7 +89,7 @@ class MoviesUseCaseTest {
 
     @Test
     fun `invoke when loading then do not return results`() {
-        val repositoryMock = mock<BaseMoviesRepository> {
+        val repositoryMock = mock<MoviesRepository> {
             on { getMovies("",1) } doReturn   just(
                 MovieResponse(1, 1, 1, listOf())
             )

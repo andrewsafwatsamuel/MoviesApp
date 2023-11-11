@@ -3,7 +3,7 @@ package com.example.domain
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.example.MovieResponse
-import com.example.domain.repositories.SearchRepository
+import com.example.data_sources.repositories.MoviesRepository
 import com.example.domain.useCases.MovieSearchUseCase
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -23,7 +23,7 @@ class MovieSearchUseCaseTest {
     fun `invoke with successful conditions result is not null`() {
         val pageNumber = 1
         val movieName = "lala land"
-        val mockRepository = mock<SearchRepository> {
+        val mockRepository = mock<MoviesRepository> {
             on { searchMovie(movieName, pageNumber) } doReturn just(
                 MovieResponse(1, 1, 1, listOf())
             )
@@ -44,7 +44,7 @@ class MovieSearchUseCaseTest {
     fun `invoke with blank movie name return no results`() {
         val pageNumber = 1
         val movieName = "lala land"
-        val mockRepository = mock<SearchRepository> {
+        val mockRepository = mock<MoviesRepository> {
             on { searchMovie(movieName, pageNumber) } doReturn just(
                 MovieResponse(1, 1, 1, listOf())
             )
@@ -65,7 +65,7 @@ class MovieSearchUseCaseTest {
     fun `invoke while loading then return no results`() {
         val pageNumber = 1
         val movieName = "lala land"
-        val mockRepository = mock<SearchRepository> {
+        val mockRepository = mock<MoviesRepository> {
             on { searchMovie(movieName, pageNumber) } doReturn just(
                 MovieResponse(1, 1, 1, listOf())
             )
@@ -87,7 +87,7 @@ class MovieSearchUseCaseTest {
     fun `invoke with successful response then loading value equals false`() {
         val pageNumber = 1
         val movieName = "lala land"
-        val mockRepository = mock<SearchRepository> {
+        val mockRepository = mock<MoviesRepository> {
             on { searchMovie(movieName, pageNumber) } doReturn just(
                 MovieResponse(1, 1, 1, listOf())
             )

@@ -51,7 +51,6 @@ dependencies {
     implementation(libs.glide)
     annotationProcessor(libs.glide.annotationProcessor)
 
-    testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.androidAutomation)
 
     implementation(files("src/libs/YouTubeAndroidPlayerApi.jar"))
