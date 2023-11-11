@@ -7,18 +7,22 @@ import kotlinx.coroutines.runBlocking
 
 class ResponseToSingleMapper {
 
-    inline operator fun <T> invoke(crossinline apiCall: suspend () -> Response<T>): Single<T> =
+    operator fun <T> invoke(runner: SuspendResponseRunner<T>): Single<T> =
         Single.create { emitter ->
             try {
-                runBlocking { apiCall() }.emitOnSingleEmitter(emitter)
+                runBlocking { runner.run() }.emitOnSingleEmitter(emitter)
             } catch (t: Throwable) {
                 if (!emitter.isDisposed) emitter.onError(t)
             }
         }
 
-    fun <T> Response<T>.emitOnSingleEmitter(emitter: SingleEmitter<T>) {
+    private fun <T> Response<T>.emitOnSingleEmitter(emitter: SingleEmitter<T>) {
         if (statusCode !in 200..399) throw RuntimeException("Error has occurred: Status code: $statusCode\n$description")
         if (!emitter.isDisposed) body?.let(emitter::onSuccess)
     }
 
+}
+
+fun interface SuspendResponseRunner<T> {
+    suspend fun run(): Response<T>
 }
