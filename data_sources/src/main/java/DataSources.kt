@@ -1,12 +1,8 @@
-import android.content.Context
+import com.example.contracts.NetworkStatus
 
 object DataSources {
-
-    lateinit var applicationContext: Context
-        private set
-
-    fun init(applicationContext: Context) {
-        this.applicationContext = applicationContext
-    }
-
+    var networkStatus: NetworkStatus? = null
+        set(value) {
+            if (field == networkStatus) field = value
+        }
 }
