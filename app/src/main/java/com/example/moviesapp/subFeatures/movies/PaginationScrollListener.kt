@@ -6,10 +6,10 @@ import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapp.hideKeyboard
-import com.example.nullLayoutManager
-import com.example.nullLifeCycleOwner
-import com.example.nullQueryParameters
-import com.example.nullRetrieve
+import com.example.moviesapp.nullLayoutManager
+import com.example.moviesapp.nullLifeCycleOwner
+import com.example.moviesapp.nullQueryParameters
+import com.example.moviesapp.nullRetrieve
 
 data class QueryParameters<I>(
     val pageNumber: Int,
