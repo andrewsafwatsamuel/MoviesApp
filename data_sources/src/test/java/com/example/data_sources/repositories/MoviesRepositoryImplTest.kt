@@ -84,6 +84,6 @@ class MoviesRepositoryImplTest {
     }
 
     private fun <T> mockInvoke() = coEvery { responseToSingleMapper.invoke<T>(any()) } coAnswers {
-        Single.just(firstArg<SuspendResponseRunner<T>>().run().body)
+        Single.just(firstArg<SuspendResponseRunnable<T>>().run().body)
     }
 }
