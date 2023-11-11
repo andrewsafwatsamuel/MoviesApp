@@ -35,5 +35,4 @@ dependencies {
     implementation(libs.kotlin.jdk)
     implementation(libs.ktor.jsonSerialization)
 
-    testImplementation(libs.junit)
 }

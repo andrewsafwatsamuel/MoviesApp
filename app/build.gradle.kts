@@ -52,7 +52,6 @@ dependencies {
     implementation(libs.anroidYoutubePlayer)
     annotationProcessor(libs.glide.annotationProcessor)
 
-    testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.androidAutomation)
 
 }

@@ -1,9 +1,7 @@
-package com.moviesapp.domain
+package com.example.domain
 
-import com.moviesapp.MovieResponse
-import com.moviesapp.SuccessfulQuery
-import com.moviesapp.domain.repositories.SearchRepository
-import io.reactivex.Single
+import com.example.SuccessfulQuery
+import com.example.domain.repositories.SearchRepository
 
 val presentQuery = listOf(SuccessfulQuery("lala land"), SuccessfulQuery("inter steller"))
 
@@ -16,6 +14,4 @@ class SearchRepositoryMock : SearchRepository {
             ?.let { SuccessfulQuery(it) }
 
     override fun addSuccessfulQuery(query: SuccessfulQuery) = Unit
-
-    override fun searchMovie(movieName: String, pageNumber: Int) = Single.just(MovieResponse(1, 1, 1, listOf()))
 }
