@@ -15,19 +15,30 @@ import com.example.CreditsMember
 import com.example.CreditsResponse
 import com.example.CrewMember
 import com.example.DetailsResponse
-import com.example.moviesapp.*
+import com.example.moviesapp.BACK_DRAW_SIZE
+import com.example.moviesapp.POSTER_SIZE
+import com.example.moviesapp.R
 import com.example.moviesapp.adapters.CreditsAdapter
 import com.example.moviesapp.adapters.GenreAdapter
 import com.example.moviesapp.adapters.GridAdapter
 import com.example.moviesapp.adapters.ID_EXTRA
 import com.example.moviesapp.databinding.ActivityDetailsBinding
 import com.example.moviesapp.databinding.FragmentCreditsBinding
+import com.example.moviesapp.drawCredits
+import com.example.moviesapp.drawPhoto
 import com.example.moviesapp.features.credits.CreditsActivity
-import com.example.moviesapp.features.trailer.TrailerActivity
-import com.example.moviesapp.subFeatures.movies.*
+import com.example.moviesapp.features.trailer.TrailerDialog
+import com.example.moviesapp.features.trailer.TrailerDialog.Companion.TRAILER_DIALOG_TAG
+import com.example.moviesapp.onConnectivityCheck
+import com.example.moviesapp.reload
+import com.example.moviesapp.setErrorState
+import com.example.moviesapp.subFeatures.movies.DetailsStarter
+import com.example.moviesapp.subFeatures.movies.HorizontalMovieFragment
+import com.example.moviesapp.subFeatures.movies.PaginationScrollListener
+import com.example.moviesapp.subFeatures.movies.QueryParameters
+import com.example.moviesapp.subFeatures.movies.TopBarFragment
 
 const val EXTRA_CREDITS = "com.example.moviesapp.features.details.extraCredits"
-const val EXTRA_TRAILER = "com.example.moviesapp.features.details.extraTrailer"
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -108,15 +119,13 @@ class DetailsActivity : AppCompatActivity() {
     private inline fun getTrailer(response: DetailsResponse, trailer: (String) -> Unit) =
         response.trailers?.videos
             ?.takeUnless { it.isEmpty() }
-            ?.run { trailer(get(0)?.key ?: "") }
+            ?.run { trailer(firstOrNull()?.key ?: "") }
 
-    private fun startTrailer(trailerId: String) =
-        binding?.playButton?.apply { visibility = View.VISIBLE }
-            ?.setOnClickListener {
-                Intent(this, TrailerActivity::class.java)
-                    .apply { putExtra(EXTRA_TRAILER, trailerId) }
-                    .let { startActivity(it) }
-            }
+    private fun startTrailer(trailerId: String) = binding?.playButton
+        ?.apply { visibility = View.VISIBLE }
+        ?.setOnClickListener {
+            TrailerDialog(trailerId).show(supportFragmentManager, TRAILER_DIALOG_TAG)
+        }
 
     private fun setDetailsText(resource: Int, text: String) = "${getString(resource)} $text"
 
@@ -140,7 +149,7 @@ class DetailsActivity : AppCompatActivity() {
         .removePrefix("[")
         .removeSuffix("]")
 
-    private val relatedLayoutMAnager = LinearLayoutManager(
+    private val relatedLayoutManager = LinearLayoutManager(
         this@DetailsActivity,
         LinearLayoutManager.HORIZONTAL,
         false
@@ -150,9 +159,9 @@ class DetailsActivity : AppCompatActivity() {
         .apply { showMore()?.visibility = View.GONE }
         .apply { setCategory(getString(R.string.you_might_like)) }
         .recyclerView()
-        ?.apply { layoutManager = relatedLayoutMAnager }
+        ?.apply { layoutManager = relatedLayoutManager }
         ?.apply { adapter = movieAdapter }
-        ?.addOnScrollListener(pagination(relatedLayoutMAnager))
+        ?.addOnScrollListener(pagination(relatedLayoutManager))
 
     private fun pagination(manager: LinearLayoutManager) = PaginationScrollListener.Builder<Unit>()
         .layoutManager(manager)

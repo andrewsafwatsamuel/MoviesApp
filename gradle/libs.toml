@@ -24,6 +24,7 @@ android_arch_core = "1.1.1"
 android_lugin = "8.1.1"
 ksp = "1.9.10-1.0.13"
 kotlin_parcelize = "1.9.20-RC"
+youtube_player_version = "12.1.0"
 
 # shared versions
 buildTools = "34.0.0"
@@ -61,6 +62,7 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 mockito_nharman = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mokito_nharman" }
 mockito = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
 android_arch_coreTesting = { module = "android.arch.core:core-testing", version.ref = "android_arch_core" }
+anroidYoutubePlayer = { module = "com.pierfrancescosoffritti.androidyoutubeplayer:core", version.ref = "youtube_player_version" }
 
 [plugins]
 android_application = { id = "com.android.application", version.ref = "android_lugin" }

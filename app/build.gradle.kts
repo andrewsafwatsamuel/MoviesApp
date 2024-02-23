@@ -50,10 +50,10 @@ dependencies {
     implementation(libs.kotlin.jdk)
     implementation(libs.material)
     implementation(libs.glide)
+    implementation(libs.anroidYoutubePlayer)
     annotationProcessor(libs.glide.annotationProcessor)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.androidAutomation)
 
-    implementation(files("src/libs/YouTubeAndroidPlayerApi.jar"))
 }

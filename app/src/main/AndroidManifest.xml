@@ -14,12 +14,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <activity android:name=".features.home.HomeActivity">
-        </activity>
-        <activity
-                android:name=".features.trailer.TrailerActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/AppTheme.popup"/>
+        <activity android:name=".features.home.HomeActivity"/>
         <activity
                 android:exported="true"
                 android:name=".features.splashScreen.SplashActivity"
