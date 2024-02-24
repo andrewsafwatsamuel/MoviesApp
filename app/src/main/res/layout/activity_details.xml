@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:name="com.example.moviesapp.subFeatures.movies.TopBarFragment"
+            android:name="com.moviesapp.presentation.subFeatures.movies.TopBarFragment"
             android:id="@+id/top_bar_fragment"/>
     <ScrollView
             android:layout_height="match_parent"
@@ -156,7 +156,7 @@
             <fragment
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:name="com.example.moviesapp.features.details.CreditsFragment"
+                    android:name="com.moviesapp.presentation.features.details.CreditsFragment"
                     android:id="@+id/credits_fragment"
                     app:layout_constraintTop_toBottomOf="@id/overview_text_view"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -177,7 +177,7 @@
                 <fragment
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:name="com.example.moviesapp.subFeatures.movies.HorizontalMovieFragment"
+                        android:name="com.moviesapp.presentation.subFeatures.movies.HorizontalMovieFragment"
                         android:id="@+id/related_movies_fragment"/>
             </LinearLayout>
 

@@ -9,10 +9,12 @@
     <fragment
             android:id="@+id/home_top_bar_fragment"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" android:name="com.example.moviesapp.subFeatures.movies.TopBarFragment"
+            android:layout_height="wrap_content"
+            android:name="com.moviesapp.presentation.subFeatures.movies.TopBarFragment"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" />
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="0dp"
             android:layout_height="0dp"

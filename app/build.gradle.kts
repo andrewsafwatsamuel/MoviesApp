@@ -8,10 +8,10 @@ android {
     libs.versions.apply {
         buildToolsVersion = buildTools.get()
         compileSdk = compileSdkVersion.get().toInt()
-        namespace = "com.example.moviesapp"
+        namespace = "com.moviesapp.presentation"
 
         defaultConfig {
-            applicationId = "com.example.moviesapp"
+            applicationId = "com.moviesapp"
             minSdk = minSdkVersion.get().toInt()
             targetSdk = compileSdkVersion.get().toInt()
             versionCode = versionCodeInt.get().toInt()

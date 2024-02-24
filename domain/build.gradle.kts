@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.libs
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -8,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.domain"
+    namespace = "com.moviesapp.domain"
     libs.versions.apply {
         buildToolsVersion = buildTools.get()
         compileSdk = compileSdkVersion.get().toInt()

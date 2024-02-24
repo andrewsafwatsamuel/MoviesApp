@@ -4,7 +4,7 @@ plugins {
     id("kotlin-parcelize")
 }
 android {
-    namespace = "com.example.entities"
+    namespace = "com.moviesapp.entities"
     libs.versions.apply {
         buildToolsVersion = buildTools.get()
         compileSdk = compileSdkVersion.get().toInt()

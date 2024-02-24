@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
-            android:name=".MoviesApp"
+            android:name="com.moviesapp.presentation.MoviesApp"
             android:allowBackup="false"
             android:fullBackupContent="false"
             android:icon="@drawable/app_icon"
@@ -14,25 +14,25 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <activity android:name=".features.home.HomeActivity"/>
+        <activity android:name="com.moviesapp.presentation.features.home.HomeActivity" />
         <activity
                 android:exported="true"
-                android:name=".features.splashScreen.SplashActivity"
+                android:name="com.moviesapp.presentation.features.splashScreen.SplashActivity"
                 android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".features.movies.MoviesActivity"/>
-        <activity android:name=".features.search.SearchActivity"/>
-        <activity android:name=".features.details.DetailsActivity"/>
-        <activity android:name=".features.credits.CreditsActivity"/>
+        <activity android:name="com.moviesapp.presentation.features.movies.MoviesActivity" />
+        <activity android:name="com.moviesapp.presentation.features.search.SearchActivity" />
+        <activity android:name="com.moviesapp.presentation.features.details.DetailsActivity" />
+        <activity android:name="com.moviesapp.presentation.features.credits.CreditsActivity" />
 
         <meta-data
                 android:name="preloaded_fonts"
-                android:resource="@array/preloaded_fonts"/>
+                android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
