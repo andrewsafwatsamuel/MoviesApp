@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package com.example
+package com.moviesapp
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

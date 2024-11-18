@@ -1,6 +1,6 @@
-package com.example.data_sources.server_gateway
+package com.moviesapp.data_sources.server_gateway
 
-import com.example.Response
+import com.moviesapp.Response
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 

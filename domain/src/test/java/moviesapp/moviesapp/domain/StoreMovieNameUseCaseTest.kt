@@ -1,4 +1,4 @@
-package com.moviesapp.domain
+package moviesapp.moviesapp.domain
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.moviesapp.domain.useCases.StoreMovieNameUseCase

@@ -1,4 +1,4 @@
-package com.example
+package com.moviesapp
 
 data class Response<T>(
     val body:T?,

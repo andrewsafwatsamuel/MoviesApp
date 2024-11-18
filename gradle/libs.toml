@@ -25,6 +25,7 @@ kotlin_parcelize = "1.9.20-RC"
 ktor = "2.3.5"
 coroutines = "1.7.3"
 mockk = "1.12.8"
+youtube_player_version = "12.1.0"
 
 # shared versions
 buildTools = "34.0.0"
@@ -54,6 +55,7 @@ androidx_lifecycleExtensions = { module = "androidx.lifecycle:lifecycle-extensio
 android_arch_lifcycleCommon = { module = "android.arch.lifecycle:common", version.ref = "android_lifecycle_common" }
 room_annotationProcessor = { module = "androidx.room:room-compiler", version.ref = "room" }
 room_runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+anroidYoutubePlayer = { module = "com.pierfrancescosoffritti.androidyoutubeplayer:core", version.ref = "youtube_player_version" }
 
 # Unit testing
 mockito_nharman = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mokito_nharman" }

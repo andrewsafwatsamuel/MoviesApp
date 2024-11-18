@@ -1,15 +1,20 @@
-package com.example.moviesapp.subFeatures.movies
+package com.moviesapp.presentation.subFeatures.movies
 
 import android.app.Activity
 import android.widget.AbsListView
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.moviesapp.hideKeyboard
-import com.example.moviesapp.nullLayoutManager
-import com.example.moviesapp.nullLifeCycleOwner
-import com.example.moviesapp.nullQueryParameters
-import com.example.moviesapp.nullRetrieve
+import com.moviesapp.presentation.hideKeyboard
+import com.moviesapp.presentation.nullLayoutManager
+import com.moviesapp.presentation.nullLifeCycleOwner
+import com.moviesapp.presentation.nullQueryParameters
+import com.moviesapp.presentation.nullRetrieve
 
 data class QueryParameters<I>(
     val pageNumber: Int,

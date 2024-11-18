@@ -1,10 +1,10 @@
-package com.example.data_sources.server_gateway.api
+package com.moviesapp.data_sources.server_gateway.api
 
-import com.example.CreditsResponse
-import com.example.DetailsResponse
-import com.example.MovieResponse
-import com.example.Response
-import com.example.data_sources.server_gateway.toResponse
+import com.moviesapp.CreditsResponse
+import com.moviesapp.DetailsResponse
+import com.moviesapp.MovieResponse
+import com.moviesapp.Response
+import com.moviesapp.data_sources.server_gateway.toResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 

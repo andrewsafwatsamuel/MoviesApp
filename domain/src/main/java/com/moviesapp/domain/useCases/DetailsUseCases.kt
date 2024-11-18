@@ -1,11 +1,11 @@
-package com.example.domain.useCases
+package com.moviesapp.domain.useCases
 
 import androidx.lifecycle.MutableLiveData
-import com.example.CreditsResponse
-import com.example.DetailsResponse
-import com.example.MovieResponse
-import com.example.data_sources.DataSourcesServiceLocator
-import com.example.data_sources.repositories.MoviesRepository
+import com.moviesapp.CreditsResponse
+import com.moviesapp.DetailsResponse
+import com.moviesapp.MovieResponse
+import com.moviesapp.data_sources.DataSourcesServiceLocator
+import com.moviesapp.data_sources.repositories.MoviesRepository
 
 class DetailsUseCases(
     private val repository: MoviesRepository = DataSourcesServiceLocator.moviesRepository,

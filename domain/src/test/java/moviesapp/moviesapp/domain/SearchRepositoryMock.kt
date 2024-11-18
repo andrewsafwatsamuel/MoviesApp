@@ -1,7 +1,7 @@
-package com.example.domain
+package moviesapp.moviesapp.domain
 
-import com.example.SuccessfulQuery
-import com.example.domain.repositories.SearchRepository
+import com.moviesapp.SuccessfulQuery
+import com.moviesapp.domain.repositories.SearchRepository
 
 val presentQuery = listOf(SuccessfulQuery("lala land"), SuccessfulQuery("inter steller"))
 

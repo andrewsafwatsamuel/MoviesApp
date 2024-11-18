@@ -1,4 +1,4 @@
-package com.example.moviesapp
+package com.moviesapp.presentation
 
 const val NOT_Null = "can not be null"
 const val PAGINATION = "PaginationScrollListener"

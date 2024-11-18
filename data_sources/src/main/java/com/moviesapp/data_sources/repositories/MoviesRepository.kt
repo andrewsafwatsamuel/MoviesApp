@@ -1,9 +1,9 @@
-package com.example.data_sources.repositories
+package com.moviesapp.data_sources.repositories
 
-import com.example.CreditsResponse
-import com.example.DetailsResponse
-import com.example.MovieResponse
-import com.example.data_sources.server_gateway.api.MoviesAPI
+import com.moviesapp.CreditsResponse
+import com.moviesapp.DetailsResponse
+import com.moviesapp.MovieResponse
+import com.moviesapp.data_sources.server_gateway.api.MoviesAPI
 import io.reactivex.Single
 
 

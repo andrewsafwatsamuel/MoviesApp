@@ -1,9 +1,10 @@
-package com.example.domain.useCases
+package moviesapp.moviesapp.domain.useCases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.example.MovieResponse
-import com.example.data_sources.repositories.MoviesRepository
+import com.moviesapp.MovieResponse
+import com.moviesapp.data_sources.repositories.MoviesRepository
+import com.moviesapp.domain.useCases.MoviesUseCase
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import io.reactivex.Single.just

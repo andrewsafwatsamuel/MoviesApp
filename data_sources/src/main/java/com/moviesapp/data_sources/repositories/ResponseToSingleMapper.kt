@@ -1,6 +1,6 @@
-package com.example.data_sources.repositories
+package com.moviesapp.data_sources.repositories
 
-import com.example.Response
+import com.moviesapp.Response
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import kotlinx.coroutines.runBlocking

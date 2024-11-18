@@ -1,4 +1,4 @@
-import com.example.contracts.NetworkStatus
+import com.moviesapp.contracts.NetworkStatus
 
 object DataSources {
     var networkStatus: NetworkStatus? = null

@@ -1,7 +1,7 @@
-package com.example.data_sources.server_gateway
+package com.moviesapp.data_sources.server_gateway
 
 import DataSources
-import com.example.NotConnectedException
+import com.moviesapp.NotConnectedException
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.DefaultRequest

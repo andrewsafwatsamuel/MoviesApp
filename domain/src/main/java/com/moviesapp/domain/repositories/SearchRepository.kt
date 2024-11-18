@@ -1,7 +1,7 @@
-package com.example.domain.repositories
+package com.moviesapp.domain.repositories
 
-import com.example.SuccessfulQuery
-import com.example.domain.databaseGateWay.movieAppDatabase
+import com.moviesapp.SuccessfulQuery
+import com.moviesapp.domain.databaseGateWay.movieAppDatabase
 
 interface SearchRepository {
     fun getSuccessfulQueries(): List<SuccessfulQuery>?
